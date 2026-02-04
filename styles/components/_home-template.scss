@@ -1,0 +1,396 @@
+// Home Template Styles
+.section {
+  padding: 4rem 0;
+
+  &.bg-gray {
+    background-color: var(--color-gray);
+  }
+}
+
+.sectionheadings {
+  display: grid;
+  grid-template-columns: 1fr 313px;
+  grid-gap: 120px;
+  align-items: center;
+  padding-bottom: 58px;
+
+  .sectionheadingstext {
+    position: relative;
+    padding: 30px 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150px;
+      height: 30px;
+      background: url("/styleup.svg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 150px;
+      height: 30px;
+      background: url("/styledown.svg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+
+  }
+
+  .rightside {
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .swiper-nav-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .swiper-nav-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--color-text);
+        background: var(--color-text);
+        color: var(--color-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        img {
+          width: 12px;
+          height: 16px;
+          margin-left: -2px;
+        }
+
+        &.next {
+          img {
+            margin-left: 2px;
+          }
+        }
+
+        &:hover {
+          background-color: var(--color-primary);
+          border-color: var(--color-primary);
+          color: var(--color-white);
+        }
+
+        &.swiper-button-disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+.section-title {
+  margin-bottom: 10px;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  margin-bottom: 0;
+  color: var(--color-text);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.bestpackages {
+  display: grid;
+  grid-template-columns: 463px 1fr;
+  grid-gap: 24px;
+  align-items: center;
+  padding: 60px 37px;
+
+  .leftcontent {
+    display: block;
+    overflow: hidden;
+
+
+  }
+
+  .bestpackagesswiper {
+    .swiper-slide {
+      padding-left: 24px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.dealssection {
+  .swiper-slide {
+    padding-left: 24px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+}
+
+.hajjsection {
+  .packages-swiper-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 559px;
+    gap: 40px;
+
+    .sliderhere {
+      overflow: hidden;
+
+      .swiper-slide {
+        padding-left: 24px;
+
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+    }
+
+    .imagearea {
+      overflow: hidden;
+    }
+  }
+}
+
+
+// Packages Swiper
+.packages-swiper-wrapper {
+
+  :global(.swiper-button-next),
+  :global(.swiper-button-prev) {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+// Customize Section
+.customize-section {
+  background: var(--color-white);
+
+  .customize-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+
+    @media (min-width: 992px) {
+      flex-direction: row;
+      gap: 4rem;
+    }
+  }
+
+  .customize-image {
+    flex: 1;
+
+    img {
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .customize-text {
+    flex: 1;
+    text-align: center;
+
+    @media (min-width: 992px) {
+      text-align: left;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--color-dark);
+    }
+
+    p {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      color: var(--color-text-light);
+    }
+  }
+}
+
+// Why Choose Us
+.why-us-section {
+  background-color: #FAFAFA;
+  padding: 60px 0;
+
+  .why-us-header {
+    margin-bottom: 3rem;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 321px 1fr;
+    gap: 30px;
+
+    .features-card-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 70px;
+    }
+  }
+
+  .feature-card {
+    text-align: left;
+    padding: 0;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      width: 100px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .content {
+      width: calc(100% - 115px);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    h3 {
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 400;
+      color: var(--color-text);
+      margin: 0;
+    }
+  }
+}
+
+// Spiritual Journey / Testimonials
+.spiritual-journey-section {
+  background: linear-gradient(to bottom, #fff, #f5f5f5);
+  overflow: hidden;
+
+  .journey-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+
+    @media (min-width: 992px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .journey-image {
+    flex: 1;
+    position: relative;
+
+    img {
+      max-width: 100%;
+      border-radius: 12px 12px 0 0; // Curve top
+
+      @media (min-width: 992px) {
+        mask-image: linear-gradient(to right, black 80%, transparent 100%);
+      }
+    }
+  }
+
+  .reviews-slider-wrapper {
+    flex: 1;
+    width: 100%;
+    padding: 2rem;
+
+    .review-card-minimal {
+      text-align: center;
+      padding: 2rem;
+      background: var(--color-white);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+
+      p {
+        font-size: 1.2rem;
+        font-style: italic;
+        margin-bottom: 1rem;
+        color: var(--color-text);
+      }
+
+      h4 {
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// Partners
+.partners-section {
+  padding: 2rem 0;
+  border-top: 1px solid #eee;
+
+  img {
+    max-width: 100%;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+
+    &:hover {
+      filter: grayscale(0%);
+    }
+  }
+}
+
+.swiper-pagination-custom {
+  display: flex;
+  gap: 4px;
+  padding-top: 40px;
+  justify-content: center;
+  align-items: center;
+
+  .swiper-pagination-bullet {
+    width: 33px;
+    height: 3px;
+    border-radius: 5px;
+    background-color: var(--color-secondary);
+    margin: 0 !important;
+
+    &.swiper-pagination-bullet-active {
+      background-color: var(--color-primary);
+      width: 86px;
+    }
+  }
+}

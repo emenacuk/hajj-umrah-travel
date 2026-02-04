@@ -1,0 +1,125 @@
+// Reviews Styles
+.reviews {
+  padding: 2rem 0;
+
+  :global(.swiper-button-next),
+  :global(.swiper-button-prev) {
+    color: var(--color-primary);
+    width: 40px;
+    height: 40px;
+    background: var(--color-white);
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--color-primary);
+      color: var(--color-white);
+      transform: scale(1.1);
+    }
+
+    &::after {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+  }
+
+  :global(.swiper-pagination-bullet) {
+    background: var(--color-gray-dark);
+    opacity: 0.5;
+    width: 10px;
+    height: 10px;
+    transition: all 0.3s ease;
+
+    &.swiper-pagination-bullet-active {
+      background: var(--color-primary);
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  .review-card {
+    background: var(--color-white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .review-quote {
+      font-size: 4rem;
+      font-family: var(--font-heading);
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+    }
+
+    .review-comment {
+      flex: 1;
+      color: var(--color-text-light);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      margin-top: 2rem;
+      font-style: italic;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .review-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--color-primary);
+      }
+
+      .review-author-info {
+        flex: 1;
+
+        .review-name {
+          font-weight: 600;
+          color: var(--color-dark);
+          margin-bottom: 0.25rem;
+        }
+
+        .review-location {
+          font-size: 0.875rem;
+          color: var(--color-text-light);
+        }
+      }
+    }
+
+    .review-rating {
+      display: flex;
+      gap: 0.25rem;
+
+      .star {
+        color: var(--color-gray-dark);
+        font-size: 1rem;
+      }
+
+      .star-filled {
+        color: var(--color-primary);
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+
