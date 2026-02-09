@@ -35,6 +35,27 @@
             overflow-y: auto;
             direction: rtl;
             padding-left: 24px;
+
+            /* Custom Scrollbar */
+            &::-webkit-scrollbar {
+                width: 14px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background-color: transparent;
+                border-left: 6.5px solid transparent;
+                border-right: 6.5px solid transparent;
+                background-clip: content-box;
+                background-color: #707070; // Thinner vertical line
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: white;
+                border: 2px solid #707070;
+                border-radius: 100px;
+                background-clip: padding-box;
+            }
+
             .contenttext{
                 direction: ltr;
             }
