@@ -6,6 +6,7 @@ import WithoutBannerTemplate from '@/templates/WithoutBannerTemplate';
 import StaticWithBannerTemplate from '@/templates/StaticWithBannerTemplate';
 import ContactTemplate from '@/templates/ContactTemplate';
 import BlogTemplate from '@/templates/BlogTemplate';
+import SingleUmrahTemplate from '@/templates/SingleUmrahTemplate';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -41,6 +42,11 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
     case 'blog':
       return <BlogTemplate data={pageData} />;
     
+    case 'singleumrahtemplate':
+    case 'single_umrah':
+    case 'single-umrah':
+      return <SingleUmrahTemplate data={pageData} />;
+
     default:
       return <WithoutBannerTemplate data={pageData} />;
   }

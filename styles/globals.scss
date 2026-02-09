@@ -303,3 +303,14 @@ img {
     border-radius: 8px;
   }
 }
+
+.faq-section {
+  margin-top: 100px;
+  margin-bottom: 100px;
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}

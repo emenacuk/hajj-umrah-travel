@@ -444,11 +444,20 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
       />
       {/* FAQ Section */}
       {faqs.length > 0 && (
-        <section className="section bg-gray">
+        <section className="section faq-section">
           <div className="container">
-            <h2 className="text-center">Frequently Asked Questions</h2>
-            <FAQ items={faqs} />
+            <div className='sectionheadings'>
+              <div className='sectionheadingstext'>
+                <h2 className="section-title">Frequently Asked Questions</h2>
+                <p className="section-subtitle">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip
+                </p>
+              </div>
+            </div>
           </div>
+          <FAQ items={faqs} />
         </section>
       )}
     </>

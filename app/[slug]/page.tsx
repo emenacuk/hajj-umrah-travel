@@ -1,6 +1,11 @@
 import { fetchPageData } from '@/utils/api';
 import { resolveTemplate } from '@/utils/templateResolver';
 import { notFound } from 'next/navigation';
+import { dynamicParams } from '@/data/static-routes';
+
+export function generateStaticParams() {
+  return dynamicParams.general;
+}
 
 interface PageProps {
   params: {

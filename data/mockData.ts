@@ -50,11 +50,35 @@ export const mockHomePageData: PageData = {
         type: 'umrah',
         title: '7 Nights 4 Star Cheap Umrah Package',
         price: 965,
-        rating: 5,
+        rating: 4,
         image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
         makkahHotel: 'Al Kiswah Hotel Makkah',
         madinahHotel: 'Millennium Al Aqeeq Madinah',
         nights: 7,
+        stars: 4
+      },
+      {
+        id: 'umrah-11',
+        type: 'umrah',
+        title: '10 Nights 4 Star Executive Umrah Package',
+        price: 1150,
+        rating: 4,
+        image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        makkahHotel: 'Dar Al Eiman Royal',
+        madinahHotel: 'Pulman Zamzam Madinah',
+        nights: 10,
+        stars: 4
+      },
+      {
+        id: 'umrah-12',
+        type: 'umrah',
+        title: '12 Nights 4 Star Premium Umrah Package',
+        price: 1250,
+        rating: 4,
+        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800',
+        makkahHotel: 'Makkah Towers',
+        madinahHotel: 'Anwar Al Madinah',
+        nights: 12,
         stars: 4
       },
       {
@@ -116,6 +140,42 @@ export const mockHomePageData: PageData = {
         madinahHotel: 'Taiba Front Madinah',
         nights: 10,
         stars: 5
+      },
+      {
+        id: 'umrah-8',
+        type: 'umrah',
+        title: '7 Nights 3 Star Budget Umrah Package',
+        price: 650,
+        rating: 3,
+        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        makkahHotel: 'Economy Hotel Makkah',
+        madinahHotel: 'Economy Hotel Madinah',
+        nights: 7,
+        stars: 3
+      },
+      {
+        id: 'umrah-9',
+        type: 'umrah',
+        title: '10 Nights 3 Star Basic Umrah Package',
+        price: 750,
+        rating: 3,
+        image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800',
+        makkahHotel: 'Standard Hotel Makkah',
+        madinahHotel: 'Standard Hotel Madinah',
+        nights: 10,
+        stars: 3
+      },
+      {
+        id: 'umrah-10',
+        type: 'umrah',
+        title: '14 Nights 3 Star Saver Umrah Package',
+        price: 850,
+        rating: 3,
+        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        makkahHotel: 'Saver Hotel Makkah',
+        madinahHotel: 'Saver Hotel Madinah',
+        nights: 14,
+        stars: 3
       }
     ],
     hajjPackages: [
@@ -260,7 +320,7 @@ export const mockUmrahPackage: UmrahPackageData & any = {
   type: 'umrah',
   title: '4 Star 1st Ashra 14 Nights Ramadan Umrah Package',
   price: 965,
-  rating: 5,
+  rating: 4,
   images: [
     'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=1200',
     'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200',
@@ -340,7 +400,7 @@ export const mockUmrahPackage: UmrahPackageData & any = {
       type: 'umrah',
       title: '7 Nights 4 Star Cheap Umrah Package',
       price: 965,
-      rating: 5,
+      rating: 4,
       image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
       makkahHotel: 'Al Kiswah Towers Hotel Makkah',
       madinahHotel: 'Millennium Al Aqeeq Madinah'
@@ -360,7 +420,25 @@ export const mockUmrahPackage: UmrahPackageData & any = {
     phone: '0208-000-000',
     whatsapp: '0208-000-000',
     email: 'info@example.co.uk'
-  }
+  },
+  faqs: [
+    {
+      question: 'What is included in this 4 Star Umrah Package?',
+      answer: 'This package includes Umrah Visa, 14 nights accommodation (5 nights in Makkah, 5 nights in Madinah), return flights, and ground transfers. It also covers Ziyarat tours in both holy cities.'
+    },
+    {
+      question: 'How close are the hotels to the Haram?',
+      answer: 'The Emaar Andalusia Hotel in Makkah is approximately 10 minutes walk, and Taiba Front in Madinah is located very close to the Prophet\'s Mosque entrance.'
+    },
+    {
+      question: 'Are meals provided in this package?',
+      answer: 'The package standardly includes Half Board (breakfast and dinner). Full board can be arranged upon special request for an additional fee.'
+    },
+    {
+      question: 'Is travel insurance included?',
+      answer: 'Basic medical insurance required for the visa is included. We strongly recommend purchasing comprehensive travel insurance for additional coverage.'
+    }
+  ]
 };
 
 // Mock Hajj Package Detail
@@ -469,7 +547,25 @@ export const mockHajjPackage: HajjPackageData & any = {
     phone: '0208-000-000',
     whatsapp: '0208-000-000',
     email: 'info@example.co.uk'
-  }
+  },
+  faqs: [
+    {
+      question: 'Is this Hajj package Shifting or Non-Shifting?',
+      answer: 'This specific package is Non-Shifting, meaning you will stay in the same hotel in Makkah throughout your stay, closer to the Haram.'
+    },
+    {
+      question: 'What kind of guidance is provided during Hajj?',
+      answer: 'We provide experienced religious guides (Imams) and group leaders who will accompany you throughout the Manasik of Hajj, providing lectures and step-by-step instructions.'
+    },
+    {
+      question: 'Are Qurbani (sacrifice) costs included?',
+      answer: 'Standardly, Qurbani is not included in the base price but can be arranged for an additional fee of £150 per person.'
+    },
+    {
+      question: 'What is the format of the flights?',
+      answer: 'We typically use scheduled airlines like Saudi Arabian Airlines or British Airways. Indirect flights may be used for budget options, but this specific premium package uses direct flights.'
+    }
+  ]
 };
 
 // Mock Contact Page Data

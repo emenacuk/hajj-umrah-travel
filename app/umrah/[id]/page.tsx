@@ -1,6 +1,11 @@
 import { fetchUmrahPackage } from '@/utils/api';
 import UmrahPackageTemplate from '@/templates/UmrahPackageTemplate';
 import { notFound } from 'next/navigation';
+import { dynamicParams } from '@/data/static-routes';
+
+export function generateStaticParams() {
+  return dynamicParams.umrah;
+}
 
 interface UmrahPackagePageProps {
   params: {
@@ -26,6 +31,7 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
       relatedPackages: packageData.relatedPackages,
       inclusions: packageData.inclusions,
       contact: packageData.contact,
+      faqs: packageData.faqs,
     },
   };
 

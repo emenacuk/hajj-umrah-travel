@@ -26,6 +26,21 @@ export async function fetchPageData(slug: string): Promise<any> {
         return mockContactPageData;
       case 'blog':
         return mockBlogPageData;
+      case '3-star-umrah-packages':
+      case '4-star-umrah-packages':
+      case '5-star-umrah-packages':
+        return {
+          template_name: 'singleumrahtemplate',
+          title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+          content: {
+            banner: {
+              title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+              description: `Experience the finest ${slug.split('-')[0]} star Umrah pilgrimage with our specially curated packages.`,
+              image: '/homebanner.png'
+            },
+            faqs: mockHomePageData.content.faqs || []
+          }
+        };
       default:
         return {
           template_name: 'without_banner',

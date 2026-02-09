@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { InquiryFormData } from '@/types';
 import { submitInquiry } from '@/utils/api';
 import { toast } from 'sonner';
@@ -13,6 +14,7 @@ interface InquiryFormProps {
 }
 
 export default function InquiryForm({ data }: InquiryFormProps) {
+  const pathname = usePathname();
   const [formData, setFormData] = useState<Record<string, any>>({
     passengers: { adults: 1, children: 0, infants: 0 },
     departureDate: null,
@@ -50,9 +52,22 @@ export default function InquiryForm({ data }: InquiryFormProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    let filteredValue = value;
+
+    if (name === 'name') {
+      filteredValue = value.replace(/[^a-zA-Z.]/g, '');
+    } else if (name === 'phone') {
+      filteredValue = value.replace(/[^0-9+]/g, '');
+    } else if (name === 'nights' || name === 'captchaInput') {
+      filteredValue = value.replace(/[^0-9]/g, '');
+    } else if (name === 'email') {
+      filteredValue = value.replace(/\s/g, '');
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: filteredValue,
     });
   };
 
@@ -68,7 +83,6 @@ export default function InquiryForm({ data }: InquiryFormProps) {
       const currentValue = prev.passengers[type];
       let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
-      // Minimum values
       if (type === 'adults' && newValue < 1) newValue = 1;
       if (type !== 'adults' && newValue < 0) newValue = 0;
 
@@ -131,7 +145,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
   const passengerLabel = `${formData.passengers.adults.toString()} ADT - ${formData.passengers.children.toString()} CHD - ${formData.passengers.infants.toString()} INF`;
 
   return (
-    <form onSubmit={handleSubmit} className="premium-inquiry-form">
+    <form onSubmit={handleSubmit} className={`premium-inquiry-form ${pathname !== '/' ? 'is-inner-page' : ''}`}>
       {/* Row 1 */}
       <div className="form-row three-cols">
         <div className="form-group icon-group custom-datepicker-wrapper">
@@ -246,7 +260,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
       <div className="form-row captcha-row">
         <div className="form-group captcha-group">
           <input
-            type="number"
+            type="text"
             name="captchaInput"
             placeholder="Answer"
             value={formData.captchaInput}

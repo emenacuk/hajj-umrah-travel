@@ -8,6 +8,10 @@
   border-radius: 18px;
   width: 100%;
 
+  &.is-inner-page {
+    background-color: rgba(232, 232, 233, 0.6);
+  }
+
   .form-row {
     display: flex;
     gap: 15px;
@@ -44,9 +48,12 @@
     &.custom-datepicker-wrapper {
       .react-datepicker-wrapper {
         width: 100%;
+        position: relative;
+        z-index: 1005;
       }
 
       .custom-date-input {
+
         width: 100%;
         padding: 11px 14px;
         border-radius: 50px;
@@ -181,6 +188,7 @@
    
   }
 .react-datepicker-popper{
+  z-index: 9999 !important;
   .react-datepicker__triangle {
       display: none !important;
   }

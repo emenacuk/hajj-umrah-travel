@@ -10,7 +10,11 @@ import Reviews from '@/components/common/Reviews';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Link from 'next/link';
+import { mockHomePageData } from '@/data/mockData';
 import '@/styles/components/_package-detail.scss';
+import { ScrollDetail } from '@/components/sections/ScrollDetail';
+import FAQ from '@/components/common/FAQ';
 
 interface UmrahPackageTemplateProps {
   data: PageData;
@@ -18,12 +22,13 @@ interface UmrahPackageTemplateProps {
 
 export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps) {
   const bannerData = data.content?.banner || {};
-  const packageData = data.content?.package || {};
-  const hotels = data.content?.hotels || [];
-  const reviews = data.content?.reviews || [];
-  const relatedPackages = data.content?.relatedPackages || [];
-  const inclusions = data.content?.inclusions || [];
-  const formData = data.content?.form || {};
+  const faqs = data.content?.faqs || [];
+
+  // Get packages from mock data for sliders
+  const allUmrahPackages = mockHomePageData.content?.umrahPackages || [];
+  const threeStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 3);
+  const fourStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 4);
+  const fiveStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 5);
 
   return (
     <>
@@ -33,210 +38,200 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
       {/* Package Details */}
       <section className="section">
         <div className="container">
-          <div className="package-detail-layout">
-            <div className="package-detail-left">
-              <div className="package-rating">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className={i < (packageData.rating || 5) ? 'star-filled' : 'star'}>
-                    ★
-                  </span>
-                ))}
-              </div>
-              <h1>{packageData.title || data.title}</h1>
 
-              {/* Hotel Information */}
-              {packageData.makkahHotel && (
-                <div className="hotel-info">
-                  <div className="hotel-item">
-                    <strong>Makkah Hotel Nights:</strong>
-                    <span>{packageData.makkahHotel}</span>
-                    <span className="nights">{packageData.makkahNights || '05'} Nights</span>
+          {/* 3 Star Umrah Packages Slider */}
+          {threeStarPackages.length > 0 && (
+            <section className="section exploration-section">
+              <div className="container">
+                <div className='sectionheadings'>
+                  <div className='sectionheadingstext'>
+                    <h2 className="section-title">3 Star Umrah Packages</h2>
+                    <p className="section-subtitle">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                      exercitation ullamco laboris nisi ut aliquip
+                    </p>
                   </div>
-                </div>
-              )}
-
-              {packageData.madinahHotel && (
-                <div className="hotel-info">
-                  <div className="hotel-item">
-                    <strong>Madinah Hotel Nights:</strong>
-                    <span>{packageData.madinahHotel}</span>
-                    <span className="nights">{packageData.madinahNights || '05'} Nights</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Package Options */}
-              {packageData.options && (
-                <div className="package-options">
-                  {packageData.options.map((option: any, index: number) => (
-                    <div key={index} className="package-option">
-                      <h4>{option.name}</h4>
-                      <div className="package-price">
-                        starting from <span className="price-amount">£ {option.price}</span> per person
-                      </div>
+                  <div className='rightside'>
+                    <div className="swiper-nav-btns">
+                      <button id='prev-3star' className="swiper-nav-btn prev prev-exploration">
+                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <button id='next-3star' className="swiper-nav-btn next next-exploration">
+                        <img src="/nextarrow.svg" alt="" />
+                      </button>
                     </div>
-                  ))}
-                </div>
-              )}
-
-              <button className="btn btn--secondary">Enquire Now</button>
-            </div>
-
-            <div className="package-detail-right">
-              {/* Image Gallery */}
-              {packageData.images && packageData.images.length > 0 && (
-                <div className="package-gallery">
-                  <Swiper
-                    modules={[Navigation, Pagination]}
-                    spaceBetween={10}
-                    slidesPerView={1}
-                    navigation
-                    pagination={{ clickable: true }}
-                  >
-                    {packageData.images.map((image: string, index: number) => (
-                      <SwiperSlide key={index}>
-                        <img src={image} alt={`${packageData.title} - Image ${index + 1}`} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Package Details Section */}
-          <div className="package-details-section">
-            <h2>PACKAGE DETAILS</h2>
-            {data.content?.packageDescription && (
-              <p>{data.content.packageDescription}</p>
-            )}
-
-            {/* Service Icons */}
-            <div className="service-icons">
-              {inclusions.map((inclusion: string, index: number) => (
-                <div key={index} className="service-icon">
-                  <span>{inclusion}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="package-actions">
-              <button className="btn btn--primary">Book This Package</button>
-              <button className="btn btn--outline">Customize Package</button>
-            </div>
-
-            {/* Inclusions List */}
-            {inclusions.length > 0 && (
-              <div className="inclusions-list">
-                <h3>Inclusions</h3>
-                <ul>
-                  {inclusions.map((inclusion: string, index: number) => (
-                    <li key={index}>{inclusion}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-
-          {/* Hotel Details */}
-          {hotels.length > 0 && (
-            <div className="hotels-section">
-              <h2>HOTEL DETAILS:</h2>
-              <div className="hotels-grid">
-                {hotels.map((hotel: HotelData) => (
-                  <div key={hotel.id} className="hotel-card">
-                    {hotel.images && hotel.images.length > 0 && (
-                      <Swiper
-                        modules={[Navigation]}
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        navigation
-                      >
-                        {hotel.images.map((image: string, index: number) => (
-                          <SwiperSlide key={index}>
-                            <img src={image} alt={hotel.name} />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    )}
-                    <div className="hotel-card-content">
-                      <div className="hotel-rating">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} className={i < hotel.rating ? 'star-filled' : 'star'}>
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <h3>{hotel.name}</h3>
-                      <p className="hotel-location">Hotel in {hotel.location}</p>
-                      {hotel.description && <p>{hotel.description}</p>}
-                      <a href="#" className="see-more">See More →</a>
-                    </div>
+                    <Link href="/3-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Contact Information */}
-          <div className="contact-info-section">
-            <div className="contact-cards">
-              <div className="contact-card contact-card--phone">
-                <div className="contact-icon">📞</div>
-                <h3>Call Now!</h3>
-                <p>{data.content?.contact?.phone || '0208-000-000'}</p>
-              </div>
-              <div className="contact-card contact-card--email">
-                <div className="contact-icon">✉️</div>
-                <h3>Email Us!</h3>
-                <p>{data.content?.contact?.email || 'info@example.co.uk'}</p>
-              </div>
-              <div className="contact-card contact-card--whatsapp">
-                <div className="contact-icon">💬</div>
-                <h3>WhatsApp!</h3>
-                <p>{data.content?.contact?.whatsapp || '0208-000-000'}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Reviews */}
-          {reviews.length > 0 && (
-            <div className="reviews-section">
-              <h2>What Our Clients Says</h2>
-              <Reviews reviews={reviews} />
-            </div>
-          )}
-
-          {/* Related Packages */}
-          {relatedPackages.length > 0 && (
-            <div className="related-packages-section">
-              <div className="section-header">
-                <h2>More Relevant Packages</h2>
-                <button className="btn btn--primary">View All Packages</button>
-              </div>
-              <div className="packages-grid">
+              <div className="packages-swiper-wrapper">
                 <Swiper
+                  key="three-star-swiper"
                   modules={[Navigation, Pagination]}
-                  spaceBetween={20}
                   slidesPerView={1}
-                  navigation
-                  pagination={{ clickable: true }}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-3star',
+                    nextEl: '#next-3star',
+                  }}
+                  className="packages-swiper"
                   breakpoints={{
-                    640: {
-                      slidesPerView: 2,
-                    },
+                    640: { slidesPerView: 1 },
+                    1024: { slidesPerView: 2 },
+                    1280: { slidesPerView: 2 },
                   }}
                 >
-                  {relatedPackages.map((pkg: UmrahPackageData) => (
+                  {threeStarPackages.map((pkg: any) => (
                     <SwiperSlide key={pkg.id}>
                       <UmrahPackageCard package={pkg} />
                     </SwiperSlide>
                   ))}
                 </Swiper>
               </div>
-            </div>
+            </section>
           )}
+
+          {/* 4 Star Umrah Packages Slider */}
+          {fourStarPackages.length > 0 && (
+            <section className="section exploration-section umrah-slider-section">
+              <div className="container">
+                <div className='sectionheadings'>
+                  <div className='sectionheadingstext'>
+                    <h2 className="section-title">4 Star Umrah Packages</h2>
+                    <p className="section-subtitle">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                      exercitation ullamco laboris nisi ut aliquip
+                    </p>
+                  </div>
+                  <div className='rightside'>
+                    <div className="swiper-nav-btns">
+                      <button id='prev-4star' className="swiper-nav-btn prev prev-exploration">
+                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <button id='next-4star' className="swiper-nav-btn next next-exploration">
+                        <img src="/nextarrow.svg" alt="" />
+                      </button>
+                    </div>
+                    <Link href="/4-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="packages-swiper-wrapper">
+                <Swiper
+                  key="four-star-swiper"
+                  modules={[Navigation, Pagination]}
+                  slidesPerView={1}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-4star',
+                    nextEl: '#next-4star',
+                  }}
+                  className="packages-swiper"
+                  breakpoints={{
+                    640: { slidesPerView: 1 },
+                    1024: { slidesPerView: 2 },
+                    1280: { slidesPerView: 2 },
+                  }}
+                >
+                  {fourStarPackages.map((pkg: any) => (
+                    <SwiperSlide key={pkg.id}>
+                      <UmrahPackageCard package={pkg} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </section>
+          )}
+          {fiveStarPackages.length > 0 && (
+            <section className="section exploration-section umrah-slider-section">
+              <div className="container">
+                <div className='sectionheadings'>
+                  <div className='sectionheadingstext'>
+                    <h2 className="section-title">5 Star Umrah Packages</h2>
+                    <p className="section-subtitle">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                      exercitation ullamco laboris nisi ut aliquip
+                    </p>
+                  </div>
+                  <div className='rightside'>
+                    <div className="swiper-nav-btns">
+                      <button id='prev-5star' className="swiper-nav-btn prev prev-exploration">
+                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <button id='next-5star' className="swiper-nav-btn next next-exploration">
+                        <img src="/nextarrow.svg" alt="" />
+                      </button>
+                    </div>
+                    <Link href="/5-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="packages-swiper-wrapper">
+                <Swiper
+                  key="five-star-swiper"
+                  modules={[Navigation, Pagination]}
+                  slidesPerView={1}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-5star',
+                    nextEl: '#next-5star',
+                  }}
+                  className="packages-swiper"
+                  breakpoints={{
+                    640: { slidesPerView: 1 },
+                    1024: { slidesPerView: 2 },
+                    1280: { slidesPerView: 2 },
+                  }}
+                >
+                  {fiveStarPackages.map((pkg: any) => (
+                    <SwiperSlide key={pkg.id}>
+                      <UmrahPackageCard package={pkg} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </section>
+          )}
+          <ScrollDetail
+            title="Umrah & Hajj Services Scroll Detail"
+            image="/scrollimg.png"
+            content={`
+          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
+          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
+          <h3>Umrah Packages</h3>
+          <ul>
+            <li>Premium Accommodations</li>
+            <li>Direct Flight Options</li>
+            <li>Experienced Professional Guides</li>
+            <li>24/7 Spiritual Assistance</li>
+          </ul>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        `}
+          />
         </div>
+        {faqs.length > 0 && (
+          <section className="section faq-section">
+            <div className="container">
+              <div className='sectionheadings'>
+                <div className='sectionheadingstext'>
+                  <h2 className="section-title">Frequently Asked Questions</h2>
+                  <p className="section-subtitle">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation ullamco laboris nisi ut aliquip
+                  </p>
+                </div>
+              </div>
+            </div>
+            <FAQ items={faqs} />
+          </section>
+        )}
       </section>
     </>
   );

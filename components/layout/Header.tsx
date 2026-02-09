@@ -2,12 +2,32 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '@/styles/components/_header.scss';
 
 export default function Header() {
+
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [hijriData, setHijriData] = useState({ year: '', dayMonth: '' });
+    useEffect(() => {
+        const today = new Date();
+        const dateStr = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+
+        const islamicDateApi = `https://api.aladhan.com/v1/gToH/${dateStr}`;
+        fetch(islamicDateApi)
+            .then(response => response.json())
+            .then(res => {
+                if (res.data && res.data.hijri) {
+                    const hijri = res.data.hijri;
+                    setHijriData({
+                        year: hijri.year,
+                        dayMonth: `${hijri.day} ${hijri.month.en}`
+                    });
+                }
+            })
+            .catch(err => console.error("Error fetching Islamic date:", err));
+    }, []);
 
     const isActive = (path: string) => pathname === path;
 
@@ -23,9 +43,9 @@ export default function Header() {
                             <span></span>
                             <span></span>
                             <span></span>
-                        </div>
+                        </div> 
                         <Link href="/" className="logo-link">
-                            <span className="logo-text">Logo Here</span>
+                            <span className={`logo-text ${pathname !== '/' ? 'white-text' : ''}`}>Logo Here</span>
                         </Link>
                     </div>
 
@@ -44,13 +64,13 @@ export default function Header() {
 
                     {/* Contact Pills */}
                     <div className="contact-pills">
-                        <a href="tel:02081457860" className="contact-pill outline">
+                        <a href="tel:02081457860" className={`contact-pill outline ${pathname !== '/' ? 'white-text' : ''}`}>
                             0208 - 145 - 7860
                             <span className="icon-whatsapp">
                                 <img src="/whatsappicon.png" alt="whatsappicon" />
                             </span>
                         </a>
-                        <a href="tel:02081457860" className="contact-pill outline">
+                        <a href="tel:02081457860" className={`contact-pill outline ${pathname !== '/' ? 'white-text' : ''}`}>
                             0208 - 145 - 7860
                             <span className="icon-headset">
                                 <img src="/callicon.png" alt="callicon" />
@@ -64,7 +84,7 @@ export default function Header() {
             <div className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`} onClick={toggleSidebar}></div>
             <div className={`sidebar-menu ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="hijri-date">1447 Hijri, <span>25 Safar</span></div>
+                    <div className="hijri-date">{hijriData.year} Hijri, <span>{hijriData.dayMonth}</span></div>
                     <div className="sidebar-controls">
                         <button className="close-btn" onClick={toggleSidebar}>×</button>
                         <span className="sidebar-logo">Logo Here</span>

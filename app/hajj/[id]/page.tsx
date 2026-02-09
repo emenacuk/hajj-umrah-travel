@@ -1,6 +1,11 @@
 import { fetchHajjPackage } from '@/utils/api';
 import HajjPackageTemplate from '@/templates/HajjPackageTemplate';
 import { notFound } from 'next/navigation';
+import { dynamicParams } from '@/data/static-routes';
+
+export function generateStaticParams() {
+  return dynamicParams.hajj;
+}
 
 interface HajjPackagePageProps {
   params: {
@@ -26,6 +31,7 @@ export default async function HajjPackagePage({ params }: HajjPackagePageProps) 
       relatedPackages: packageData.relatedPackages,
       inclusions: packageData.inclusions,
       contact: packageData.contact,
+      faqs: packageData.faqs,
     },
   };
 

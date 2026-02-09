@@ -1,6 +1,11 @@
 import { fetchPageData } from '@/utils/api';
 import StaticWithBannerTemplate from '@/templates/StaticWithBannerTemplate';
 import { notFound } from 'next/navigation';
+import { dynamicParams } from '@/data/static-routes';
+
+export function generateStaticParams() {
+  return dynamicParams.blog;
+}
 
 interface BlogPostPageProps {
   params: {
