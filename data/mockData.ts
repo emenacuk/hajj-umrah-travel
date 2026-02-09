@@ -92,6 +92,30 @@ export const mockHomePageData: PageData = {
         madinahHotel: 'Taiba Front Madinah',
         nights: 10,
         stars: 5
+      },
+      {
+        id: 'umrah-6',
+        type: 'umrah',
+        title: '10 Nights 5 Star Luxury Umrah Package',
+        price: 1295,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=800',
+        makkahHotel: 'Emaar Andalusia Hotel',
+        madinahHotel: 'Taiba Front Madinah',
+        nights: 10,
+        stars: 5
+      },
+      {
+        id: 'umrah-7',
+        type: 'umrah',
+        title: '10 Nights 5 Star Luxury Umrah Package',
+        price: 1295,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=800',
+        makkahHotel: 'Emaar Andalusia Hotel',
+        madinahHotel: 'Taiba Front Madinah',
+        nights: 10,
+        stars: 5
       }
     ],
     hajjPackages: [
@@ -215,7 +239,15 @@ export const mockHomePageData: PageData = {
         rating: 5,
         comment: 'Professional service from start to finish. The guides were knowledgeable and the hotels exceeded expectations.',
         avatar: 'https://i.pravatar.cc/150?img=4'
-      }
+      },
+      {
+        id: 'review-5',
+        name: 'Aisha Malik',
+        location: 'Leeds',
+        rating: 5,
+        comment: 'Professional service from start to finish. The guides were knowledgeable and the hotels exceeded expectations.',
+        avatar: 'https://i.pravatar.cc/150?img=4'
+      },
     ],
     umrahDescription: 'Discover our carefully curated Umrah packages designed to provide you with a comfortable and spiritually fulfilling journey.',
     hajjDescription: 'Experience the journey of a lifetime with our comprehensive Hajj packages, designed to make your pilgrimage smooth and memorable.'

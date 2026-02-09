@@ -110,4 +110,17 @@ export interface ContactData {
   form?: InquiryFormData;
 }
 
+// Service Types
+export interface ServiceItem {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
 
+export interface ServicesSectionData {
+  title: string;
+  description: string;
+  mainImage: string;
+  items: ServiceItem[];
+}

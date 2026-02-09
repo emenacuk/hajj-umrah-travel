@@ -13,6 +13,10 @@
 @import 'components/blog';
 @import 'components/home-template';
 @import 'components/special-pages';
+@import 'components/customize-banner';
+@import 'components/home-reviews';
+@import 'components/umrah-hajj-services';
+@import 'components/scroll-detail';
 
 // Variables
 :root {
@@ -27,8 +31,8 @@
   --color-gray-dark: #666666;
   --color-text: #000;
   --color-text-light: #666666;
-  --color-border:#707070;
-  --color-bg:#F4F4F5;
+  --color-border: #707070;
+  --color-bg: #F4F4F5;
 
   // Fonts
   --font-heading: 'Playfair Display', serif;
@@ -59,11 +63,14 @@
 html {
   scroll-behavior: smooth;
 }
-body,html{
-    padding: 0;
-    max-width: 1920px;
-    margin: 0 auto;
+
+body,
+html {
+  padding: 0;
+  max-width: 1920px;
+  margin: 0 auto;
 }
+
 body {
   font-family: var(--font-body);
   font-size: 16px;
@@ -135,10 +142,12 @@ img {
   max-width: 1360px;
   margin: 0 auto;
   padding: 0 20px;
-  &.container-sm{
+
+  &.container-sm {
     max-width: 1140px;
   }
-  &.container-xs{
+
+  &.container-xs {
     max-width: 992px;
   }
 }
@@ -177,6 +186,7 @@ img {
       background-color: var(--color-dark-light);
     }
   }
+
   &--black {
     background-color: var(--color-text);
     color: var(--color-white);
@@ -198,36 +208,13 @@ img {
   }
 }
 
-// Section
-.section {
-  padding: var(--spacing-xl) 0;
-
-  @media (min-width: 768px) {
-    padding: var(--spacing-xxl) 0;
-  }
-
-  &--dark {
-    background-color: var(--color-dark);
-    color: var(--color-white);
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      color: var(--color-white);
-    }
-
-    p {
-      color: rgba(255, 255, 255, 0.9);
-    }
-  }
-}
-
 // Utility Classes
 .text-center {
   text-align: center;
+}
+
+.justify-content-end {
+  justify-content: end !important;
 }
 
 .mt-sm {

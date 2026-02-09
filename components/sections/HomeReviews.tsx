@@ -1,0 +1,92 @@
+'use client';
+
+import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import { ReviewData } from '@/types';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import '@/styles/components/_home-reviews.scss';
+import Link from 'next/link';
+
+interface HomeReviewsProps {
+    reviews: ReviewData[];
+}
+
+const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews }) => {
+    const displayReviews = reviews.length > 0 ? reviews : [];
+
+    return (
+        <section className="home-reviews-section">
+            <div className="container">
+                <div className='sectionheadings'>
+                    <div className='sectionheadingstext'>
+                        <h2 className="section-title">Explore Our Umrah Packages</h2>
+                        <p className="section-subtitle">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip
+                        </p>
+                    </div>
+                    <div className='rightside justify-content-end'>
+                        <div className="swiper-nav-btns ">
+                            <button className="swiper-nav-btn prev prev-review">
+                                <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                            </button>
+                            <button className="swiper-nav-btn next next-review">
+                                <img src="/nextarrow.svg" alt="" />
+                            </button>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            <div className="reviews-carousel">
+                    <Swiper
+                        modules={[Navigation]}
+                        slidesPerView={1}
+                        navigation={{
+                            prevEl: '.prev-review',
+                            nextEl: '.next-review',
+                        }}
+                        breakpoints={{
+                            640: { slidesPerView: 2 },
+                            1024: { slidesPerView: 3 },
+                            1280: { slidesPerView: 4 },
+                        }}
+                    >
+                        {displayReviews.map((review) => (
+                            <SwiperSlide key={review.id}>
+                                <div className="review-card">
+                                    <div className='reviewcardinner'>
+                                        <div className="reviewer-avatar">
+                                            <img src={review.avatar || '/placeholder-user.png'} alt={review.name} />
+                                        </div>
+                                        <div className='review-content'>
+                                            <p>
+                                                {review.comment}
+                                            </p>
+                                            <div className="reviewer-details">
+                                                <div className='reviewerinfo'>
+                                                    <h4 className="reviewer-name">{review.name}</h4>
+                                                    <p className="reviewer-location">{review.location}</p>
+                                                </div>                                       
+                                                <div className="reviewer-rating">
+                                                    {Array.from({ length: 5 }).map((_, i) => (
+                                                        <span key={i} className={i < review.rating ? 'star-filled' : 'star-empty'}>
+                                                            <img src="/star.svg" alt="" />
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+            </div>
+        </section>
+    );
+};
+
+export default HomeReviews;

@@ -1,0 +1,89 @@
+.umrah-hajj-services {
+    padding-top: 60px;
+
+    .services-header {
+        margin-bottom: 60px;
+
+        .sectionheadingstext.centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+
+            &::before,
+            &::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: 1fr 536px;
+        gap: 24px;
+        align-items: center;
+    }
+
+    .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow: hidden;
+
+    }
+
+    .service-card {
+        display: grid;
+        grid-template-columns: 176px 1fr;
+        align-items: center;
+        gap: 20px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: translateX(10px);
+        }
+
+        .service-icon {
+            overflow: hidden;
+            height: 129px;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        .service-info {
+            h3 {
+                font-size: 18px;
+                color: var(--color-primary);
+                font-weight: 700;
+                margin-bottom: 8px;
+                font-family: var(--font-heading);
+            }
+
+            p {
+                font-size: 16px;
+                line-height: 1.2;
+                color: var(--color-text);
+                margin: 0;
+                display: -webkit-box;
+                line-clamp: 5;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+    }
+
+    .services-main-image {
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 18px;
+        }
+    }
+}
