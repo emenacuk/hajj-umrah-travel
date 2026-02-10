@@ -1,5 +1,5 @@
 import { fetchUmrahPackage } from '@/utils/api';
-import UmrahPackageTemplate from '@/templates/UmrahPackageTemplate';
+import { resolveTemplate } from '@/utils/templateResolver';
 import { notFound } from 'next/navigation';
 import { dynamicParams } from '@/data/static-routes';
 
@@ -20,8 +20,11 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
     notFound();
   }
 
+  const routeConfig = dynamicParams.umrah.find(route => route.id === params.id);
+  const templateName = routeConfig?.template || 'single_umrah';
+
   const pageData = {
-    template_name: 'umrah_package',
+    template_name: templateName,
     title: packageData.title,
     content: {
       package: packageData,
@@ -35,7 +38,7 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
     },
   };
 
-  return <UmrahPackageTemplate data={pageData} />;
+  return resolveTemplate(pageData.template_name, pageData);
 }
 
 

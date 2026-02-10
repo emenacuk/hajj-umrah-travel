@@ -193,7 +193,85 @@ export const mockHomePageData: PageData = {
         shifting: false
       },
       {
+        id: 'hajj-1a',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Non Shifting Hajj Package',
+        price: 2965,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: false
+      },
+      {
+        id: 'hajj-1b',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Non Shifting Hajj Package',
+        price: 2965,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: false
+      },
+      {
+        id: 'hajj-1c',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Non Shifting Hajj Package',
+        price: 2965,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: false
+      },
+      {
+        id: 'hajj-1d',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Non Shifting Hajj Package',
+        price: 2965,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: false
+      },
+      {
         id: 'hajj-2',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Shifting Hajj Package',
+        price: 3265,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: true
+      },
+      {
+        id: 'hajj-2a',
+        type: 'hajj',
+        title: '14 Nights 5 Stars Shifting Hajj Package',
+        price: 3265,
+        rating: 5,
+        image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
+        makkahHotel: 'Al Kiswah Towers Makkah',
+        madinahHotel: 'Millennium Al Aqeeq Hotel',
+        nights: 14,
+        stars: 5,
+        shifting: true
+      },
+      {
+        id: 'hajj-2b',
         type: 'hajj',
         title: '14 Nights 5 Stars Shifting Hajj Package',
         price: 3265,
@@ -217,6 +295,45 @@ export const mockHomePageData: PageData = {
         nights: 18,
         stars: 5,
         shifting: false
+      },
+      {
+        id: 'hajj-4',
+        type: 'hajj',
+        title: '21 Nights Shifting Economy Hajj Package',
+        price: 2450,
+        rating: 3,
+        image: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800',
+        makkahHotel: 'Economy Shifting Hotel',
+        madinahHotel: 'Economy Madinah Hotel',
+        nights: 21,
+        stars: 3,
+        shifting: true
+      },
+      {
+        id: 'hajj-5',
+        type: 'hajj',
+        title: '15 Nights Non-Shifting Standard Hajj Package',
+        price: 2750,
+        rating: 4,
+        image: 'https://images.unsplash.com/photo-1565552136439-3898162e082c?w=800',
+        makkahHotel: 'Standard Makkah Hotel',
+        madinahHotel: 'Standard Madinah Hotel',
+        nights: 15,
+        stars: 4,
+        shifting: false
+      },
+      {
+        id: 'hajj-6',
+        type: 'hajj',
+        title: '25 Nights Deluxe Shifting Hajj Package',
+        price: 3150,
+        rating: 4,
+        image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        makkahHotel: 'Deluxe Shifting Makkah',
+        madinahHotel: 'Deluxe Madinah Hotel',
+        nights: 25,
+        stars: 4,
+        shifting: true
       }
     ],
     features: [
@@ -251,20 +368,20 @@ export const mockHomePageData: PageData = {
         answer: 'Finding the best Hajj package requires careful research. Look for packages that include all necessary services, have good hotel locations, provide experienced guides, and offer proper visa assistance. Check for ATOL protection and read customer testimonials.'
       },
       {
-        question: 'What documents are required for Umrah?',
-        answer: 'For Umrah, you typically need a valid passport, Umrah visa, vaccination certificates, and proof of accommodation. Requirements may vary, so check with your travel agency for the most current documentation needed.'
+        question: 'What is the difference between Shifting and Non-Shifting Hajj packages?',
+        answer: 'In a Non-Shifting package, you stay in one hotel in Makkah close to the Haram for the entire duration. In a Shifting package, you stay in an apartment-style accommodation far from the Haram during peak Hajj days to reduce costs, and then move to a hotel closer to the Haram after Hajj.'
       },
       {
-        question: 'When is the best time to perform Umrah?',
-        answer: 'Umrah can be performed at any time of the year. However, many prefer to perform it during Ramadan for greater spiritual rewards, or during the off-peak seasons for better prices and less crowding.'
+        question: 'What documents are required for Hajj?',
+        answer: 'For Hajj, you need a valid passport (at least 6 months validity), Hajj visa, Meningitis ACWY vaccination certificate, passport-sized photos, and proof of relationship for Mahram (if applicable).'
       },
       {
-        question: 'What is included in the Umrah package?',
-        answer: 'Typically, Umrah packages include flights, hotel accommodation in Makkah and Madinah, ground transportation, Umrah visa processing, and sometimes meals. Check with your travel agency for specific inclusions.'
+        question: 'Is Qurbani included in the Hajj packages?',
+        answer: 'Qurbani (sacrifice) is usually not included in the base price of Hajj packages unless specified. It can be arranged for an additional fee of approximately £150-£200.'
       },
       {
-        question: 'How far in advance should I book?',
-        answer: 'It is recommended to book your Umrah or Hajj package at least 2-3 months in advance to secure the best prices and availability, especially during peak seasons like Ramadan.'
+        question: 'What is ATOL protection?',
+        answer: 'ATOL (Air Travel Organisers\' Licensing) is a UK financial protection scheme. If an ATOL-protected travel company ceases trading, the scheme ensures you don\'t lose your money or get stranded abroad. All our Hajj and Umrah packages are ATOL protected.'
       }
     ],
     reviews: [

@@ -7,6 +7,7 @@ import StaticWithBannerTemplate from '@/templates/StaticWithBannerTemplate';
 import ContactTemplate from '@/templates/ContactTemplate';
 import BlogTemplate from '@/templates/BlogTemplate';
 import SingleUmrahTemplate from '@/templates/SingleUmrahTemplate';
+import CustomizePackage from '@/templates/CustomizePackage';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -46,6 +47,12 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
     case 'single_umrah':
     case 'single-umrah':
       return <SingleUmrahTemplate data={pageData} />;
+
+    case 'customize_package':
+    case 'customize-package':
+    case 'customizepackage':
+    case 'customize-hajj-umrah':
+      return <CustomizePackage data={pageData} />;
 
     default:
       return <WithoutBannerTemplate data={pageData} />;

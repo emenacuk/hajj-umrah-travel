@@ -16,6 +16,7 @@
 @import 'components/customize-banner';
 @import 'components/home-reviews';
 @import 'components/umrah-hajj-services';
+@import 'components/customize-package';
 @import 'components/scroll-detail';
 @import 'components/footer';
 
@@ -304,3 +305,15 @@ img {
     border-radius: 8px;
   }
 }
+
+.faq-section {
+  margin-top: 100px;
+  margin-bottom: 100px;
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
