@@ -8,16 +8,20 @@ interface BlogCardProps {
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <Link href={`/blog/${post.slug}`} className="blog-card">
-      <div className="blog-image-wrapper">
-        <img src={post.image} alt={post.title} />
-      </div>
-      <div className="blog-content">
-        <h3>{post.title}</h3>
-        <p className="blog-excerpt">{post.excerpt}</p>
-        <div className="blog-meta">
-          {post.date && <span>{new Date(post.date).toLocaleDateString()}</span>}
-          {post.author && <span>{post.author}</span>}
+    <Link href={`/blog/${post.slug}`}>
+      <div className="blog-card">      
+        <div className="blog-image-wrapper">
+          <img src={post.image} alt={post.title} />
+        </div>        
+        <div className="blog-content">       
+          <h3 className="blog-title">{post.title}</h3>
+          <div className="blog-meta">
+            <span className="author">{post.author || 'Admin'}</span>
+            <div className="date-wrapper">
+              <img src="/blogtime.svg" alt="clock" className="meta-icon" />
+              <span className="date">{post.date}</span>
+            </div>
+          </div>
         </div>
       </div>
     </Link>
