@@ -57,7 +57,7 @@ export default function Header() {
                         <Link href="/hajj" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
                             Hajj Package
                         </Link>
-                        <Link href="/customize" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>
+                        <Link href="/customize-hajj-umrah" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>
                             Customize Package
                         </Link>
                     </nav>
