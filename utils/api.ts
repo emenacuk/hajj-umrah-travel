@@ -41,6 +41,31 @@ export async function fetchPageData(slug: string): Promise<any> {
             faqs: mockHomePageData.content.faqs || []
           }
         };
+      case 'hajj-package-2026':
+        return {
+          template_name: 'hajj_package',
+          title: 'Hajj Packages 2026',
+          content: {
+            banner: {
+              title: 'Hajj Packages 2026',
+              description: 'Join us for the journey of a lifetime. Book your Hajj 2026 package today with Bismillah Travel.',
+              image: '/homebanner.png'
+            },
+            faqs: mockHomePageData.content.faqs || []
+          }
+        };
+      case 'customize-hajj-umrah':
+        return {
+          template_name: 'customize_package',
+          title: 'Customize Your Hajj & Umrah Package',
+          content: {
+            banner: {
+              title: 'Customize Your Package',
+              description: 'Tailor your spiritual journey to your preferences.',
+              image: '/homebanner.png'
+            }
+          }
+        };
       default:
         return {
           template_name: 'without_banner',

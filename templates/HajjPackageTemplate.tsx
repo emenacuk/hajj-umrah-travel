@@ -2,14 +2,17 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { PageData, HajjPackageData, HotelData, ReviewData } from '@/types';
+import { PageData, HajjPackageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import HajjPackageCard from '@/components/cards/HajjPackageCard';
-import Reviews from '@/components/common/Reviews';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Link from 'next/link';
+import { mockHomePageData } from '@/data/mockData';
 import '@/styles/components/_package-detail.scss';
+import { ScrollDetail } from '@/components/sections/ScrollDetail';
+import FAQ from '@/components/common/FAQ';
 
 interface HajjPackageTemplateProps {
   data: PageData;
@@ -17,11 +20,12 @@ interface HajjPackageTemplateProps {
 
 export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) {
   const bannerData = data.content?.banner || {};
-  const packageData = data.content?.package || {};
-  const hotels = data.content?.hotels || [];
-  const reviews = data.content?.reviews || [];
-  const relatedPackages = data.content?.relatedPackages || [];
-  const inclusions = data.content?.inclusions || [];
+  const faqs = data.content?.faqs || [];
+
+  // Get packages from mock data for sliders
+  const allHajjPackages = mockHomePageData.content?.hajjPackages || [];
+  const shiftingPackages = allHajjPackages.filter((pkg: any) => pkg.shifting === true);
+  const nonShiftingPackages = allHajjPackages.filter((pkg: any) => pkg.shifting === false);
 
   return (
     <>
@@ -31,210 +35,145 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
       {/* Package Details */}
       <section className="section">
         <div className="container">
-          <div className="package-detail-layout">
-            <div className="package-detail-left">
-              <div className="package-rating">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className={i < (packageData.rating || 5) ? 'star-filled' : 'star'}>
-                    ★
-                  </span>
-                ))}
-              </div>
-              <h1>{packageData.title || data.title}</h1>
 
-              {/* Hotel Information */}
-              {packageData.makkahHotel && (
-                <div className="hotel-info">
-                  <div className="hotel-item">
-                    <strong>Makkah Hotel Nights:</strong>
-                    <span>{packageData.makkahHotel}</span>
-                    <span className="nights">{packageData.makkahNights || '05'} Nights</span>
+          {/* All Hajj Shifting Packages Slider */}
+          {shiftingPackages.length > 0 && (
+            <section className="section exploration-section">
+              <div className="container">
+                <div className='sectionheadings'>
+                  <div className='sectionheadingstext'>
+                    <h2 className="section-title">All Hajj Shifting Packages</h2>
+                    <p className="section-subtitle">
+                      Explore our range of shifting Hajj packages, offering a balance of comfort and convenience
+                      during the most important days of your pilgrimage.
+                    </p>
                   </div>
-                </div>
-              )}
-
-              {packageData.madinahHotel && (
-                <div className="hotel-info">
-                  <div className="hotel-item">
-                    <strong>Madinah Hotel Nights:</strong>
-                    <span>{packageData.madinahHotel}</span>
-                    <span className="nights">{packageData.madinahNights || '05'} Nights</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Package Options */}
-              {packageData.options && (
-                <div className="package-options">
-                  {packageData.options.map((option: any, index: number) => (
-                    <div key={index} className="package-option">
-                      <h4>{option.name}</h4>
-                      <div className="package-price">
-                        starting from <span className="price-amount">£ {option.price}</span> per person
-                      </div>
+                  <div className='rightside'>
+                    <div className="swiper-nav-btns">
+                      <button id='prev-shifting' className="swiper-nav-btn prev prev-exploration">
+                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <button id='next-shifting' className="swiper-nav-btn next next-exploration">
+                        <img src="/nextarrow.svg" alt="" />
+                      </button>
                     </div>
-                  ))}
-                </div>
-              )}
-
-              <button className="btn btn--secondary">Enquire Now</button>
-            </div>
-
-            <div className="package-detail-right">
-              {/* Image Gallery */}
-              {packageData.images && packageData.images.length > 0 && (
-                <div className="package-gallery">
-                  <Swiper
-                    modules={[Navigation, Pagination]}
-                    spaceBetween={10}
-                    slidesPerView={1}
-                    navigation
-                    pagination={{ clickable: true }}
-                  >
-                    {packageData.images.map((image: string, index: number) => (
-                      <SwiperSlide key={index}>
-                        <img src={image} alt={`${packageData.title} - Image ${index + 1}`} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Package Details Section */}
-          <div className="package-details-section">
-            <h2>PACKAGE DETAILS</h2>
-            {data.content?.packageDescription && (
-              <p>{data.content.packageDescription}</p>
-            )}
-
-            {/* Service Icons */}
-            <div className="service-icons">
-              {inclusions.map((inclusion: string, index: number) => (
-                <div key={index} className="service-icon">
-                  <span>{inclusion}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="package-actions">
-              <button className="btn btn--primary">Book This Package</button>
-              <button className="btn btn--outline">Customize Package</button>
-            </div>
-
-            {/* Inclusions List */}
-            {inclusions.length > 0 && (
-              <div className="inclusions-list">
-                <h3>Inclusions</h3>
-                <ul>
-                  {inclusions.map((inclusion: string, index: number) => (
-                    <li key={index}>{inclusion}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-
-          {/* Hotel Details */}
-          {hotels.length > 0 && (
-            <div className="hotels-section">
-              <h2>HOTEL DETAILS:</h2>
-              <div className="hotels-grid">
-                {hotels.map((hotel: HotelData) => (
-                  <div key={hotel.id} className="hotel-card">
-                    {hotel.images && hotel.images.length > 0 && (
-                      <Swiper
-                        modules={[Navigation]}
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        navigation
-                      >
-                        {hotel.images.map((image: string, index: number) => (
-                          <SwiperSlide key={index}>
-                            <img src={image} alt={hotel.name} />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    )}
-                    <div className="hotel-card-content">
-                      <div className="hotel-rating">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} className={i < hotel.rating ? 'star-filled' : 'star'}>
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <h3>{hotel.name}</h3>
-                      <p className="hotel-location">Hotel in {hotel.location}</p>
-                      {hotel.description && <p>{hotel.description}</p>}
-                      <a href="#" className="see-more">See More →</a>
-                    </div>
+                    <Link href="/hajj-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Contact Information */}
-          <div className="contact-info-section">
-            <div className="contact-cards">
-              <div className="contact-card contact-card--phone">
-                <div className="contact-icon">📞</div>
-                <h3>Call Now!</h3>
-                <p>{data.content?.contact?.phone || '0208-000-000'}</p>
-              </div>
-              <div className="contact-card contact-card--email">
-                <div className="contact-icon">✉️</div>
-                <h3>Email Us!</h3>
-                <p>{data.content?.contact?.email || 'info@example.co.uk'}</p>
-              </div>
-              <div className="contact-card contact-card--whatsapp">
-                <div className="contact-icon">💬</div>
-                <h3>WhatsApp!</h3>
-                <p>{data.content?.contact?.whatsapp || '0208-000-000'}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Reviews */}
-          {reviews.length > 0 && (
-            <div className="reviews-section">
-              <h2>What Our Clients Says</h2>
-              <Reviews reviews={reviews} />
-            </div>
-          )}
-
-          {/* Related Packages */}
-          {relatedPackages.length > 0 && (
-            <div className="related-packages-section">
-              <div className="section-header">
-                <h2>More Relevant Packages</h2>
-                <button className="btn btn--primary">View All Packages</button>
-              </div>
-              <div className="packages-grid">
+              <div className="packages-swiper-wrapper">
                 <Swiper
+                  key="shifting-hajj-swiper"
                   modules={[Navigation, Pagination]}
-                  spaceBetween={20}
                   slidesPerView={1}
-                  navigation
-                  pagination={{ clickable: true }}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-shifting',
+                    nextEl: '#next-shifting',
+                  }}
+                  className="packages-swiper"
                   breakpoints={{
-                    640: {
-                      slidesPerView: 2,
-                    },
+                    640: { slidesPerView: 1 },
+                    1024: { slidesPerView: 2 },
+                    1280: { slidesPerView: 3 },
                   }}
                 >
-                  {relatedPackages.map((pkg: HajjPackageData) => (
+                  {shiftingPackages.map((pkg: any) => (
                     <SwiperSlide key={pkg.id}>
                       <HajjPackageCard package={pkg} />
                     </SwiperSlide>
                   ))}
                 </Swiper>
               </div>
-            </div>
+            </section>
           )}
+
+          {/* All Hajj Non-Shifting Packages Slider */}
+          {nonShiftingPackages.length > 0 && (
+            <section className="section exploration-section umrah-slider-section">
+              <div className="container">
+                <div className='sectionheadings'>
+                  <div className='sectionheadingstext'>
+                    <h2 className="section-title">All Hajj Non-Shifting Packages</h2>
+                    <p className="section-subtitle">
+                      Our non-shifting Hajj packages provide you with fixed hotel accommodation in Makkah
+                      close to the Haram throughout your entire stay for maximum convenience.
+                    </p>
+                  </div>
+                  <div className='rightside'>
+                    <div className="swiper-nav-btns">
+                      <button id='prev-nonshifting' className="swiper-nav-btn prev prev-exploration">
+                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <button id='next-nonshifting' className="swiper-nav-btn next next-exploration">
+                        <img src="/nextarrow.svg" alt="" />
+                      </button>
+                    </div>
+                    <Link href="/hajj-packages" className="btn btn--primary">View All Packages</Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="packages-swiper-wrapper">
+                <Swiper
+                  key="non-shifting-hajj-swiper"
+                  modules={[Navigation, Pagination]}
+                  slidesPerView={1}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-nonshifting',
+                    nextEl: '#next-nonshifting',
+                  }}
+                  className="packages-swiper"
+                  breakpoints={{
+                    640: { slidesPerView: 1 },
+                    1024: { slidesPerView: 2 },
+                    1280: { slidesPerView: 3 },
+                  }}
+                >
+                  {nonShiftingPackages.map((pkg: any) => (
+                    <SwiperSlide key={pkg.id}>
+                      <HajjPackageCard package={pkg} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </section>
+          )}
+          <ScrollDetail
+            title="Hajj Services Detail"
+            image="/scrollimg.png"
+            content={`
+          <h2>Why Choose Bismillah Travel for Your Hajj Journey?</h2>
+          <p>Hajj is the journey of a lifetime, and at Bismillah Travel, we understand the spiritual significance of this pilgrimage. Our goal is to provide a seamless and deeply spiritual experience for every pilgrim. We offer comprehensive Hajj packages tailored to meet your specific needs, whether you prefer shifting or non-shifting accommodations.</p>
+          <h3>Our Hajj Packages Include:</h3>
+          <ul>
+            <li>Premium Accommodations near the Haram</li>
+            <li>Experienced Religious Guides and Group Leaders</li>
+            <li>Full Transportation within Saudi Arabia</li>
+            <li>24/7 On-ground Support</li>
+            <li>Assistance with Visas and Documentation</li>
+          </ul>
+          <p>We take care of all the logistics so you can focus entirely on your worship and connection with Allah (SWT). Join the thousands of satisfied pilgrims who have performed Hajj with Bismillah Travel.</p>
+        `}
+          />
         </div>
+        {faqs.length > 0 && (
+          <section className="section faq-section">
+            <div className="container">
+              <div className='sectionheadings'>
+                <div className='sectionheadingstext'>
+                  <h2 className="section-title">Frequently Asked Questions</h2>
+                  <p className="section-subtitle">
+                    Find answers to common questions about our Hajj packages and the pilgrimage experience.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <FAQ items={faqs} />
+          </section>
+        )}
       </section>
     </>
   );

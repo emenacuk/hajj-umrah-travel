@@ -20,6 +20,11 @@ export default async function DynamicPage({ params }: PageProps) {
     notFound();
   }
 
+  const routeConfig = dynamicParams.general?.find(route => route.slug === params.slug);
+  if (routeConfig?.template) {
+    pageData.template_name = routeConfig.template;
+  }
+
   return resolveTemplate(pageData.template_name, pageData);
 }
 

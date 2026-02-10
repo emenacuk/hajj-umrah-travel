@@ -1,5 +1,5 @@
 import { fetchHajjPackage } from '@/utils/api';
-import HajjPackageTemplate from '@/templates/HajjPackageTemplate';
+import { resolveTemplate } from '@/utils/templateResolver';
 import { notFound } from 'next/navigation';
 import { dynamicParams } from '@/data/static-routes';
 
@@ -20,8 +20,11 @@ export default async function HajjPackagePage({ params }: HajjPackagePageProps) 
     notFound();
   }
 
+  const routeConfig = dynamicParams.hajj.find(route => route.id === params.id);
+  const templateName = routeConfig?.template || 'hajj_package';
+
   const pageData = {
-    template_name: 'hajj_package',
+    template_name: templateName,
     title: packageData.title,
     content: {
       package: packageData,
@@ -35,7 +38,7 @@ export default async function HajjPackagePage({ params }: HajjPackagePageProps) 
     },
   };
 
-  return <HajjPackageTemplate data={pageData} />;
+  return resolveTemplate(pageData.template_name, pageData);
 }
 
 

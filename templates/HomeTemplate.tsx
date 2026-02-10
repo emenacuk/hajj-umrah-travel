@@ -62,7 +62,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                     <img src="/nextarrow.svg" alt="" />
                   </button>
                 </div>
-                <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
+                <Link href="/best-umrah-packages-2025-2026" className="btn btn--primary">View All Packages</Link>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                     <img src="/nextarrow.svg" alt="" />
                   </button>
                 </div>
-                <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
+                <Link href="/december-umrah-packages" className="btn btn--primary">View All Packages</Link>
               </div>
             </div>
           </div>
