@@ -82,8 +82,8 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                   </p>
                 </div>
               </div>
-            </div>
-            <FAQ items={faqs} />
+              <FAQ items={faqs} />
+            </div>            
           </section>
         )}
       </section>

@@ -17,6 +17,7 @@
 @import 'components/home-reviews';
 @import 'components/umrah-hajj-services';
 @import 'components/scroll-detail';
+@import 'components/footer';
 
 // Variables
 :root {
@@ -301,16 +302,5 @@ img {
     height: auto;
     margin: 2rem 0;
     border-radius: 8px;
-  }
-}
-
-.faq-section {
-  margin-top: 100px;
-  margin-bottom: 100px;
-
-  .faq-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
   }
 }

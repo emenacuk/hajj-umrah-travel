@@ -13,6 +13,7 @@ import CustomizeBanner from '@/components/banners/CustomizeBanner';
 import HomeReviews from '@/components/sections/HomeReviews';
 import UmrahHajjServices from '@/components/sections/UmrahHajjServices';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
+import BlogSection from '@/components/sections/BlogSection';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -30,6 +31,45 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
   const faqs = data.content?.faqs || [];
   const reviews = data.content?.reviews || [];
   const features = data.content?.features || [];
+
+  const dummyPosts = [
+    {
+      id: '1',
+      title: 'Is It Better To Go To Makkah Or Madinah First',
+      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+      image: '/blog1.png',
+      date: '16 December, 2025',
+      author: 'Admin',
+      slug: 'better-to-go-to-makkah-or-madinah-first'
+    },
+    {
+      id: '2',
+      title: 'How Can Pilgrims Protect Themselves from Getting Sick?',
+      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+      image: '/blog1.png',
+      date: '16 December, 2025',
+      author: 'Admin',
+      slug: 'how-can-pilgrims-protect-themselves-from-getting-sick'
+    },
+    {
+      id: '3',
+      title: 'Which Is The Best Time To Perform Umrah',
+      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+      image: '/blog1.png',
+      date: '16 December, 2025',
+      author: 'Admin',
+      slug: 'which-is-the-best-time-to-perform-umrah'
+    },
+    {
+      id: '4',
+      title: 'Common Mistakes During Hajj',
+      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+      image: '/blog1.png',
+      date: '16 December, 2025',
+      author: 'Admin',
+      slug: 'common-mistakes-during-hajj'
+    }
+  ];
 
   return (
     <>
@@ -370,10 +410,10 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
         }}
       />
 
-     
+
 
       {/* Partners Section - Placeholder or using image */}
-      <section className="section partners-section text-center">
+      <section className="section partners-section">
         <div className="container">
           <div className='sectionheadings'>
             <div className='sectionheadingstext'>
@@ -400,16 +440,10 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
           <Swiper
             modules={[Navigation]}
             slidesPerView="auto"
-            centeredSlides={true}
             spaceBetween={24}
-            loop={umrahPackages.length > 1}
             navigation={{
               prevEl: '.partner-prev',
               nextEl: '.partner-next',
-            }}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false
             }}
             breakpoints={{
               640: { slidesPerView: 2 },
@@ -417,7 +451,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             }}
             className="packages-swiper partner-swiper"
           >
-            {['Air_China-Logo.wine.png', 'iata-logo.png', 'protected-icon.png', 'hajj-ministry.png'].map((pkg: string) => (
+            {['Air_China-Logo.wine.png', 'Air_China-Logo.wine.png', 'Air_China-Logo.wine.png', 'Air_China-Logo.wine.png'].map((pkg: string) => (
               <SwiperSlide key={`partner-${pkg}`}>
                 <img src={pkg} alt="Partners" />
               </SwiperSlide>
@@ -426,7 +460,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
         </div>
       </section>
 
-       <ScrollDetail
+      <ScrollDetail
         title="Umrah & Hajj Services Scroll Detail"
         image="/scrollimg.png"
         content={`
@@ -456,11 +490,14 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 </p>
               </div>
             </div>
+
+            <FAQ items={faqs} />
           </div>
-          <FAQ items={faqs} />
         </section>
       )}
+
+      {/* Blog Section */}
+      <BlogSection posts={dummyPosts} />
     </>
   );
 }
-

@@ -34,11 +34,6 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
     <>
       {/* Banner */}
       {bannerData && <InnerBanner data={bannerData} />}
-
-      {/* Package Details */}
-      <section className="section">
-        <div className="container">
-
           {/* 3 Star Umrah Packages Slider */}
           {threeStarPackages.length > 0 && (
             <section className="section exploration-section">
@@ -64,38 +59,37 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/3-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-              </div>
-
-              <div className="packages-swiper-wrapper">
-                <Swiper
-                  key="three-star-swiper"
-                  modules={[Navigation, Pagination]}
-                  slidesPerView={1}
-                  spaceBetween={24}
-                  navigation={{
-                    prevEl: '#prev-3star',
-                    nextEl: '#next-3star',
-                  }}
-                  className="packages-swiper"
-                  breakpoints={{
-                    640: { slidesPerView: 1 },
-                    1024: { slidesPerView: 2 },
-                    1280: { slidesPerView: 2 },
-                  }}
-                >
-                  {threeStarPackages.map((pkg: any) => (
-                    <SwiperSlide key={pkg.id}>
-                      <UmrahPackageCard package={pkg} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
+                <div className="packages-swiper-wrapper">
+                  <Swiper
+                    key="three-star-swiper"
+                    modules={[Navigation, Pagination]}
+                    slidesPerView={1}
+                    spaceBetween={24}
+                    navigation={{
+                      prevEl: '#prev-3star',
+                      nextEl: '#next-3star',
+                    }}
+                    className="packages-swiper"
+                    breakpoints={{
+                      640: { slidesPerView: 1 },
+                      1024: { slidesPerView: 2 },
+                      1280: { slidesPerView: 2 },
+                    }}
+                  >
+                    {threeStarPackages.map((pkg: any) => (
+                      <SwiperSlide key={pkg.id}>
+                        <UmrahPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+               </div>
             </section>
           )}
 
           {/* 4 Star Umrah Packages Slider */}
           {fourStarPackages.length > 0 && (
-            <section className="section exploration-section umrah-slider-section">
+            <section className="section exploration-section ">
               <div className="container">
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
@@ -118,36 +112,37 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/4-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-              </div>
+             
 
-              <div className="packages-swiper-wrapper">
-                <Swiper
-                  key="four-star-swiper"
-                  modules={[Navigation, Pagination]}
-                  slidesPerView={1}
-                  spaceBetween={24}
-                  navigation={{
-                    prevEl: '#prev-4star',
-                    nextEl: '#next-4star',
-                  }}
-                  className="packages-swiper"
-                  breakpoints={{
-                    640: { slidesPerView: 1 },
-                    1024: { slidesPerView: 2 },
-                    1280: { slidesPerView: 2 },
-                  }}
-                >
-                  {fourStarPackages.map((pkg: any) => (
-                    <SwiperSlide key={pkg.id}>
-                      <UmrahPackageCard package={pkg} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
+                <div className="packages-swiper-wrapper">
+                  <Swiper
+                    key="four-star-swiper"
+                    modules={[Navigation, Pagination]}
+                    slidesPerView={1}
+                    spaceBetween={24}
+                    navigation={{
+                      prevEl: '#prev-4star',
+                      nextEl: '#next-4star',
+                    }}
+                    className="packages-swiper"
+                    breakpoints={{
+                      640: { slidesPerView: 1 },
+                      1024: { slidesPerView: 2 },
+                      1280: { slidesPerView: 2 },
+                    }}
+                  >
+                    {fourStarPackages.map((pkg: any) => (
+                      <SwiperSlide key={pkg.id}>
+                        <UmrahPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+               </div>
             </section>
           )}
           {fiveStarPackages.length > 0 && (
-            <section className="section exploration-section umrah-slider-section">
+            <section className="section exploration-section ">
               <div className="container">
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
@@ -170,31 +165,32 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/5-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-              </div>
+             
 
-              <div className="packages-swiper-wrapper">
-                <Swiper
-                  key="five-star-swiper"
-                  modules={[Navigation, Pagination]}
-                  slidesPerView={1}
-                  spaceBetween={24}
-                  navigation={{
-                    prevEl: '#prev-5star',
-                    nextEl: '#next-5star',
-                  }}
-                  className="packages-swiper"
-                  breakpoints={{
-                    640: { slidesPerView: 1 },
-                    1024: { slidesPerView: 2 },
-                    1280: { slidesPerView: 2 },
-                  }}
-                >
-                  {fiveStarPackages.map((pkg: any) => (
-                    <SwiperSlide key={pkg.id}>
-                      <UmrahPackageCard package={pkg} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                <div className="packages-swiper-wrapper">
+                  <Swiper
+                    key="five-star-swiper"
+                    modules={[Navigation, Pagination]}
+                    slidesPerView={1}
+                    spaceBetween={24}
+                    navigation={{
+                      prevEl: '#prev-5star',
+                      nextEl: '#next-5star',
+                    }}
+                    className="packages-swiper"
+                    breakpoints={{
+                      640: { slidesPerView: 1 },
+                      1024: { slidesPerView: 2 },
+                      1280: { slidesPerView: 2 },
+                    }}
+                  >
+                    {fiveStarPackages.map((pkg: any) => (
+                      <SwiperSlide key={pkg.id}>
+                        <UmrahPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
               </div>
             </section>
           )}
@@ -214,7 +210,6 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
           <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
         `}
           />
-        </div>
         {faqs.length > 0 && (
           <section className="section faq-section">
             <div className="container">
@@ -228,11 +223,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                   </p>
                 </div>
               </div>
+            
+              <FAQ items={faqs} />
             </div>
-            <FAQ items={faqs} />
           </section>
         )}
-      </section>
     </>
   );
 }

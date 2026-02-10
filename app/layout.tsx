@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.scss';
 import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <Footer />
         <Toaster richColors position="bottom-right" />
       </body>
     </html>
