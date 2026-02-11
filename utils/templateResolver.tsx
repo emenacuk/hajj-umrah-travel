@@ -9,6 +9,7 @@ import BlogTemplate from '@/templates/BlogTemplate';
 import SingleUmrahTemplate from '@/templates/SingleUmrahTemplate';
 import CustomizePackage from '@/templates/CustomizePackage';
 import VisaPageTemplate from '@/templates/VisaTemplate';
+import SingleListing from '@/templates/SingleListing';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -47,7 +48,7 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
     case 'singleumrahtemplate':
     case 'single_umrah':
     case 'single-umrah':
-      return <SingleUmrahTemplate data={pageData} />;
+      return <SingleListing data={pageData} />;
 
     case 'customize_package':
     case 'customize-package':
