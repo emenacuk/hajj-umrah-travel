@@ -1,3 +1,4 @@
+import { BlogPost } from '@/types';
 // Import mock data
 import {
   mockHomePageData,
@@ -19,6 +20,40 @@ export async function fetchPageData(slug: string): Promise<any> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 100));
     
+    if (slug.startsWith('blog/')) {
+      const postSlug = slug.replace('blog/', '');
+      const post = mockBlogPageData.content.posts?.find((p: BlogPost) => p.slug === postSlug) || mockBlogPageData.content.posts?.[0];
+
+      return {
+        template_name: 'blog_detail',
+        title: post?.title || 'Blog Post',
+        content: {
+          banner: {
+            title: post?.title || 'Blog Post',
+            image: '/innerbg.jpg'
+          },
+          body: `
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <h2>What are the primary reasons for visiting Makkah and Madinah?</h2>
+                    <img src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=1200" alt="Makkah" />
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <h2>How does travel logistics influence your decision?</h2>
+                    <img src="https://images.unsplash.com/photo-1565552136439-3898162e082c?w=1200" alt="Logistics" />
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <h2>Are there direct flights, and what are the travel times?</h2>
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200" alt="Flights" />
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    <h2>What are the flight options available to Makkah and Madinah?</h2>
+                    <img src="https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=1200" alt="Options" />
+                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                    <h2>Footwear for Men during Umrah</h2>
+                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+                `,
+          latestPosts: mockBlogPageData.content.posts?.filter((p: BlogPost) => p.slug !== postSlug).slice(0, 10) || []
+        }
+      };
+    }
+
     switch (slug) {
       case 'home':
         return mockHomePageData;
