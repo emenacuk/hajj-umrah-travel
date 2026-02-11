@@ -1,0 +1,108 @@
+.visa-info-section {
+  .visa-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 521px;
+    gap: 40px;
+    align-items: center;
+    margin-top: 40px;
+    .visa-text-column {
+      h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--color-primary);
+        font-family: var(--font-body);
+      }
+      p {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #4a4a4a;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  .visa-text {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #4a4a4a;
+    font-size: 1rem;
+  }
+  .visaImageContainer {
+    border-radius: 20px;
+    max-width: 521px;
+    overflow: hidden;
+  }
+  .visaImage {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+.visa-scroll-grid {
+  // margin-top: 100px;
+  max-height: 600px;
+  overflow-y: scroll;
+  margin: 100px 40px 0px 40px;
+  h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--color-primary);
+    font-family: var(--font-body);
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--color-primary);
+    font-family: var(--font-body);
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-black);
+    margin-bottom: 20px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 24px 0;
+  }
+
+  ul,
+  ol {
+    margin-left: 20px;
+    margin-bottom: 20px;
+
+    li {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: var(--color-black);
+    }
+  }
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-left: 6.5px solid transparent;
+    border-right: 6.5px solid transparent;
+    background-clip: content-box;
+    background-color: #707070; // Thinner vertical line
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: white;
+    border: 2px solid #707070;
+    border-radius: 100px;
+    background-clip: padding-box;
+  }
+}
+
+.section.faq-section{
+    margin-top: 0px !important;
+}

@@ -1,0 +1,202 @@
+// Blog Detail Hero Section (similar to blog-hero but can adapt if needed)
+.blog-detail-hero {
+  position: relative;
+  width: 100%;
+  height: 50vh; 
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  overflow: hidden;
+
+  .banner-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); 
+    }
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: var(--font-heading);
+    color: #fff !important;
+  }
+  
+  .section-subtitle {
+     color: #fff;
+     opacity: 0.8;
+     max-width: 800px;
+     margin: 0 auto;
+     font-size: 16px;
+     line-height: 1.6;
+  }
+}
+
+// Blog Detail Grid Layout
+.blog-detail-section {
+  padding: 60px 0;
+
+  .blog-detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; // Main content roughly 2/3, Sidebar 1/3
+    gap: 40px;
+    align-items: start;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Main Content Styling
+  .blog-content-column {
+    .blog-post-content {
+      // General Typography
+      p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: var(--color-text);
+        margin-bottom: 24px;
+        font-family: var(--font-body);
+      }
+
+      h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #D69A5E; // Gold for headings
+        margin-top: 40px;
+        margin-bottom: 20px;
+        font-family: var(--font-body);
+      }
+
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #D69A5E; 
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-family: var(--font-body);
+      }
+
+      ul, ol {
+        margin-left: 20px;
+        margin-bottom: 24px;
+        
+        li {
+             font-size: 16px;
+             line-height: 1.8;
+             color: var(--color-text);
+             margin-bottom: 10px;
+        }
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px; // Rounded corners for images
+        margin: 30px 0;
+        display: block;
+      }
+    }
+  }
+
+  // Sidebar Styling
+  .blog-sidebar-column {
+    position: sticky;
+    top: 20px;
+    .sidebar-widget {
+        background-color: #fff;
+        padding: 0;
+
+    }
+
+    .widget-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #D69A5E;
+      margin-bottom: 25px;
+      font-family: var(--font-body);
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      &::before {
+        content: "●";
+        font-size: 25px;
+        color: var(--color-primary);
+      }
+    }
+
+    .sidebar-posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      .blog-card {
+        .blog-image-wrapper {
+            height: 160px; // Significantly smaller for sidebar
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .blog-content {
+            padding: 0;
+            
+            .blog-title {
+                font-size: 15px; // Smaller text
+                color: var(--color-gray-dark);
+                line-height: 1.4;
+                margin-bottom: 5px;
+            }
+
+            .blog-meta {
+                font-size: 11px;
+                gap: 8px;
+                
+                .author {
+                    font-weight: 500;
+                }
+                
+                .date-wrapper {
+                    gap: 5px;
+                    &::before {
+                        font-size: 4px;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            .blog-title {
+                color: var(--color-primary);
+            }
+        }
+      }
+    }
+  }
+}
