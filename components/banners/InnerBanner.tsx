@@ -6,6 +6,7 @@ import '@/styles/components/_inner-banner.scss';
 
 interface InnerBannerProps {
   data: BannerData;
+  form?: boolean;
 }
 
 const data: BannerData = {
@@ -40,7 +41,7 @@ const data: BannerData = {
   }
 }
 
-export default function InnerBanner({ data: bannerData }: InnerBannerProps) {
+export default function InnerBanner({ data: bannerData, form = true }: InnerBannerProps) {
   const formData = bannerData.form || data.form;
   const backgroundImage = "/innerbg.jpg";
 
@@ -59,13 +60,16 @@ export default function InnerBanner({ data: bannerData }: InnerBannerProps) {
               {bannerData.description || "Experience the spiritual journey of a lifetime with our trusted Hajj & Umrah packages. We provide comprehensive services including flights, hotels, and guidance to ensure your pilgrimage is comfortable and spiritually fulfilling."}
             </p>
 
-            {formData ? (
-              <div className="inquiry-form-wrapper">
-                <InquiryForm data={formData} />
-              </div>
-            ) : (
-              <div className="placeholder-form">Form Data Missing</div>
+            {form === true && (
+              formData ? (
+                <div className="inquiry-form-wrapper">
+                  <InquiryForm data={formData} />
+                </div>
+              ) : (
+                <div className="placeholder-form">Form Data Missing</div>
+                )
             )}
+
           </div>
         </div>
       </div>
