@@ -293,7 +293,6 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   640: { slidesPerView: 2 },
                   1024: { slidesPerView: 3 },
                 }}
-                slidesOffsetBefore={-100}
               >
                 {hajjPackages.map((pkg: HajjPackageData) => (
                   <SwiperSlide key={pkg.id}>
@@ -301,13 +300,14 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   </SwiperSlide>
                 ))}
               </Swiper>
+               <div className="swiper-pagination-custom haj-pagination"></div>
             </div>
             <div className='imagearea'>
               <img src="/Hajj-pillgrim.png" alt="" />
             </div>
           </div>
 
-          <div className="swiper-pagination-custom haj-pagination"></div>
+         
         </section>
       )}
 

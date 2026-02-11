@@ -48,17 +48,14 @@ export default function Footer() {
                                 <Link href="/cookies">Cookies Policy</Link>
                                 <Link href="/blogs">Blogs</Link>
                             </div>
-                        </div>
-                        
+                        </div>                        
                         <div className="footer-payment-methods">
                             <img src="/dis.svg" alt="Discover" className="payment-icon" />
                             <img src="/msc.svg" alt="Mastercard" className="payment-icon" />
                             <img src="/vis.svg" alt="Visa" className="payment-icon" />
                             <img src="/ame.svg" alt="Amex" className="payment-icon" />
                         </div>
-                        </div>
-
-                        
+                        </div>                        
                     </div>
                  </div>
                 <div className='container'>

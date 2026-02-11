@@ -10,6 +10,17 @@ export default function Header() {
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [hijriData, setHijriData] = useState({ year: '', dayMonth: '' });
+    const [hasInnerBanner, setHasInnerBanner] = useState(false);
+
+    useEffect(() => {
+        const checkBanner = () => {
+            const banner = document.querySelector('.inner-banner');
+            setHasInnerBanner(!!banner);
+        };
+        const timer = setTimeout(checkBanner, 100);
+        return () => clearTimeout(timer);
+    }, [pathname]);
+
     useEffect(() => {
         const today = new Date();
         const dateStr = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
@@ -35,7 +46,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="site-header">
+            <header className={`site-header ${hasInnerBanner ? 'white' : ''}`}>
                 <div className="container header-container">
                     {/* Logo Section */}
                     <div className="logo-section">
@@ -43,9 +54,9 @@ export default function Header() {
                             <span></span>
                             <span></span>
                             <span></span>
-                        </div> 
+                        </div>
                         <Link href="/" className="logo-link">
-                            <span className={`logo-text ${pathname !== '/' ? 'white-text' : ''}`}>Logo Here</span>
+                            <span className={`logo-text`}>Logo Here</span>
                         </Link>
                     </div>
 
@@ -64,13 +75,13 @@ export default function Header() {
 
                     {/* Contact Pills */}
                     <div className="contact-pills">
-                        <a href="tel:02081457860" className={`contact-pill outline ${pathname !== '/' ? 'white-text' : ''}`}>
+                        <a href="tel:02081457860" className={`contact-pill outline`}>
                             0208 - 145 - 7860
                             <span className="icon-whatsapp">
                                 <img src="/whatsappicon.png" alt="whatsappicon" />
                             </span>
                         </a>
-                        <a href="tel:02081457860" className={`contact-pill outline ${pathname !== '/' ? 'white-text' : ''}`}>
+                        <a href="tel:02081457860" className={`contact-pill outline`}>
                             0208 - 145 - 7860
                             <span className="icon-headset">
                                 <img src="/callicon.png" alt="callicon" />

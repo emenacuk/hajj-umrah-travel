@@ -8,7 +8,7 @@ interface UmrahExplorationCardProps {
 export default function UmrahExplorationCard({ package: pkg }: UmrahExplorationCardProps) {
     return (
         <div className="umrah-exploration-card">
-            <Link href={`/${pkg.id}`}>
+            <Link href={`/umrah/${pkg.id}`}>
                 <div className="card-image">
                     <img src={pkg.image} alt={pkg.title} />
                     <div className="card-overlay">

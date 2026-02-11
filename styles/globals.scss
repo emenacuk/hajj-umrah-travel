@@ -153,6 +153,10 @@ img {
     max-width: 992px;
   }
 }
+.container-fluid{
+  padding: 0 53px;
+  max-width: 100%;
+}
 
 // Buttons
 .btn {
@@ -208,6 +212,18 @@ img {
       color: var(--color-dark);
     }
   }
+}
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn--secondary {
+  background: var(--color-secondary);
+  color: #fff;
+}
+.btn--dark {
+  background: var(--color-dark);
+  color: #fff;
 }
 
 // Utility Classes
@@ -307,9 +323,6 @@ img {
 }
 
 .faq-section {
-  margin-top: 100px;
-  margin-bottom: 100px;
-
   .faq-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

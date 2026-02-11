@@ -1,182 +1,354 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Thumbs, FreeMode } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import { PageData } from '@/types';
-import InnerBanner from '@/components/banners/InnerBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
-import { mockHomePageData } from '@/data/mockData';
-import '@/styles/components/_package-detail.scss';
-import { ScrollDetail } from '@/components/sections/ScrollDetail';
+import Reviews from '@/components/common/Reviews';
 import FAQ from '@/components/common/FAQ';
+import Link from 'next/link';
+import HomeReviews from '@/components/sections/HomeReviews';
+import PackageContactInfo from '@/components/sections/PackageContactInfo';
+
+import { useSearchParams } from 'next/navigation';
+
+import EnquiryModal from '@/components/common/EnquiryModal';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/thumbs';
+import 'swiper/css/free-mode';
+
+import '@/styles/components/_package-detail.scss';
 
 interface UmrahPackageTemplateProps {
   data: PageData;
 }
 
 export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps) {
-  const bannerData = data.content?.banner || {};
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+  const [selectedTier, setSelectedTier] = useState<'Economy' | 'Premium'>('Economy');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('enquire') === 'true') {
+      setIsModalOpen(true);
+    }
+  }, [searchParams]);
+
+  const packageData = data.content?.package || {};
+  const hotels = data.content?.hotels || [];
+  const reviews = data.content?.reviews || [];
+  const relatedPackages = data.content?.relatedPackages || [];
+  const inclusions = data.content?.inclusions || [];
   const faqs = data.content?.faqs || [];
+  const contact = data.content?.contact || {};
 
-  // Determine the star rating from the page title (e.g., "3 Star Umrah Packages")
-  const starRating = data.title?.includes('3') ? 3 : data.title?.includes('4') ? 4 : 5;
-
-  // Get packages from mock data and filter by the specific star rating OR MORE
-  const allUmrahPackages = mockHomePageData.content?.umrahPackages || [];
-  const filteredPackages = allUmrahPackages.filter((pkg: any) => pkg.stars >= starRating);
+  const images = packageData.images || [packageData.image];
 
   return (
-    <>
-      {/* Banner */}
-      {bannerData && <InnerBanner data={bannerData} />}
-
-      {/* Package List Grid */}
-      <section className="section">
+    <div className="package-detail-page">
+      <section className="section package-hero-section">
         <div className="container">
-          <div className='sectionheadings'>
-            <div className='sectionheadingstext'>
-              <h2 className="section-title">{data.title}</h2>
-              <p className="section-subtitle">
-                Explore our exclusive collection of {starRating} star Umrah packages and more. 
-                Designed to provide comfort and spiritual peace during your holy journey.
-              </p>
+          <div className="package-detail-header">
+            <div className="pkg-header-left">
+              <div className="star-rating">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className={i < (packageData.stars || 4) ? 'star-filled' : 'star'}>
+                    <img src="/star.svg" alt="Star" />
+                  </span>
+                ))}
+              </div>
+              <h1 className="package-title">{packageData.title}</h1>
+
+              <div className="hotel-summaries">
+                <div className="hotel-summary-item">
+                  <div className="hotel-info-box">
+                    <div>
+                      <span className="hotel-label">Makkah Hotel Nights</span>
+                      <span className="hotel-name">{packageData.makkahHotel || 'Hotel In Makkah'}</span>
+                    </div>
+                    <span className="nights-count">{String(packageData.makkahNights || 5).padStart(2, '0')} <small>Nights</small></span>
+                  </div>
+                </div>
+                <div className="hotel-summary-item">
+
+                  <div className="hotel-info-box">
+                    <div>
+                      <span className="hotel-label">Madinah Hotel Nights</span>
+                      <span className="hotel-name">{packageData.madinahHotel || 'Hotel In Madinah'}</span>
+                    </div>
+                    <span className="nights-count">{String(packageData.madinahNights || 5).padStart(2, '0')} <small>Nights</small></span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="package-price-options">
+                <div
+                  className={`price-option-row ${selectedTier === 'Economy' ? 'active' : ''}`}
+                  onClick={() => setSelectedTier('Economy')}
+                >
+                  <div className="option-name">
+                    <div className="radio-circle">
+                      {selectedTier === 'Economy' && <div className="inner-dot"></div>}
+                    </div>
+                    Economy Package
+                  </div>
+                  <div className="option-price">
+                    <small>starting <br />from</small>
+                    <span className="currency">£</span>
+                    <span className="amount">965</span>
+                    <small className="per-person">per<br />person</small>
+                  </div>
+                </div>
+                <div
+                  className={`price-option-row ${selectedTier === 'Premium' ? 'active' : ''}`}
+                  onClick={() => setSelectedTier('Premium')}
+                >
+                  <div className="option-name">
+                    <div className="radio-circle">
+                      {selectedTier === 'Premium' && <div className="inner-dot"></div>}
+                    </div>
+                    Premium Package
+                  </div>
+                  <div className="option-price">
+                    <small>starting <br />from</small>
+                    <span className="currency">£</span>
+                    <span className="amount">2952</span>
+                    <small className="per-person">per<br />person</small>
+                  </div>
+                </div>
+              </div>
+
+              <div className="header-actions">
+                <button
+                  className="btn btn-enquire"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Enquire Now
+                </button>
+              </div>
+            </div>
+
+            <div className="pkg-header-right">
+              <div className="detail-gallery-wrapper">
+                <Swiper
+                  spaceBetween={10}
+                  navigation={true}
+                  thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                  modules={[FreeMode, Navigation, Thumbs]}
+                  className="main-gallery-swiper"
+                >
+                  {images.map((img: string, index: number) => (
+                    <SwiperSlide key={index}>
+                      <img src={img} alt={`Gallery ${index}`} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div className="thumbs-gallery-container">
+                  <Swiper
+                    onSwiper={setThumbsSwiper}
+                    slidesPerView={4}
+                    freeMode={true}
+                    watchSlidesProgress={true}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="thumbs-gallery-swiper"
+                  >
+                    {images.map((img: string, index: number) => (
+                      <SwiperSlide key={index}>
+                        <div className="thumb-img-box">
+                          <img src={img} alt={`Thumb ${index}`} />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section package-description-section">
+        <div className="container">
+          <h2 className="section-subtitle-small">PACKAGE DETAILS</h2>
+          <p className="pkg-description-text">
+            {packageData.packageDescription || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.'}
+          </p>
+
+          <div className="package-icon-row">
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/aiplanewhite.svg" alt="Flight" /></div>
+              <span>Flight</span>
+            </div>
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/hotelwhite.svg" alt="Hotel" /></div>
+              <span>Hotel</span>
+            </div>
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/visawhite.svg" alt="Visa" /></div>
+              <span>Visa</span>
+            </div>
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/transportwhite.svg" alt="Transport" /></div>
+              <span>Transport</span>
+            </div>
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/board.svg" alt="Half Board" /></div>
+              <span>Half Board</span>
+            </div>
+            <div className="pkg-icon-item">
+              <div className="icon-circle"><img src="/qurbani.svg" alt="Qurbani" /></div>
+              <span>Qurbani</span>
+            </div>
+
+            <div className="pkg-action-btns">
+              <button className="btn btn--primary">Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
+              <button className="btn btn--dark">Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
             </div>
           </div>
 
-          <div className="packages-grid-two-col" style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', 
-            gap: '70px',
-            marginTop: '0px' 
-          }}>
-            {filteredPackages.map((pkg: any) => (
-              <UmrahPackageCard key={pkg.id} package={pkg} />
-            ))}
+          <div className="inclusions-grid">
+            <ul className="inclusions-list">
+              {inclusions.map((item: string, index: number) => (
+                <li key={index} className="inclusion-item">{item}</li>
+              ))}
+              {inclusions.length === 0 && (
+                <>
+                  <li className="inclusion-item">Umrah Visa</li>
+                  <li className="inclusion-item">All Packages Are Based On Quad Sharing</li>
+                  <li className="inclusion-item">Return Flights</li>
+                  <li className="inclusion-item">Ground Transfers Can Be Included On</li>
+                  <li className="inclusion-item">3 Nights in Makkah 3 Star Hotel</li>
+                  <li className="inclusion-item">Direct Flights Can Be Arranged On Special Request</li>
+                  <li className="inclusion-item">2 Nights in Madinah 3</li>
+                </>
+              )}
+            </ul>
           </div>
-
-          <ScrollDetail
-            title="Umrah & Hajj Services Scroll Detail"
-            image="/scrollimg.png"
-            content={`
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-        `}
-          />
         </div>
-        {faqs.length > 0 && (
-          <section className="section faq-section">
-            <div className="container">
-              <div className='sectionheadings'>
-                <div className='sectionheadingstext'>
-                  <h2 className="section-title">Frequently Asked Questions</h2>
-                  <p className="section-subtitle">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                    exercitation ullamco laboris nisi ut aliquip
-                  </p>
-                </div>
-              </div>
-              <FAQ items={faqs} />
-            </div>            
-          </section>
-        )}
       </section>
-    </>
+
+      <section className="section hotel-details-section">
+        <div className="container">
+          <h2 className="section-subtitle-small">HOTEL DETAILS:</h2>
+          <p className="pkg-description-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+          </p>
+
+
+        </div>
+        <div className="container-fluid">
+          <div className="hotels-detail-grid">
+            {hotels.map((hotel: any, index: number) => {
+              // Using a simple local state for the current slide index
+              const [activeIndex, setActiveIndex] = useState(0);
+              const totalImages = hotel.images?.length || 0;
+
+              return (
+                <div key={hotel.id} className="hotel-card">
+                  <div className="hotel-img-count">{totalImages > 0 ? `${activeIndex + 1}/${totalImages}` : '0/0'}</div>
+                  <div className='hotel-detail-card'>
+                    <div className="hotel-card-img-wrapper">
+                      <Swiper
+                        navigation={true}
+                        modules={[Navigation]}
+                        className="hotel-card-swiper"
+                        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                      >
+                        {hotel.images?.map((img: string, idx: number) => (
+                          <SwiperSlide key={idx}>
+                            <img src={img} alt={hotel.name} />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                    <div className="hotel-card-info">
+                      <div className="star-rating">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i} className={i < (hotel.rating || 5) ? 'star-filled' : 'star'}>
+                            <img src="/star.svg" alt="" />
+                          </span>
+                        ))}
+                      </div>
+                      <h3 className="hotel-card-name">{hotel.name}</h3>
+                      <p className="hotel-card-location">Hotel In {hotel.location}</p>
+                      <p className="hotel-card-desc">
+                        {hotel.description || 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.'}
+                      </p>
+                      <Link href="#" className="see-more-link">See More <span><img src="/rightarrow.svg" alt="" /></span></Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+      <PackageContactInfo contact={contact} />
+      <HomeReviews reviews={reviews} />
+
+      <section className="section related-packages-detail">
+        <div className="container">
+          <div className='sectionheadings'>
+            <div className='sectionheadingstext'>
+              <h2 className='section-title'>More Relevant Packages</h2>
+              <p className='section-subtitle'>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+              </p>
+            </div>
+            <div className='rightside'>
+              <div className='swiper-nav-btns'>
+                <button className="swiper-nav-btn prev prev-related">
+                  <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                </button>
+                <button className="swiper-nav-btn next next-related">
+                  <img src="/nextarrow.svg" alt="" />
+                </button>
+              </div>
+              <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
+            </div>
+          </div>
+          <div className="related-pkgs-grid">
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={30}
+              slidesPerView={1}
+              navigation={{
+                prevEl: '.prev-related',
+                nextEl: '.next-related',
+              }}
+              pagination={{
+                el: '.related-pagination-custom',
+                clickable: true
+              }}
+              breakpoints={{
+                768: { slidesPerView: 2 },
+                1200: { slidesPerView: 2 }
+              }}
+              className="related-packages-swiper"
+            >
+              {relatedPackages.map((pkg: any) => (
+                <SwiperSlide key={pkg.id}>
+                  <UmrahPackageCard package={pkg} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className="swiper-pagination-custom related-pagination-custom"></div>
+          </div>
+        </div>
+      </section>
+      <EnquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedPackage={selectedTier}
+        packageTitle={packageData.title}
+      />
+
+    </div>
   );
 }

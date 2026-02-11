@@ -438,10 +438,13 @@ export const mockUmrahPackage: UmrahPackageData & any = {
   title: '4 Star 1st Ashra 14 Nights Ramadan Umrah Package',
   price: 965,
   rating: 4,
+  image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=1200',
   images: [
     'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=1200',
     'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200',
-    'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=1200'
+    'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=1200',
+    'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200',
+     'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200'
   ],
   makkahHotel: 'Emaar Andalusia Hotel',
   makkahNights: 5,
@@ -467,7 +470,7 @@ export const mockUmrahPackage: UmrahPackageData & any = {
         'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
         'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800'
       ],
-      description: 'Luxurious hotel located in the heart of Makkah, just minutes away from the Grand Mosque. Features modern amenities and comfortable rooms.'
+      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem  '
     },
     {
       id: 'hotel-2',
@@ -509,9 +512,53 @@ export const mockUmrahPackage: UmrahPackageData & any = {
       rating: 5,
       comment: 'Amazing experience! The package was exactly as described.',
       avatar: 'https://i.pravatar.cc/150?img=2'
-    }
+    },
+    {
+      id: 'review-3',
+      name: 'Mohammed Hassan',
+      location: 'Birmingham',
+      rating: 5,
+      comment: 'Great value for money. Everything was well arranged and the accommodation was comfortable. Will book again!',
+      avatar: 'https://i.pravatar.cc/150?img=3'
+    },
+    {
+      id: 'review-4',
+      name: 'Aisha Malik',
+      location: 'Leeds',
+      rating: 5,
+      comment: 'Professional service from start to finish. The guides were knowledgeable and the hotels exceeded expectations.',
+      avatar: 'https://i.pravatar.cc/150?img=4'
+    },
+    {
+      id: 'review-5',
+      name: 'Aisha Malik',
+      location: 'Leeds',
+      rating: 5,
+      comment: 'Professional service from start to finish. The guides were knowledgeable and the hotels exceeded expectations.',
+      avatar: 'https://i.pravatar.cc/150?img=4'
+    },
   ],
   relatedPackages: [
+    {
+      id: 'umrah-2',
+      type: 'umrah',
+      title: '7 Nights 4 Star Cheap Umrah Package',
+      price: 965,
+      rating: 4,
+      image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
+      makkahHotel: 'Al Kiswah Towers Hotel Makkah',
+      madinahHotel: 'Millennium Al Aqeeq Madinah'
+    },
+    {
+      id: 'umrah-3',
+      type: 'umrah',
+      title: '10 Nights 5 Star Luxury Umrah Package',
+      price: 1295,
+      rating: 5,
+      image: 'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=800',
+      makkahHotel: 'Emaar Andalusia Hotel',
+      madinahHotel: 'Taiba Front Madinah'
+    },
     {
       id: 'umrah-2',
       type: 'umrah',

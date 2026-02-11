@@ -305,3 +305,13 @@
         }
     }
 }
+.site-header.white{
+    .logo-text{
+        color: var(--color-white);
+    }
+    .contact-pills .contact-pill {
+        border-color: #fff;
+        color: #fff;
+    }
+  
+}

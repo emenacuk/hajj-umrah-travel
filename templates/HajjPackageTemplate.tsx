@@ -170,8 +170,9 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                   </p>
                 </div>
               </div>
+              <FAQ items={faqs} />
             </div>
-            <FAQ items={faqs} />
+            
           </section>
         )}
       </section>

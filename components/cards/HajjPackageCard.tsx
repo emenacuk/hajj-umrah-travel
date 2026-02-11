@@ -29,9 +29,9 @@ export default function HajjPackageCard({ package: pkg }: HajjPackageCardProps) 
           <h2>{pkg.title}</h2>
         </Link>
         <div className="package-price">
-          <span className="price-label">starting from</span>
+          <span className="price-label">starting <br /> from</span>
           <span className="price-amount">£ {pkg.price}</span>
-          <sub className="price-unit">per person</sub>
+          <sub className="price-unit">per <br /> person</sub>
         </div>
 
         {pkg.makkahHotel && (
