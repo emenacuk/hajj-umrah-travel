@@ -730,6 +730,7 @@ export const mockBlogPageData: PageData = {
         image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
         date: '2025-01-15',
         author: 'Admin',
+        featured: true,
         slug: 'best-time-umrah-2025'
       },
       {
@@ -739,6 +740,7 @@ export const mockBlogPageData: PageData = {
         image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800',
         date: '2025-01-10',
         author: 'Admin',
+        featured: true,
         slug: 'complete-guide-hajj-2026'
       },
       {
@@ -748,11 +750,132 @@ export const mockBlogPageData: PageData = {
         image: 'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=800',
         date: '2025-01-05',
         author: 'Admin',
+        featured: true,
         slug: 'ramadan-umrah-packages-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: true,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
+      },
+      {
+        id: 'blog-1',
+        title: 'Best Time to Perform Umrah in 2025',
+        excerpt: 'Discover the best times to perform Umrah in 2025, including peak seasons, weather conditions, and tips for a comfortable journey.',
+        image: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?w=800',
+        date: '2025-01-15',
+        author: 'Admin',
+        featured: false,
+        slug: 'best-time-umrah-2025'
       }
     ]
   }
-};
+}
 
 // Helper function to get mock Umrah package by ID
 export function getMockUmrahPackage(id: string): any {

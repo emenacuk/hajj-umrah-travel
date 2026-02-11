@@ -1,5 +1,5 @@
 import { fetchPageData } from '@/utils/api';
-import StaticWithBannerTemplate from '@/templates/StaticWithBannerTemplate';
+import BlogDetailTemplate from '@/templates/BlogDetailTemplate';
 import { notFound } from 'next/navigation';
 import { dynamicParams } from '@/data/static-routes';
 
@@ -20,7 +20,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  return <StaticWithBannerTemplate data={pageData} />;
+  return <BlogDetailTemplate data={pageData} />;
 }
 
 

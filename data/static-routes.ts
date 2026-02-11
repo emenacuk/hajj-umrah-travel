@@ -56,6 +56,8 @@ export const dynamicParams = {
     { slug: 'november-umrah-packages', template: 'umrah_package' },
     { slug: 'hajj-package-2026', template: 'hajj_package' },
     { slug: 'customize-hajj-umrah', template: 'customize_package' },
+    { slug: 'contact-us', template: 'contact' },
+    { slug: 'hajj-umrah-visa', template: 'visa' }
 
   ],
 };

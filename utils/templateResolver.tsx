@@ -8,6 +8,7 @@ import ContactTemplate from '@/templates/ContactTemplate';
 import BlogTemplate from '@/templates/BlogTemplate';
 import SingleUmrahTemplate from '@/templates/SingleUmrahTemplate';
 import CustomizePackage from '@/templates/CustomizePackage';
+import VisaPageTemplate from '@/templates/VisaTemplate';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -53,6 +54,11 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
     case 'customizepackage':
     case 'customize-hajj-umrah':
       return <CustomizePackage data={pageData} />;
+
+    case 'visa':
+    case 'visa_page':
+    case 'visa-page':
+      return <VisaPageTemplate data={pageData} />;
 
     default:
       return <WithoutBannerTemplate data={pageData} />;
