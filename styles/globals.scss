@@ -1,5 +1,5 @@
 // Google Fonts Import
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
 // Component Styles
 @import 'components/home-banner';
@@ -21,13 +21,14 @@
 @import 'components/booking-modal';
 @import 'components/customize-modal';
 @import 'components/footer';
+@import "components/blogSlider";
 
 // Variables
 :root {
   // Colors
-  --color-primary: #D69A5E;
+  --color-primary: #d69a5e;
   --color-primary-dark: #b8941f;
-  --color-secondary: #7D7D7D;
+  --color-secondary: #7d7d7d;
   --color-dark: #000;
   --color-dark-light: #2a2a2a;
   --color-white: #ffffff;
@@ -36,11 +37,11 @@
   --color-text: #000;
   --color-text-light: #666666;
   --color-border: #707070;
-  --color-bg: #F4F4F5;
+  --color-bg: #f4f4f5;
 
   // Fonts
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Montserrat', sans-serif;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Montserrat", sans-serif;
 
   // Spacing
   --spacing-xs: 0.5rem;
@@ -334,4 +335,42 @@ img {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
+}
+
+.content-body {
+  flex: 1;
+  h2 {
+    font-family: var(--font-body);
+    font-size: 32px;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  h3 {
+    font-family: var(--font-body);
+    font-size: 24px;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  p {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  ul {
+    margin-bottom: 20px;
+    margin-left: 20px;
+    li {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.static-section{
+  margin: 150px 0;
 }

@@ -1,8 +1,14 @@
+import React from 'react'
 import { PageData } from '@/types';
-
-interface WithoutBannerTemplateProps {
+import "@/styles/components/_aboutus.scss"
+import WhyChoose from '@/components/common/WhyChoose';
+import HomeReviews from '@/components/sections/HomeReviews';
+import { mockHomePageData } from '@/data/mockData';
+interface AboutUSTemplateProps {
   data: PageData;
 }
+
+const reviews = mockHomePageData.content.reviews;
 
 const content = [
   `<h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
@@ -39,20 +45,18 @@ const content = [
         `
 ]
 
-export default function WithoutBannerTemplate({ data }: WithoutBannerTemplateProps) {
+export default function AboutUSTemplate({ data }: AboutUSTemplateProps) {
   return (
-    <section className="static-section">
-      <div className="container">
-        {/* {data.title && <h1>{data.title}</h1>}
-        {data.content?.description && (
-          <div className="content-body">
-            <p>{data.content.description}</p>
-          </div>
-        )} */}
-        <div className="content-body" dangerouslySetInnerHTML={{ __html: content[0] }} />
+    <div className='about-us'>
+      <div className='container'>
+        <div className='content-wrapper'>
+          <div className='content-left'
+            dangerouslySetInnerHTML={{ __html: content[0] }}
+          />
+        </div>
+      <WhyChoose />
+      <HomeReviews reviews={reviews} cardsPerSlide={2} />
       </div>
-    </section>
-  );
+    </div>
+  )
 }
-
-
