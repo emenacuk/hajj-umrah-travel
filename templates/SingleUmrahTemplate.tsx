@@ -15,6 +15,8 @@ import PackageContactInfo from '@/components/sections/PackageContactInfo';
 import { useSearchParams } from 'next/navigation';
 
 import EnquiryModal from '@/components/common/EnquiryModal';
+import BookingModal from '@/components/common/BookingModal';
+import CustomizeModal from '@/components/common/CustomizeModal';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -32,6 +34,8 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [selectedTier, setSelectedTier] = useState<'Economy' | 'Premium'>('Economy');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -207,8 +211,8 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
             </div>
 
             <div className="pkg-action-btns">
-              <button className="btn btn--primary">Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
-              <button className="btn btn--dark">Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
+              <button className="btn btn--primary" onClick={() => setIsBookingModalOpen(true)}>Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
+              <button className="btn btn--dark" onClick={() => setIsCustomizeModalOpen(true)}>Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
             </div>
           </div>
 
@@ -347,6 +351,19 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
         onClose={() => setIsModalOpen(false)}
         selectedPackage={selectedTier}
         packageTitle={packageData.title}
+      />
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        packageTitle={packageData.title}
+        selectedPackage={selectedTier}
+      />
+
+      <CustomizeModal
+        isOpen={isCustomizeModalOpen}
+        onClose={() => setIsCustomizeModalOpen(false)}
+        type="umrah"
       />
 
     </div>

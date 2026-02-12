@@ -45,11 +45,13 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
 
     case 'blog':
       return <BlogTemplate data={pageData} />;
+    case 'listing':
+      return <SingleListing data={pageData} />;
 
-    case 'singleumrahtemplate':
     case 'single_umrah':
     case 'single-umrah':
-      return <SingleListing data={pageData} />;
+    case 'singleumrahtemplate':
+      return <SingleUmrahTemplate data={pageData} />;
 
     case 'single_hajj':
     case 'single-hajj':

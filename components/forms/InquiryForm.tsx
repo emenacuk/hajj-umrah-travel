@@ -18,7 +18,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
   const [formData, setFormData] = useState<Record<string, any>>({
     passengers: { adults: 1, children: 0, infants: 0 },
     departureDate: null,
-    nights: '',
+    nights: 7,
     name: '',
     phone: '',
     email: '',
@@ -120,7 +120,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
         setFormData({
           passengers: { adults: 1, children: 0, infants: 0 },
           departureDate: null,
-          nights: '',
+          nights: 7,
           name: '',
           phone: '',
           email: '',
@@ -207,19 +207,12 @@ export default function InquiryForm({ data }: InquiryFormProps) {
           )}
         </div>
 
-        <div className="form-group">
-          <input
-            type="text"
-            name="nights"
-            placeholder="No. of Nights"
-            value={formData.nights}
-            onChange={handleChange}
-            required
-          />
-          
-            <span className="count-badge">{formData.nights.toString().padStart(2, '0')}</span>
-        
-        </div>
+        <NightSelect
+          name="nights"
+          label="No. of Nights"
+          value={formData.nights}
+          onChange={(name, val) => setFormData(prev => ({ ...prev, [name]: val }))}
+        />
       </div>
 
       {/* Row 2 */}
@@ -278,7 +271,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
             onChange={handleChange}
             required
           />
-          
+
         </div>
         <div>
           <button type="submit" className="submit-icon-btn" disabled={isSubmitting}>
@@ -289,3 +282,53 @@ export default function InquiryForm({ data }: InquiryFormProps) {
     </form>
   );
 }
+
+interface NightSelectProps {
+  name: string;
+  label: string;
+  value: number;
+  onChange: (name: string, value: number) => void;
+}
+
+const NightSelect = ({ name, label, value, onChange }: NightSelectProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const nights = Array.from({ length: 15 }, (_, i) => i + 1);
+
+  return (
+    <div className="night-select-container" ref={wrapperRef}>
+      <span className="label">{label}</span>
+      <div className="night-badge" onClick={() => setIsOpen(!isOpen)}>
+        {value.toString().padStart(2, '0')}
+        <span className={`chevron ${isOpen ? 'up' : ''}`}></span>
+      </div>
+      {isOpen && (
+        <div className="night-dropdown">
+          {nights.map(n => (
+            <div
+              key={n}
+              className={`night-option ${n === value ? 'selected' : ''}`}
+              onClick={() => {
+                onChange(name, n);
+                setIsOpen(false);
+              }}
+            >
+              {n.toString().padStart(2, '0')}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};

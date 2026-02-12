@@ -20,7 +20,6 @@
 
   .form-column {
     .sectionheadings {
-        margin-bottom: 20px;
         grid-template-columns: 1fr;
         
         .sectionheadingstext {
@@ -111,16 +110,16 @@
           background-color: #ffffff;
           font-family: var(--font-body);
           font-size: 14px;
-          color: #333;
+          color: var(--color-dark);
           outline: none;
           appearance: none;
 
           &::placeholder {
             flex-grow: 1;
-  font-size: 14px;
-  color: #333;
-  pointer-events: none;
-  font-weight: 500;
+            font-size: 14px;
+            color: #636060;
+            pointer-events: none;
+            font-weight: 500;
           }
           
           &:invalid {
@@ -585,7 +584,7 @@ body {
   .label {
     flex-grow: 1;
     font-size: 14px;
-    color: #333;
+    color: #636060;
     pointer-events: none;
     font-weight: 500;
   }

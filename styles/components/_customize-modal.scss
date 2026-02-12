@@ -1,0 +1,345 @@
+.customize-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.customize-modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 875px;
+    border-radius: 18px;
+    position: relative;
+    padding: 24px;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: -25px;
+    left: calc(50% - 20px);
+    transform: translateX(-50%);
+    background: var(--color-primary);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+
+    img {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+.customize-form-wrapper {
+    .customize-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .form-row {
+            display: grid;
+            gap: 10px;
+
+            &.two-cols {
+                grid-template-columns: 1fr 1.1fr;
+            }
+
+            &.three-cols {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            &.two-thirds-one-third {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .input-field {
+            position: relative;
+
+            input {
+                width: 100%;
+                height: 48px;
+                background: #FFFFFF;
+                border: 1px solid #7D7D7D;
+                border-radius: 200px;
+                padding: 0 25px;
+                font-family: var(--font-body);
+                font-size: 14px;
+                color: var(--color-dark);
+                outline: none;
+
+                &::placeholder {
+                    color: #636060;
+                }
+            }
+
+            &.badge-right {
+                input {
+                    padding-right: 80px;
+                }
+            }
+
+            &.has-text-left {
+                input {
+                    text-align: left;
+                }
+            }
+        }
+
+        .captcha-badge {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--color-primary);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-row-submit {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+
+            .message-field {
+                input{
+                    width: 100%;
+                    height: 48px;
+                    background: #FFFFFF;
+                    border: 1px solid #7D7D7D;
+                    border-radius: 200px;
+                    padding: 0 25px;
+                    font-family: var(--font-body);
+                    font-size: 16px;
+                    color: #000;
+                    outline: none;
+                }
+            }
+
+            .submit-circle-btn {
+                width: 44px;
+                height: 44px;
+                background: var(--color-primary);
+                border: none;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                transition: transform 0.3s ease;
+                color: #fff;
+                &:hover {
+                    transform: scale(1.05);
+                }
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+}
+
+// Custom Select Styles (Simplified for Modal)
+.custom-select-container {
+    position: relative;
+    width: 100%;
+
+    .select-trigger {
+        width: 100%;
+        height: 48px;
+        background: #fff;
+        border: 1px solid #7D7D7D;
+        border-radius: 200px;
+        padding: 0 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+
+        .selected-text {
+            color: #7D7D7D;
+            font-size: 14px;
+
+            &.placeholder {
+                color: #7D7D7D;
+            }
+        }
+
+        .field-icon-img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .select-badge {
+            background: var(--color-primary);
+            display: flex;
+            align-items: center;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+
+            .chevron {
+              
+
+                &.up {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+
+    .options-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 5px;
+
+        .option-item {
+            padding: 10px 20px;
+            cursor: pointer;
+
+            &.selected {
+                color: var(--color-primary);
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+// Night Select Styles
+.night-select-container {
+    height: 40px;
+    border: 1px solid #7D7D7D;
+    border-radius: 200px;
+    padding: 0 14px 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .label {
+        font-size: 14px;
+        color: #636060;
+    }
+
+    .night-badge {
+        background: var(--color-primary);
+        color: #fff;
+        padding: 4px 11px;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .chevron {
+            &.up {
+                transform: rotate(225deg);
+            }
+        }
+    }
+
+    .night-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 100px;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 5px;
+
+        .night-option {
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+                background: transparent;
+                color: var(--color-primary);
+            }
+
+            &.selected {
+                color: var(--color-primary);
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+// Passenger Dropdown Styles
+.passenger-input {
+    &.active {
+        border-color: var(--color-primary) !important;
+    }
+}
+
+
+
+
+// Datepicker Overrides
+.custom-datepicker-wrapper {
+    position: relative;
+
+    .custom-date-input {
+        padding-right: 45px !important;
+    }
+
+    .field-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+
+        img {
+            width: 18px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .customize-modal-content {
+        padding: 30px 20px;
+        border-radius: 25px;
+    }
+
+    .customize-form {
+        .form-row {
+            grid-template-columns: 1fr !important;
+        }
+    }
+}

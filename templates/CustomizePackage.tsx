@@ -302,18 +302,54 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                     ]}
                                                 />
                                             </div>
-                                            <div className="input-field">
-                                                <CustomSelect
-                                                    name="Passenger"
-                                                    value={formData.Passenger}
-                                                    onChange={handleSelectChange}
-                                                    placeholder="Passenger"
-                                                    position="right"
-                                                    options={[
-                                                        { value: "1", label: "1" },
+                                            <div className="input-field icon-right" ref={passengerRef}>
+                                                <div
+                                                    className="custom-select-trigger"
+                                                    onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                                    <input
+                                                        type="text"
+                                                        name="passengers"
+                                                        value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                        readOnly
+                                                        placeholder="Passengers"
+                                                        className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
+                                                        style={{ pointerEvents: 'none' }}
+                                                    />
+                                                    <div className="passenger-badge">
+                                                        {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                    </div>
+                                                </div>
 
-                                                    ]}
-                                                />
+                                                {showPassengerDropdown && (
+                                                    <div className="passenger-dropdown-menu">
+                                                        <div className="dropdown-item">
+                                                            <span>Adult(s)</span>
+                                                            <div className="counter-controls">
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
+                                                                <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
+                                                            </div>
+                                                        </div>
+                                                        <div className="dropdown-item">
+                                                            <span>Child(s)</span>
+                                                            <div className="counter-controls">
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
+                                                                <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
+                                                            </div>
+                                                        </div>
+                                                        <div className="dropdown-item">
+                                                            <span>Infant(s)</span>
+                                                            <div className="counter-controls">
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
+                                                                <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                                <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className="input-field icon-right">
                                                 <CustomSelect
@@ -335,55 +371,55 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
 
                                 <div className={`form-row ${packageType === 'umrah' ? 'three-cols' : 'two-cols'}`}>
                                     {packageType === 'umrah' && (
-                                    <div className="input-field icon-right" ref={passengerRef}>
-                                        <div
-                                            className="custom-select-trigger"
-                                            onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <input
-                                                type="text"
-                                                name="passengers"
-                                                value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
-                                                readOnly
-                                                placeholder="Passengers"
-                                                className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
-                                                style={{ pointerEvents: 'none' }}
-                                            />
-                                            <div className="passenger-badge">
-                                                {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                        <div className="input-field icon-right" ref={passengerRef}>
+                                            <div
+                                                className="custom-select-trigger"
+                                                onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                <input
+                                                    type="text"
+                                                    name="passengers"
+                                                    value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                    readOnly
+                                                    placeholder="Passengers"
+                                                    className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
+                                                    style={{ pointerEvents: 'none' }}
+                                                />
+                                                <div className="passenger-badge">
+                                                    {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        {showPassengerDropdown && (
-                                            <div className="passenger-dropdown-menu">
-                                                <div className="dropdown-item">
-                                                    <span>Adult(s)</span>
-                                                    <div className="counter-controls">
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
+                                            {showPassengerDropdown && (
+                                                <div className="passenger-dropdown-menu">
+                                                    <div className="dropdown-item">
+                                                        <span>Adult(s)</span>
+                                                        <div className="counter-controls">
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
+                                                            <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="dropdown-item">
+                                                        <span>Child(s)</span>
+                                                        <div className="counter-controls">
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
+                                                            <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="dropdown-item">
+                                                        <span>Infant(s)</span>
+                                                        <div className="counter-controls">
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
+                                                            <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="dropdown-item">
-                                                    <span>Child(s)</span>
-                                                    <div className="counter-controls">
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
-                                                    </div>
-                                                </div>
-                                                <div className="dropdown-item">
-                                                    <span>Infant(s)</span>
-                                                    <div className="counter-controls">
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
-                                                        <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
+                                            )}
+                                        </div>
                                     )}
                                     <div className="input-field">
                                         <input
@@ -441,7 +477,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                         />
                                     </div>
                                     <button type="submit" className="submit-circle-btn">
-                                        <img src="/nextarrow.svg" alt="submit" />
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                                     </button>
                                 </div>
                             </form>

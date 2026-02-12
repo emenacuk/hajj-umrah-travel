@@ -2,23 +2,31 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import '@/styles/components/_enquiry-modal.scss';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import '@/styles/components/_booking-modal.scss';
 
-interface EnquiryModalProps {
+interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
-    selectedPackage?: string;
     packageTitle?: string;
+    selectedPackage?: string;
 }
 
-export default function EnquiryModal({ isOpen, onClose, selectedPackage, packageTitle }: EnquiryModalProps) {
+const AIRPORTS = [
+    { value: 'london', label: 'London' },
+    { value: 'manchester', label: 'Manchester' },
+    { value: 'birmingham', label: 'Birmingham' }
+];
+
+export default function BookingModal({ isOpen, onClose, packageTitle, selectedPackage }: BookingModalProps) {
     const [formData, setFormData] = useState<Record<string, any>>({
-        name: '',
-        email: '',
-        phone: '',
+        departureAirport: '',
+        departureDate: null,
         passengers: { adults: 1, children: 0, infants: 0 },
-        subject: '',
-        message: '',
+        name: '',
+        phone: '',
+        email: '',
         captchaInput: ''
     });
 
@@ -27,6 +35,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const datePickerRef = useRef<any>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -41,7 +50,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen, packageTitle, selectedPackage]);
+    }, [isOpen]);
 
     const generateCaptcha = () => {
         const n1 = Math.floor(Math.random() * 10);
@@ -49,9 +58,13 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
         setCaptcha({ n1, n2, result: n1 + n2 });
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleDateChange = (date: Date | null) => {
+        setFormData(prev => ({ ...prev, departureDate: date }));
     };
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
@@ -86,17 +99,17 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
         // Simulate API call
         setTimeout(() => {
-            toast.success('Your enquiry has been sent successfully!');
+            toast.success('Your booking request has been sent successfully!');
             setIsSubmitting(false);
             onClose();
             // Reset form
             setFormData({
-                name: '',
-                email: '',
-                phone: '',
+                departureAirport: '',
+                departureDate: null,
                 passengers: { adults: 1, children: 0, infants: 0 },
-                subject: '',
-                message: '',
+                name: '',
+                phone: '',
+                email: '',
                 captchaInput: ''
             });
         }, 1500);
@@ -108,30 +121,61 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     if (!isOpen) return null;
 
     return (
-        <div className="enquiry-modal-overlay" onClick={onClose}>
-            <div className="enquiry-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="booking-modal-overlay" onClick={onClose}>
+            <div className="booking-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
-                    <img src="/crosswhite.svg" alt="" />
+                    <img src="/crosswhite.svg" alt="Close" />
                 </button>
 
-                <form onSubmit={handleSubmit} className="enquiry-modal-form premium-inquiry-form">
+                <div className="modal-header">
+                    <p>Just Drop Your Contact, One of Our Agent will contact you and Book Package this Package over the call</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="booking-modal-form">
                     <div className="form-row">
+                        {/* Departure Airport */}
                         <div className="form-group">
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Full Name*"
-                                value={formData.name}
+                            <select
+                                name="departureAirport"
+                                value={formData.departureAirport}
                                 onChange={handleChange}
                                 required
-                            />
+                            >
+                                <option value="" disabled>Departure Airport</option>
+                                {AIRPORTS.map(airport => (
+                                    <option key={airport.value} value={airport.value}>{airport.label}</option>
+                                ))}
+                            </select>
+                            <span className="field-icon">
+                                <img src="/airplaneicon.svg" alt="plane" />
+                            </span>
                         </div>
+
+                        {/* Departure Date */}
+                        <div className="form-group icon-group custom-datepicker-wrapper">
+                            <DatePicker
+                                selected={formData.departureDate}
+                                onChange={handleDateChange}
+                                placeholderText="Departure Date"
+                                dateFormat="dd/MM/yyyy"
+                                className="custom-date-input"
+                                required
+                                ref={datePickerRef}
+                                minDate={new Date()}
+                                popperPlacement="bottom-start"
+                            />
+                            <span className="field-icon">
+                                <img src="/calendar.png" alt="calendar" />
+                            </span>
+                        </div>
+
+                        {/* No. of Guests */}
                         <div className="form-group passenger-group" ref={dropdownRef}>
                             <div
                                 className={`passenger-trigger ${showPassengerDropdown ? 'active' : ''}`}
                                 onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
                             >
-                                <span>{passengerLabel}</span>
+                                <span>{totalPassengers === 0 ? 'No. of Guests' : passengerLabel}</span>
                                 <span className="count-badge">{totalPassengers.toString().padStart(2, '0')}</span>
                             </div>
 
@@ -164,19 +208,22 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 </div>
                             )}
                         </div>
-                    </div>
 
-                    <div className="form-row">
+                        {/* Name */}
                         <div className="form-group">
                             <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address*"
-                                value={formData.email}
+                                type="text"
+                                name="name"
+                                placeholder="Name*"
+                                value={formData.name}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
+                    </div>
+
+                    <div className="form-row btn-formrow">
+                        {/* Phone Number */}
                         <div className="form-group">
                             <input
                                 type="tel"
@@ -187,19 +234,20 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 required
                             />
                         </div>
-                    </div>
 
-                    <div className="form-row">
+                        {/* Email Address */}
                         <div className="form-group">
                             <input
-                                type="text"
-                                name="subject"
-                                placeholder="Subject*"
-                                value={formData.subject}
+                                type="email"
+                                name="email"
+                                placeholder="Email Address"
+                                value={formData.email}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
+
+                        {/* Captcha */}
                         <div className="form-group captcha-group">
                             <input
                                 type="text"
@@ -211,26 +259,18 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                             />
                             <span className="captcha-text">{captcha.n1}+{captcha.n2}</span>
                         </div>
-                    </div>
-                    <div className='form-row message-group'>
-                        <div className="form-group ">
-                            <textarea
-                                name="message"
-                                placeholder="Type a Message"
-                                rows={3}
-                                value={formData.message}
-                                onChange={handleChange}
-                                required
-                            ></textarea>
+
+                        {/* Submit Button */}
+                        <div className="submit-btn-wrapper">
+                            <button type="submit" className="submit-icon-btn" disabled={isSubmitting}>
+                                {isSubmitting ? '...' : (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                )}
+                            </button>
                         </div>
-                        <button type="submit" className="submit-icon-btn" disabled={isSubmitting}>
-                            {isSubmitting ? '...' : (
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            )}
-                        </button>
                     </div>
                 </form>
             </div>
