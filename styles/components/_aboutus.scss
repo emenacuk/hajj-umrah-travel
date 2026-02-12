@@ -1,0 +1,75 @@
+.about-us{
+  margin: 150px 0;
+  .content-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+    .content-left{
+      flex: 1;
+      h2{
+        font-family: var(--font-body);
+        font-size: 32px;
+        color: var(--color-primary);
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+      h3{
+        font-family: var(--font-body);
+        font-size: 24px;
+        color: var(--color-primary);
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+      p{
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      ul{
+        margin-bottom: 20px;
+        margin-left: 20px;
+        li{
+            font-family: var(--font-body);
+          font-size: 16px;
+          line-height: 1.5;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+    .sectionheadingstext {
+    position: relative;
+    padding: 30px 0;
+    margin-top: 100px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150px;
+      height: 30px;
+      background: url("/styleup.svg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 150px;
+      height: 30px;
+      background: url("/styledown.svg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+
+  }
+}

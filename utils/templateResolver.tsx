@@ -10,6 +10,8 @@ import SingleUmrahTemplate from '@/templates/SingleUmrahTemplate';
 import CustomizePackage from '@/templates/CustomizePackage';
 import VisaPageTemplate from '@/templates/VisaTemplate';
 import SingleListing from '@/templates/SingleListing';
+import AboutUSTemplate from '@/templates/AboutUSTemplate';
+import ReviewsTemplate from '@/templates/ReviewsTemplate';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -60,6 +62,16 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
     case 'visa_page':
     case 'visa-page':
       return <VisaPageTemplate data={pageData} />;
+
+    case 'about_us':
+    case 'about-us':
+    case 'aboutus':
+      return <AboutUSTemplate data={pageData} />;
+
+    case 'reviews':
+    case 'reviews_page':
+    case 'reviews-page':
+      return <ReviewsTemplate data={pageData} />;
 
     default:
       return <WithoutBannerTemplate data={pageData} />;

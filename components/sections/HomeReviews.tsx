@@ -11,9 +11,10 @@ import Link from 'next/link';
 
 interface HomeReviewsProps {
     reviews: ReviewData[];
+    cardsPerSlide?: number;
 }
 
-const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews }) => {
+const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 }) => {
     const displayReviews = reviews.length > 0 ? reviews : [];
 
     return (
@@ -51,7 +52,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews }) => {
                         breakpoints={{
                             640: { slidesPerView: 2 },
                             1024: { slidesPerView: 3 },
-                            1280: { slidesPerView: 4 },
+                            1280: { slidesPerView: cardsPerSlide },
                         }}
                     >
                         {displayReviews.map((review) => (

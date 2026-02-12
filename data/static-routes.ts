@@ -19,6 +19,10 @@ export const staticRoutes = [
   '/hajj-package-2026',
   '/customize-hajj-umrah',
   '/success',
+  '/about-us',
+  '/reviews',
+  '/terms-and-conditions',
+  '/privacy-policy',
 ];
 
 export const dynamicParams = {
@@ -42,9 +46,8 @@ export const dynamicParams = {
     { id: 'hajj-3', template: 'hajj_package' },
   ],
   general: [
-    { slug: 'about-us' },
-    { slug: 'terms-and-conditions' },
-    { slug: 'privacy-policy' },
+    { slug: 'terms-and-conditions', template: 'without_banner' },
+    { slug: 'privacy-policy', template: 'without_banner' },
     { slug: '3-star-umrah-packages', template: 'single_umrah' },
     { slug: '4-star-umrah-packages', template: 'single_umrah' },
     { slug: '5-star-umrah-packages', template: 'single_umrah' },
@@ -57,7 +60,9 @@ export const dynamicParams = {
     { slug: 'hajj-package-2026', template: 'hajj_package' },
     { slug: 'customize-hajj-umrah', template: 'customize_package' },
     { slug: 'contact-us', template: 'contact' },
-    { slug: 'hajj-umrah-visa', template: 'visa' }
+    { slug: 'hajj-umrah-visa', template: 'visa' },
+    { slug: 'about-us', template: 'about_us' },
+    { slug: 'reviews', template: 'reviews' },
 
   ],
 };
