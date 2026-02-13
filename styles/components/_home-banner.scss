@@ -6,7 +6,7 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    padding:148px 0px 70px;
+    padding: 148px 0px 70px;
     display: grid;
     grid-template-columns: 1fr 648px;
     gap: 24px;
@@ -32,16 +32,19 @@
       line-height: 1.6;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
-    .brandsiconslist{
-      display:flex;
-      align-items:center;
+
+    .brandsiconslist {
+      display: flex;
+      align-items: center;
       padding-top: 25px;
-      .brandicon{
+
+      .brandicon {
         position: relative;
         z-index: 1;
         padding-right: 40px;
-        padding-left: 40px;         
-        &::after{
+        padding-left: 40px;
+
+        &::after {
           content: "";
           position: absolute;
           right: 0;
@@ -51,14 +54,17 @@
           height: 41px;
           background-color: var(--color-text);
         }
-        &:last-child{
+
+        &:last-child {
           padding-right: 0px;
-          &::after{
+
+          &::after {
             display: none;
           }
         }
-        &:first-child{
-          padding-left: 0px;  
+
+        &:first-child {
+          padding-left: 0px;
         }
       }
     }
@@ -75,6 +81,7 @@
       height: 100%;
       object-fit: cover;
     }
+
     video {
       width: 100%;
       height: 100%;
@@ -86,5 +93,81 @@
   .inquiry-form-wrapper {
     width: 100%;
     margin-top: 20px;
+  }
+}
+
+@media screen and (max-width:1600px) and (min-width:1200px) {
+  .home-banner {
+    .banner-image {
+      height: 445px;
+    }
+  }
+}
+
+@media (max-width: 1600px) {
+  .home-banner {
+    .banner-content {
+      grid-template-columns: 1fr 550px;
+    }
+
+    .banner-text {
+      h1 {
+        font-size: 38px;
+        line-height: 42px;
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .home-banner {
+    .banner-content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      padding: 122px 0px 50px;
+      gap: 20px;
+      >h1 {
+        color: var(--color-dark);
+        font-size: 36px;
+        line-height: 1.2;
+        font-weight: 900;
+        margin-bottom: 20px;
+        width: 100%;
+
+        span {
+          color: var(--color-primary);
+        }
+      }
+
+      .banner-text,
+      .banner-image {
+        width: calc(50% - 10px);
+
+        .inquiry-form-wrapper {
+          margin-top: 0;
+        }
+      }
+    }
+
+
+  }
+}
+@media (max-width: 992.5px) {
+  .home-banner {
+    .banner-content {
+      h1{
+        order: 0;
+      }
+      .banner-text{
+        width: 100%;
+        order: 2;
+      }
+      .banner-image{
+        width: 100%;
+        order: 1;
+      }
+    }
   }
 }

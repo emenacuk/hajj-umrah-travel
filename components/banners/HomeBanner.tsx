@@ -3,21 +3,34 @@
 import { BannerData } from '@/types';
 import InquiryForm from '../forms/InquiryForm';
 import '@/styles/components/_home-banner.scss';
+import { useState, useEffect } from 'react';
 
 interface HomeBannerProps {
   data: BannerData;
 }
 
 export default function HomeBanner({ data }: HomeBannerProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1200);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const heading = <h1>{data.title}</h1>;
+
   return (
     <section className="home-banner">
-
-
       <div className="container">
         <div className="banner-content">
+          {isMobile && heading}
           <div className="banner-text">
-            <h1>{data.title || "Trusted Hajj & Umrah Packages"}</h1>
-            {/* {data.description && <p>{data.description}</p>} */}
+            {!isMobile && heading}
             {data.form ? (
               <div className="inquiry-form-wrapper">
                 <InquiryForm data={data.form} />
@@ -34,10 +47,9 @@ export default function HomeBanner({ data }: HomeBannerProps) {
               </div>
               <div className="brandicon">
                 <img src="/b3.png" alt="" />
-              </div>              
+              </div>
             </div>
           </div>
-
           <div className="banner-image">
             {data.video ? (
               <video

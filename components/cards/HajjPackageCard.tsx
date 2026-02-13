@@ -33,19 +33,19 @@ export default function HajjPackageCard({ package: pkg }: HajjPackageCardProps) 
           <span className="price-amount">£ {pkg.price}</span>
           <sub className="price-unit">per <br /> person</sub>
         </div>
+        <div className='hotels'>
+          {pkg.makkahHotel && (
+            <div className="package-hotel">
+              <strong>Makkah Hotel:</strong> {pkg.makkahHotel}
+            </div>
+          )}
 
-        {pkg.makkahHotel && (
-          <div className="package-hotel">
-            <strong>Makkah Hotel:</strong> {pkg.makkahHotel}
-          </div>
-        )}
-
-        {pkg.madinahHotel && (
-          <div className="package-hotel">
-            <strong>Madinah Hotel:</strong> {pkg.madinahHotel}
-          </div>
-        )}
-
+          {pkg.madinahHotel && (
+            <div className="package-hotel">
+              <strong>Madinah Hotel:</strong> {pkg.madinahHotel}
+            </div>
+          )}
+        </div>
         <div className="package-actions">
           <Link href={`/hajj/${pkg.id}`} className="btn btn--black">
             Get Details

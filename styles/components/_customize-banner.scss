@@ -2,6 +2,7 @@
     padding: 60px 0 0;
     .banner-area{
         padding: 62px 41px 62px;
+        background-position: right center !important;
         h2{
             font-size: 66px;
             font-weight: 900;
@@ -89,10 +90,28 @@
         }
     }
 }
-
+@media (max-width: 1600px) {
+    .customize-banner {
+        .banner-area {
+            h2{
+                font-size: 52px;
+                line-height: 58px;
+                span {
+                    font-size: 38px;
+                    line-height: 1.2;
+                }
+            }
+        }
+    }
+}
+@media (max-width: 1200px) {
+    .customize-banner{
+        padding-top: 50px;
+    }
+}
 @media (max-width: 768px) {
     .customize-banner {
-        padding: 60px 0;
+        padding: 60px 0 0;
 
         .banner-title-wrapper {
             .banner-title {
