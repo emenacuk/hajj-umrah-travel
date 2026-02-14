@@ -51,9 +51,9 @@ export const dynamicParams = {
   general: [
     { slug: 'terms-and-conditions', template: 'without_banner' },
     { slug: 'privacy-policy', template: 'without_banner' },
-    { slug: '3-star-umrah-packages', template: 'single_umrah' },
-    { slug: '4-star-umrah-packages', template: 'single_umrah' },
-    { slug: '5-star-umrah-packages', template: 'single_umrah' },
+    { slug: '3-star-umrah-packages', template: 'listing' },
+    { slug: '4-star-umrah-packages', template: 'listing' },
+    { slug: '5-star-umrah-packages', template: 'listing' },
     { slug: 'december-umrah-packages', template: 'umrah_package' },
     { slug: 'best-umrah-packages-2025-2026', template: 'umrah_package' },
     { slug: 'ramzan-umrah-packages', template: 'umrah_package' },

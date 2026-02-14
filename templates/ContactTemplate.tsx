@@ -82,7 +82,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
 
   const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
     setFormData(prev => {
-      const currentValue = prev.passengers[type];
+      const currentValue = prev.contactDetail.passengers[type];
       let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
       if (type === 'adults' && newValue < 1) newValue = 1;

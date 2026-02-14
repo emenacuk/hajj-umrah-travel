@@ -36,8 +36,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
   const searchParams = useSearchParams();
-
+  const pageURL = window.location.href;
   useEffect(() => {
     if (searchParams.get('enquire') === 'true') {
       setIsModalOpen(true);
@@ -139,13 +140,18 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
             </div>
 
             <div className="pkg-header-right">
-              <div className="detail-gallery-wrapper">
+              <div className="detail-gallery-wrapper" style={{ position: 'relative' }}>
+                {!isGalleryLoaded && (
+                  <div className="skeleton-loader skeleton-gallery" style={{ position: 'absolute', top: 0, left: 0, zIndex: 10, height: '532px' }}></div>
+                )}
                 <Swiper
                   spaceBetween={10}
                   navigation={true}
                   thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
                   modules={[FreeMode, Navigation, Thumbs]}
                   className="main-gallery-swiper"
+                  onAfterInit={() => setIsGalleryLoaded(true)}
+                  style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
                 >
                   {images.map((img: string, index: number) => (
                     <SwiperSlide key={index}>
@@ -153,7 +159,10 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                <div className="thumbs-gallery-container">
+                <div className="thumbs-gallery-container" style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+                  {!isGalleryLoaded && (
+                    <div className="skeleton-loader skeleton-thumb" style={{ position: 'absolute', top: 0, left: 0, zIndex: 10, width: '100%' }}></div>
+                  )}
                   <Swiper
                     onSwiper={setThumbsSwiper}
                     slidesPerView={4}
@@ -349,6 +358,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
       <EnquiryModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        pageURL={pageURL}
         selectedPackage={selectedTier}
         packageTitle={packageData.title}
       />
@@ -357,6 +367,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         packageTitle={packageData.title}
+        pageURL={pageURL}
         selectedPackage={selectedTier}
       />
 
@@ -364,6 +375,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
         isOpen={isCustomizeModalOpen}
         onClose={() => setIsCustomizeModalOpen(false)}
         type="umrah"
+        pageURL={pageURL}
+        selectedPackage={selectedTier}
+        packageTitle={packageData.title}
       />
 
     </div>
