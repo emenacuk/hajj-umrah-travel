@@ -4,11 +4,16 @@ import { BannerData } from '@/types';
 import InquiryForm from '../forms/InquiryForm';
 import '@/styles/components/_home-banner.scss';
 
+import { BannerSkeleton } from '@/components/common/Skeleton';
+
 interface HomeBannerProps {
   data: BannerData;
+  loading?: boolean;
 }
 
-export default function HomeBanner({ data }: HomeBannerProps) {
+export default function HomeBanner({ data, loading }: HomeBannerProps) {
+  if (loading) return <BannerSkeleton />;
+
   return (
     <section className="home-banner">
 

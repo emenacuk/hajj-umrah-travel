@@ -4,9 +4,12 @@ import { BannerData } from '@/types';
 import InquiryForm from '../forms/InquiryForm';
 import '@/styles/components/_inner-banner.scss';
 
+import { BannerSkeleton } from '@/components/common/Skeleton';
+
 interface InnerBannerProps {
   data: BannerData;
   form?: boolean;
+  loading?: boolean;
 }
 
 const data: BannerData = {
@@ -41,7 +44,8 @@ const data: BannerData = {
   }
 }
 
-export default function InnerBanner({ data: bannerData, form = true }: InnerBannerProps) {
+export default function InnerBanner({ data: bannerData, form = true, loading }: InnerBannerProps) {
+  if (loading) return <BannerSkeleton />;
   const formData = bannerData.form || data.form;
   const backgroundImage = "/innerbg.jpg";
 
