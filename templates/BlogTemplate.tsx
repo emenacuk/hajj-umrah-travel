@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PageData, BlogPost } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import BlogCard from '@/components/cards/BlogCard';
+import { CardSkeleton } from '@/components/common/Skeleton';
 import '@/styles/components/_blog.scss';
 
 interface BlogTemplateProps {
@@ -103,13 +104,7 @@ export default function BlogTemplate({ data }: BlogTemplateProps) {
             ))}
 
             {isLoading && Array.from({ length: 3 }).map((_, index) => (
-              <div key={`skeleton-${index}`} className="skeleton-card">
-                <div className="skeleton-image"></div>
-                <div className="skeleton-content">
-                  <div className="skeleton-title"></div>
-                  <div className="skeleton-meta"></div>
-                </div>
-              </div>
+              <CardSkeleton key={`skeleton-${index}`} />
             ))}
 
             {!isLoading && posts.length === 0 && (

@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData, HajjPackageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import HajjPackageCard from '@/components/cards/HajjPackageCard';
@@ -19,6 +21,10 @@ interface HajjPackageTemplateProps {
 }
 
 export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) {
+  const [slidersLoaded, setSlidersLoaded] = useState({
+    shifting: false,
+    nonShifting: false
+  });
   const bannerData = data.content?.banner || {};
   const faqs = data.content?.faqs || [];
 
@@ -62,10 +68,13 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                 </div>
               </div>
 
-              <div className="packages-swiper-wrapper">
+              <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+                {!slidersLoaded.shifting && <SliderSkeleton count={3} />}
                 <Swiper
                   key="shifting-hajj-swiper"
                   modules={[Navigation, Pagination]}
+                  onInit={() => setSlidersLoaded(prev => ({ ...prev, shifting: true }))}
+                  style={{ opacity: slidersLoaded.shifting ? 1 : 0 }}
                   slidesPerView={1}
                   spaceBetween={24}
                   navigation={{
@@ -115,10 +124,13 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                 </div>
               </div>
 
-              <div className="packages-swiper-wrapper">
+              <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+                {!slidersLoaded.nonShifting && <SliderSkeleton count={3} />}
                 <Swiper
                   key="non-shifting-hajj-swiper"
                   modules={[Navigation, Pagination]}
+                  onInit={() => setSlidersLoaded(prev => ({ ...prev, nonShifting: true }))}
+                  style={{ opacity: slidersLoaded.nonShifting ? 1 : 0 }}
                   slidesPerView={1}
                   spaceBetween={24}
                   navigation={{

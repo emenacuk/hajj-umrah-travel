@@ -9,12 +9,16 @@ import 'swiper/css/navigation';
 import '@/styles/components/_home-reviews.scss';
 import Link from 'next/link';
 
+import { SliderSkeleton } from '@/components/common/Skeleton';
+import { useState } from 'react';
+
 interface HomeReviewsProps {
     reviews: ReviewData[];
     cardsPerSlide?: number;
 }
 
 const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
     const displayReviews = reviews.length > 0 ? reviews : [];
 
     return (
@@ -41,9 +45,12 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                     </div>
                 </div>    
             </div>
-            <div className="reviews-carousel">
+            <div className="reviews-carousel" style={{ position: 'relative', minHeight: '300px' }}>
+                {!isLoaded && <SliderSkeleton count={cardsPerSlide} />}
+                <div style={{ display: isLoaded ? 'block' : 'none' }}>
                     <Swiper
                         modules={[Navigation]}
+                        onInit={() => setIsLoaded(true)}
                         slidesPerView={1}
                         navigation={{
                             prevEl: '.prev-review',
@@ -85,6 +92,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                             </SwiperSlide>
                         ))}
                     </Swiper>
+                </div>
             </div>
         </section>
     );

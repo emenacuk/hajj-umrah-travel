@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData, UmrahPackageData, HotelData, ReviewData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
@@ -21,6 +23,11 @@ interface UmrahPackageTemplateProps {
 }
 
 export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps) {
+  const [slidersLoaded, setSlidersLoaded] = useState({
+    threeStar: false,
+    fourStar: false,
+    fiveStar: false
+  });
   const bannerData = data.content?.banner || {};
   const faqs = data.content?.faqs || [];
 
@@ -59,10 +66,13 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/3-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-                <div className="packages-swiper-wrapper">
+            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+              {!slidersLoaded.threeStar && <SliderSkeleton count={2} />}
                   <Swiper
                     key="three-star-swiper"
                     modules={[Navigation, Pagination]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, threeStar: true }))}
+                style={{ opacity: slidersLoaded.threeStar ? 1 : 0 }}
                     slidesPerView={1}
                     spaceBetween={24}
                     navigation={{
@@ -114,10 +124,13 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 </div>
              
 
-                <div className="packages-swiper-wrapper">
+            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+              {!slidersLoaded.fourStar && <SliderSkeleton count={2} />}
                   <Swiper
                     key="four-star-swiper"
                     modules={[Navigation, Pagination]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, fourStar: true }))}
+                style={{ opacity: slidersLoaded.fourStar ? 1 : 0 }}
                     slidesPerView={1}
                     spaceBetween={24}
                     navigation={{
@@ -167,10 +180,13 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 </div>
              
 
-                <div className="packages-swiper-wrapper">
+            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+              {!slidersLoaded.fiveStar && <SliderSkeleton count={2} />}
                   <Swiper
                     key="five-star-swiper"
                     modules={[Navigation, Pagination]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, fiveStar: true }))}
+                style={{ opacity: slidersLoaded.fiveStar ? 1 : 0 }}
                     slidesPerView={1}
                     spaceBetween={24}
                     navigation={{
