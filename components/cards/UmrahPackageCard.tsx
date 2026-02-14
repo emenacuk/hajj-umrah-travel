@@ -2,11 +2,16 @@ import Link from 'next/link';
 import { UmrahPackageData } from '@/types';
 import '@/styles/components/_package-cards.scss';
 
+import { CardSkeleton } from '@/components/common/Skeleton';
+
 interface UmrahPackageCardProps {
   package: UmrahPackageData;
+  loading?: boolean;
 }
 
-export default function UmrahPackageCard({ package: pkg }: UmrahPackageCardProps) {
+export default function UmrahPackageCard({ package: pkg, loading }: UmrahPackageCardProps) {
+  if (loading) return <CardSkeleton />;
+
   return (
     
       <div className="package-card">
