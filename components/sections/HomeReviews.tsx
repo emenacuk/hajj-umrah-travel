@@ -59,7 +59,8 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                         breakpoints={{
                             640: { slidesPerView: 2 },
                             1024: { slidesPerView: 3 },
-                            1280: { slidesPerView: cardsPerSlide },
+                            1280: { slidesPerView: 2 },
+                            1600: { slidesPerView: cardsPerSlide }
                         }}
                     >
                         {displayReviews.map((review) => (

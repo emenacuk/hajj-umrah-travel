@@ -138,8 +138,11 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 }}
                 breakpoints={{
                   640: { slidesPerView: 2 },
-                  1024: { slidesPerView: 2 },
-                  1280: { slidesPerView: 2 },
+                  768: { slidesPerView: 1.2 },
+                  992: { slidesPerView: 1.4 },
+                  1025: { slidesPerView: 1.6 },
+                  1200: { slidesPerView: 1.3 },
+                  1600: { slidesPerView: 2 },
                 }}
                 className="packages-swiper"
               >
@@ -201,8 +204,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               }}
               breakpoints={{
                 640: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-                1280: { slidesPerView: 2.8 },
+                768: { slidesPerView: 1.2 },
+                992: { slidesPerView: 1.4 },
+                1025: { slidesPerView: 1.6 },
+                1200: { slidesPerView: 2.2 },
+                1600: { slidesPerView: 2.8 },
+                  
               }}
               className="packages-swiper"
             >
@@ -313,8 +320,13 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 breakpoints={{
+                  
+
                   640: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
+                  992: { slidesPerView: 2.2 },
+                  1025: { slidesPerView: 2.5},
+                  1200: { slidesPerView: 2 },
+                  1500: { slidesPerView: 3 },
                 }}
               >
                 {hajjPackages.map((pkg: HajjPackageData) => (
@@ -398,7 +410,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
 
       {/* New Banner and Reviews Sections */}
       <CustomizeBanner />
-      <HomeReviews reviews={reviews} />
+     
 
       {/* Umrah & Hajj Services Section */}
       <UmrahHajjServices
@@ -471,7 +483,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               nextEl: '.partner-next',
             }}
             breakpoints={{
-              640: { slidesPerView: 2 },
+              640: { slidesPerView: 4 },
               1024: { slidesPerView: 8 },
             }}
             className="packages-swiper partner-swiper"

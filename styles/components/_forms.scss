@@ -16,15 +16,10 @@
     display: flex;
     gap: 15px;
     width: 100%;
-
     &.three-cols {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-
-      @media (max-width: 992px) {
-        grid-template-columns: 1fr;
-      }
     }
 
     &.captcha-row {
@@ -49,7 +44,6 @@
       .react-datepicker-wrapper {
         width: 100%;
         position: relative;
-        z-index: 1005;
       }
 
       .custom-date-input {
@@ -346,7 +340,7 @@
   border-radius: 50px;
   border: 1px solid var(--color-border);
   padding: 10px 10px;
-  min-height: 48px;
+  min-height: 42px;
   transition: all 0.3s ease;
 
   &:hover {
@@ -525,6 +519,38 @@
       margin: 0;
       color: var(--color-text);
       line-height: 1.6;
+    }
+  }
+}
+
+@media screen and (max-width:1600px) and (min-width:1200px) {
+  .premium-inquiry-form {
+    .form-row {
+     &.three-cols{
+      display: flex;
+      flex-wrap: wrap;
+      .form-group{
+        width: calc(50% - 5px);
+        &:last-child{
+          width: 100%;
+        }
+      }
+     } 
+    }
+  }
+}
+@media screen and (max-width:1200px) {
+  .premium-inquiry-form {
+    .form-row {
+     &.three-cols{
+      grid-template-columns: 1fr;
+     } 
+     &.captcha-row{
+      grid-template-columns: 1fr;
+      .submit-icon-btn{
+        margin-left: auto;
+      }
+     }
     }
   }
 }
