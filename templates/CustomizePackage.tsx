@@ -6,38 +6,25 @@ import '@/styles/components/_customize-package.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
+import { submitInquiry } from '@/utils/api';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface CustomizePackageProps {
     data?: PageData;
 }
 
 export default function CustomizePackage({ data }: CustomizePackageProps) {
+    const router = useRouter();
     const [packageType, setPackageType] = useState<'umrah' | 'hajj'>('umrah');
-    const [formData, setFormData] = useState<{
-        name: string;
-        email: string;
-        phone: string;
-        contactDetail: {
-            departureAirport: string;
-            departureDate: Date | null;
-            nightsInMAK: number;
-            nightsInMAD: number;
-            accommodation: string;
-            roomType: string;
-            mealType: string;
-            distance: string;
-            passengers: { adults: number; children: number; infants: number };
-            message: string;
-            hajjType?: string;
-            captcha: string;
-        }
-    }>({
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
         contactDetail: {
             departureAirport: '',
-            departureDate: null,
+            departureDate: null as Date | null,
             nightsInMAK: 2,
             nightsInMAD: 2,
             accommodation: '',
@@ -79,7 +66,14 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name === 'message' || name === 'captcha') {
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: { ...prev.contactDetail, [name]: value }
+            }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
@@ -111,10 +105,88 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
         setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, [name]: value } }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Form Submitted:', formData);
-        // Add submission logic here
+
+        if (parseInt(formData.contactDetail.captcha) !== captchaState.result) {
+            toast.warning('Incorrect captcha answer. Please try again.');
+            generateCaptcha();
+            setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, captcha: '' } }));
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            // Build the contact detail object conditionally based on package type
+            const baseContactDetail = {
+                departureAirport: formData.contactDetail.departureAirport,
+                departureDate: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+                accommodation: formData.contactDetail.accommodation,
+                passengerCount: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`,
+                message: formData.contactDetail.message,
+            };
+
+            let finalContactDetail = {};
+            if (packageType === 'umrah') {
+                finalContactDetail = {
+                    ...baseContactDetail,
+                    nightsInMAK: formData.contactDetail.nightsInMAK,
+                    nightsInMAD: formData.contactDetail.nightsInMAD,
+                    roomType: formData.contactDetail.roomType,
+                    mealType: formData.contactDetail.mealType,
+                    distance: formData.contactDetail.distance,
+                };
+            } else {
+                finalContactDetail = {
+                    ...baseContactDetail,
+                    hajjType: formData.contactDetail.hajjType,
+                };
+            }
+
+            const submissionData = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                packageType: packageType,
+                contactDetail: finalContactDetail
+            };
+
+            console.log("the submitted data", submissionData);
+            const success = await submitInquiry(submissionData);
+
+            if (success) {
+                toast.success('Your customization request has been submitted successfully!');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    contactDetail: {
+                        departureAirport: '',
+                        departureDate: null,
+                        nightsInMAK: 2,
+                        nightsInMAD: 2,
+                        accommodation: '',
+                        roomType: '',
+                        mealType: '',
+                        distance: '',
+                        passengers: { adults: 2, children: 0, infants: 0 },
+                        message: '',
+                        hajjType: '',
+                        captcha: ''
+                    }
+                });
+                generateCaptcha();
+                router.push('/success');
+            } else {
+                toast.error('Submission failed. Please try again.');
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast.error('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -124,11 +196,9 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                     <div className="form-column">
                         <div className='sectionheadings sectionheadings--center'>
                             <div className='sectionheadingstext'>
-                                <h2 className="section-title">December Umrah Deals 2025</h2>
+                                <h2 className="section-title">Customize your {packageType} 2025-2026</h2>
                                 <p className="section-subtitle">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip
+                                    Tailor your spiritual journey to your exact needs. Choose your preferred accommodation, flights, and services for a truly personalized experience.
                                 </p>
                             </div>
                         </div>
@@ -254,7 +324,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                     </>
                                 ) : (
                                     <>
-                                        {/* Hajj Specific Fields - Using same structure but conceptually different */}
+                                            {/* Hajj Specific Fields */}
                                         <div className="form-row two-cols">
                                             <div className="input-field">
                                                 <CustomSelect
@@ -295,17 +365,16 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                         <div className="form-row three-cols">
                                             <div className="input-field">
                                                 <CustomSelect
-                                                    name="Accomodation"
+                                                        name="accommodation"
                                                         value={formData.contactDetail.accommodation}
                                                     onChange={handleSelectChange}
-                                                    placeholder="Accomodation"
+                                                        placeholder="Accommodation"
                                                     position="right"
                                                     options={[
-                                                        { value: "5 star", label: "5 star" },
-                                                        { value: "4 star", label: "4 star" },
-                                                        { value: "3 star", label: "3 star" },
-                                                        { value: "any", label: "any" }
-
+                                                        { value: "5 star", label: "5 Star" },
+                                                        { value: "4 star", label: "4 Star" },
+                                                        { value: "3 star", label: "3 Star" },
+                                                        { value: "any", label: "Any" }
                                                     ]}
                                                 />
                                             </div>
@@ -360,8 +429,8 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             </div>
                                             <div className="input-field icon-right">
                                                 <CustomSelect
-                                                    name="accommodation"
-                                                        value={formData.contactDetail.accommodation}
+                                                        name="hajjType"
+                                                        value={formData.contactDetail.hajjType}
                                                     onChange={handleSelectChange}
                                                     placeholder="Hajj Type"
                                                     position="right"
@@ -435,15 +504,17 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             placeholder="Name*"
                                             value={formData.name}
                                             onChange={handleInputChange}
+                                            required
                                         />
                                     </div>
                                     <div className="input-field">
                                         <input
                                             type="email"
                                             name="email"
-                                            placeholder="Email Address"
+                                            placeholder="Email Address*"
                                             value={formData.email}
                                             onChange={handleInputChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -456,6 +527,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             placeholder="Phone Number*"
                                             value={formData.phone}
                                             onChange={handleInputChange}
+                                            required
                                         />
                                     </div>
                                     <div className="input-field badge-right has-text-left">
@@ -464,10 +536,8 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             name="captcha"
                                             placeholder="Answer"
                                             value={formData.contactDetail.captcha}
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/[^0-9]/g, '');
-                                                setFormData(prev => ({ ...prev, captcha: val }));
-                                            }}
+                                            onChange={handleInputChange}
+                                            required
                                         />
                                         <span className="captcha-badge">{captchaState.n1}+{captchaState.n2}</span>
                                     </div>
@@ -483,7 +553,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <button type="submit" className="submit-circle-btn">
+                                    <button type="submit" className="submit-circle-btn" disabled={isSubmitting}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                                     </button>
                                 </div>
