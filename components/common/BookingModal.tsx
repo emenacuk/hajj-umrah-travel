@@ -128,7 +128,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
         // Simulate API call
         setTimeout(() => {
             console.log(payload);
-            router.push('/success');
+            router.push('/thank-you');
             toast.success('Your booking request has been sent successfully!');
             setIsSubmitting(false);
             onClose();

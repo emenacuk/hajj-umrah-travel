@@ -154,7 +154,7 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
 
     // const handleSubmit = (e: React.FormEvent) => {
     //     e.preventDefault();
-    //     router.push('/success');
+    //     router.push('/thank-you');
 
     //     // Exclude captcha from payload
     //     const { captcha, ...payload } = formData;
@@ -180,7 +180,7 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
         // Simulate API call
         setTimeout(() => {
             console.log("formData", formData);
-            router.push('/success');
+            router.push('/thank-you');
             toast.success('Your enquiry has been sent successfully!');
             setIsSubmitting(false);
             onClose();
