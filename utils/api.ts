@@ -8,6 +8,7 @@ import {
   getMockHajjPackage,
   mockHomePageData as mockData
 } from '@/data/mockData';
+import { dynamicParams } from '@/data/static-routes';
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
@@ -102,13 +103,18 @@ export async function fetchPageData(slug: string): Promise<any> {
           }
         };
       default:
-        return {
-          template_name: 'without_banner',
-          title: slug.charAt(0).toUpperCase() + slug.slice(1),
-          content: {
-            description: `This is the ${slug} page.`
-          }
-        };
+        // Check if it's a known static route
+        const isGeneralSlug = dynamicParams.general.some(p => p.slug === slug);
+        if (isGeneralSlug) {
+          return {
+            template_name: 'without_banner',
+            title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '),
+            content: {
+              description: `This is the ${slug} page.`
+            }
+          };
+        }
+        return null;
     }
   }
 

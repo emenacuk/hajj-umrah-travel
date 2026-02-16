@@ -4,15 +4,25 @@ import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_customize-modal.scss';
+import { useRouter } from 'next/navigation';
+import router from 'next/router';
+import { toast } from 'sonner';
 
 interface CustomizeModalProps {
     isOpen: boolean;
     onClose: () => void;
     type: 'umrah' | 'hajj';
+    pageURL?: string;
+    selectedPackage?: string;
+    packageTitle?: string;
 }
 
-export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModalProps) {
-    const [formData, setFormData] = useState<{
+interface CustomizeModalState {
+    name: string;
+    email: string;
+    phone: string;
+    captcha: string;
+    contactDetail: {
         departureAirport: string;
         departureDate: Date | null;
         nightsInMAK: number;
@@ -21,35 +31,51 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
         roomType: string;
         mealType: string;
         distance: string;
-        passengers: { adults: number; children: number; infants: number };
-        name: string;
-        email: string;
-        phone: string;
-        captcha: string;
+        passengers: {
+            adults: number;
+            children: number;
+            infants: number;
+        };
         message: string;
         hajjType?: string;
-    }>({
-        departureAirport: '',
-        departureDate: null,
-        nightsInMAK: 2,
-        nightsInMAD: 2,
-        accommodation: '',
-        roomType: '',
-        mealType: '',
-        distance: '',
-        passengers: { adults: 2, children: 0, infants: 0 },
+        type?: string;
+        pageURL?: string;
+        selectedPackage?: string;
+        packageTitle?: string;
+    };
+}
+
+export default function CustomizeModal({ isOpen, onClose, type, pageURL, selectedPackage, packageTitle }: CustomizeModalProps) {
+    const router = useRouter();
+    const [formData, setFormData] = useState<CustomizeModalState>({
         name: '',
         email: '',
         phone: '',
         captcha: '',
-        message: '',
-        hajjType: ''
+        contactDetail: {
+            departureAirport: '',
+            departureDate: null,
+            nightsInMAK: 2,
+            nightsInMAD: 2,
+            accommodation: '',
+            roomType: '',
+            mealType: '',
+            distance: '',
+            passengers: { adults: 2, children: 0, infants: 0 },
+            message: '',
+            hajjType: '',
+            type: type,
+            pageURL: pageURL,
+            selectedPackage: selectedPackage,
+            packageTitle: packageTitle
+        }
     });
 
     const datePickerRef = useRef<DatePicker>(null);
     const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
     const passengerRef = useRef<HTMLDivElement>(null);
     const [captchaState, setCaptchaState] = useState({ n1: 0, n2: 0, result: 0 });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const generateCaptcha = () => {
         const n1 = Math.floor(Math.random() * 10);
@@ -72,12 +98,22 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (['name', 'email', 'phone', 'captcha'].includes(name)) {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    [name]: value
+                }
+            }));
+        }
     };
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
         setFormData(prev => {
-            const currentValue = prev.passengers[type];
+            const currentValue = prev.contactDetail.passengers[type];
             let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
             if (type === 'adults' && newValue < 1) newValue = 1;
@@ -85,27 +121,94 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
 
             return {
                 ...prev,
-                passengers: {
-                    ...prev.passengers,
-                    [type]: newValue
+                contactDetail: {
+                    ...prev.contactDetail,
+                    passengers: {
+                        ...prev.contactDetail.passengers,
+                        [type]: newValue
+                    }
                 }
             };
         });
     };
 
     const handleDateChange = (date: Date | null) => {
-        setFormData(prev => ({ ...prev, departureDate: date }));
+        setFormData(prev => ({
+            ...prev,
+            contactDetail: {
+                ...prev.contactDetail,
+                departureDate: date
+            }
+        }));
     };
 
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+    const handleSelectChange = (name: string, value: string | number) => {
+        setFormData(prev => ({
+            ...prev,
+            contactDetail: {
+                ...prev.contactDetail,
+                [name]: value
+            }
+        }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // const handleSubmit = (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     router.push('/success');
+
+    //     // Exclude captcha from payload
+    //     const { captcha, ...payload } = formData;
+    //     console.log('Form Submitted:', payload);
+
+    //     // Add submission logic here
+    //     onClose();
+    // };
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Form Submitted:', formData);
-        // Add submission logic here
-        onClose();
+
+        if (parseInt(formData.captcha) !== captchaState.result) {
+            toast.warning('Incorrect captcha answer. Please try again.');
+            generateCaptcha();
+            setFormData(prev => ({ ...prev, captcha: '' }));
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        // Simulate API call
+        setTimeout(() => {
+            console.log("formData", formData);
+            router.push('/success');
+            toast.success('Your enquiry has been sent successfully!');
+            setIsSubmitting(false);
+            onClose();
+            // Reset form
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                captcha: '',
+                contactDetail: {
+                    departureAirport: '',
+                    departureDate: null,
+                    nightsInMAK: 2,
+                    nightsInMAD: 2,
+                    accommodation: '',
+                    roomType: '',
+                    mealType: '',
+                    distance: '',
+                    passengers: { adults: 2, children: 0, infants: 0 },
+                    message: '',
+                    hajjType: '',
+                    type: type,
+                    pageURL: pageURL,
+                    selectedPackage: selectedPackage,
+                    packageTitle: packageTitle
+                }
+            });
+        }, 1500);
     };
 
     if (!isOpen) return null;
@@ -125,7 +228,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="departureAirport"
-                                            value={formData.departureAirport}
+                                            value={formData.contactDetail.departureAirport}
                                             onChange={handleSelectChange}
                                             placeholder="Departure Airport"
                                             required
@@ -140,7 +243,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field icon-right">
                                         <div className="form-group icon-group custom-datepicker-wrapper">
                                             <DatePicker
-                                                selected={formData.departureDate}
+                                                selected={formData.contactDetail.departureDate}
                                                 onChange={handleDateChange}
                                                 placeholderText="Departure Date"
                                                 dateFormat="dd/MM/yyyy"
@@ -164,19 +267,31 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <NightSelect
                                         name="nightsInMAK"
                                         label="Nights In MAK"
-                                        value={formData.nightsInMAK}
-                                        onChange={(name, val) => setFormData(prev => ({ ...prev, [name]: val }))}
+                                        value={formData.contactDetail.nightsInMAK}
+                                        onChange={(name: string, val: number) => setFormData(prev => ({
+                                            ...prev,
+                                            contactDetail: {
+                                                ...prev.contactDetail,
+                                                [name]: val
+                                            }
+                                        }))}
                                     />
                                     <NightSelect
                                         name="nightsInMAD"
                                         label="Nights In MAD"
-                                        value={formData.nightsInMAD}
-                                        onChange={(name, val) => setFormData(prev => ({ ...prev, [name]: val }))}
+                                        value={formData.contactDetail.nightsInMAD}
+                                        onChange={(name: string, val: number) => setFormData(prev => ({
+                                            ...prev,
+                                            contactDetail: {
+                                                ...prev.contactDetail,
+                                                [name]: val
+                                            }
+                                        }))}
                                     />
                                     <div className="input-field">
                                         <CustomSelect
                                             name="accommodation"
-                                            value={formData.accommodation}
+                                            value={formData.contactDetail.accommodation}
                                             onChange={handleSelectChange}
                                             placeholder="Accomodation"
                                             position="right"
@@ -194,7 +309,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="roomType"
-                                            value={formData.roomType}
+                                            value={formData.contactDetail.roomType}
                                             onChange={handleSelectChange}
                                             placeholder="Room Type"
                                             position="right"
@@ -209,7 +324,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="mealType"
-                                            value={formData.mealType}
+                                            value={formData.contactDetail.mealType}
                                             onChange={handleSelectChange}
                                             placeholder="Meal Type"
                                             position="right"
@@ -224,7 +339,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="distance"
-                                            value={formData.distance}
+                                            value={formData.contactDetail.distance}
                                             onChange={handleSelectChange}
                                             placeholder="Distance"
                                             position="full"
@@ -246,14 +361,14 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                             <input
                                                 type="text"
                                                 name="passengers"
-                                                value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                value={`${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`}
                                                 readOnly
                                                 placeholder="Passengers"
                                                 className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
                                                 style={{ pointerEvents: 'none' }}
                                             />
                                             <div className="passenger-badge">
-                                                {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                {(formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants).toString().padStart(2, '0')}
                                             </div>
                                         </div>
 
@@ -263,7 +378,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Adult(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                        <span className="count-value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -271,7 +386,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Child(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                        <span className="count-value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -279,7 +394,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Infant(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                        <span className="count-value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -312,7 +427,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="departureAirport"
-                                            value={formData.departureAirport}
+                                                value={formData.contactDetail.departureAirport}
                                             onChange={handleSelectChange}
                                             placeholder="Departure Airport"
                                             required
@@ -327,7 +442,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field icon-right">
                                         <div className="form-group icon-group custom-datepicker-wrapper">
                                             <DatePicker
-                                                selected={formData.departureDate}
+                                                    selected={formData.contactDetail.departureDate}
                                                 onChange={handleDateChange}
                                                 placeholderText="Departure Date"
                                                 dateFormat="dd/MM/yyyy"
@@ -350,7 +465,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="accommodation"
-                                            value={formData.accommodation}
+                                                value={formData.contactDetail.accommodation}
                                             onChange={handleSelectChange}
                                             placeholder="Accomodation"
                                             position="right"
@@ -371,14 +486,14 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                             <input
                                                 type="text"
                                                 name="passengers"
-                                                value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                    value={`${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`}
                                                 readOnly
                                                 placeholder="Passengers"
                                                 className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
                                                 style={{ pointerEvents: 'none' }}
                                             />
                                             <div className="passenger-badge">
-                                                {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                    {(formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants).toString().padStart(2, '0')}
                                             </div>
                                         </div>
 
@@ -388,7 +503,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Adult(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -396,7 +511,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Child(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -404,7 +519,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                                     <span>Infant(s)</span>
                                                     <div className="counter-controls">
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                                                        <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                                         <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
                                                     </div>
                                                 </div>
@@ -415,7 +530,7 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     <div className="input-field">
                                         <CustomSelect
                                             name="hajjType"
-                                            value={formData.hajjType || ''}
+                                                value={formData.contactDetail.hajjType || ''}
                                             onChange={handleSelectChange}
                                             placeholder="Hajj Type"
                                             position="right"
@@ -482,12 +597,17 @@ export default function CustomizeModal({ isOpen, onClose, type }: CustomizeModal
                                     type="text"
                                     name="message"
                                     placeholder="Type a message"
-                                    value={formData.message}
+                                    value={formData.contactDetail.message}
                                     onChange={handleInputChange}
                                 />
                             </div>
-                            <button type="submit" className="submit-circle-btn">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button type="submit" className="submit-circle-btn" disabled={isSubmitting}>
+                                {isSubmitting ? '...' : (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                )}
                             </button>
                         </div>
                     </form>

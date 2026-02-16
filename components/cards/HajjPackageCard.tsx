@@ -2,11 +2,16 @@ import Link from 'next/link';
 import { HajjPackageData } from '@/types';
 import '@/styles/components/_package-cards.scss';
 
+import { CardSkeleton } from '@/components/common/Skeleton';
+
 interface HajjPackageCardProps {
   package: HajjPackageData;
+  loading?: boolean;
 }
 
-export default function HajjPackageCard({ package: pkg }: HajjPackageCardProps) {
+export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCardProps) {
+  if (loading) return <CardSkeleton />;
+
   return (
     <div className="hajj-card " >
       <Link href={`/hajj/${pkg.id}`}>

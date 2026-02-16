@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_booking-modal.scss';
+import { useRouter } from 'next/navigation';
 
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
     packageTitle?: string;
     selectedPackage?: string;
+    pageURL?: string;
 }
 
 const AIRPORTS = [
@@ -19,15 +21,19 @@ const AIRPORTS = [
     { value: 'birmingham', label: 'Birmingham' }
 ];
 
-export default function BookingModal({ isOpen, onClose, packageTitle, selectedPackage }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, packageTitle, selectedPackage, pageURL }: BookingModalProps) {
     const [formData, setFormData] = useState<Record<string, any>>({
-        departureAirport: '',
-        departureDate: null,
-        passengers: { adults: 1, children: 0, infants: 0 },
         name: '',
         phone: '',
         email: '',
-        captchaInput: ''
+        contactDetail: {
+            packageTitle: packageTitle,
+            departureAirport: '',
+            departureDate: null,
+            selectedPackage: selectedPackage,
+            pageURL: pageURL,
+            passengers: { adults: 1, children: 0, infants: 0 },
+        }
     });
 
     const [captcha, setCaptcha] = useState({ n1: 0, n2: 0, result: 0 });
@@ -35,7 +41,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const datePickerRef = useRef<any>(null);
+    const datePickerRef = useRef<DatePicker>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -60,16 +66,32 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (['name', 'phone', 'email', 'captchaInput'].includes(name)) {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    [name]: value
+                }
+            }));
+        }
     };
 
     const handleDateChange = (date: Date | null) => {
-        setFormData(prev => ({ ...prev, departureDate: date }));
+        setFormData(prev => ({
+            ...prev,
+            contactDetail: {
+                ...prev.contactDetail,
+                departureDate: date
+            }
+        }));
     };
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
         setFormData(prev => {
-            const currentValue = prev.passengers[type];
+            const currentValue = prev.contactDetail.passengers[type];
             let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
             if (type === 'adults' && newValue < 1) newValue = 1;
@@ -77,14 +99,17 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
             return {
                 ...prev,
-                passengers: {
-                    ...prev.passengers,
-                    [type]: newValue
+                contactDetail: {
+                    ...prev.contactDetail,
+                    passengers: {
+                        ...prev.contactDetail.passengers,
+                        [type]: newValue
+                    }
                 }
             };
         });
     };
-
+    const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -97,26 +122,35 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
         setIsSubmitting(true);
 
+        // Exclude captchaInput from payload
+        const { captchaInput, ...payload } = formData;
+
         // Simulate API call
         setTimeout(() => {
+            console.log(payload);
+            router.push('/success');
             toast.success('Your booking request has been sent successfully!');
             setIsSubmitting(false);
             onClose();
             // Reset form
             setFormData({
-                departureAirport: '',
-                departureDate: null,
-                passengers: { adults: 1, children: 0, infants: 0 },
                 name: '',
                 phone: '',
                 email: '',
-                captchaInput: ''
+                contactDetail: {
+                    packageTitle: packageTitle,
+                    departureAirport: '',
+                    departureDate: null,
+                    selectedPackage: selectedPackage,
+                    pageURL: pageURL,
+                    passengers: { adults: 1, children: 0, infants: 0 },
+                }
             });
         }, 1500);
     };
 
-    const totalPassengers = formData.passengers.adults + formData.passengers.children + formData.passengers.infants;
-    const passengerLabel = `${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`;
+    const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;
+    const passengerLabel = `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`;
 
     if (!isOpen) return null;
 
@@ -137,7 +171,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                         <div className="form-group">
                             <select
                                 name="departureAirport"
-                                value={formData.departureAirport}
+                                value={formData.contactDetail.departureAirport}
                                 onChange={handleChange}
                                 required
                             >
@@ -154,7 +188,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                         {/* Departure Date */}
                         <div className="form-group icon-group custom-datepicker-wrapper">
                             <DatePicker
-                                selected={formData.departureDate}
+                                selected={formData.contactDetail.departureDate}
                                 onChange={handleDateChange}
                                 placeholderText="Departure Date"
                                 dateFormat="dd/MM/yyyy"
@@ -185,7 +219,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                                         <span>Adult(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('adults', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('adults', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>
@@ -193,7 +227,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                                         <span>Child(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('children', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('children', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>
@@ -201,7 +235,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                                         <span>Infant(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('infants', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('infants', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>

@@ -5,11 +5,15 @@ import InquiryForm from '../forms/InquiryForm';
 import '@/styles/components/_home-banner.scss';
 import { useState, useEffect } from 'react';
 
+import { BannerSkeleton } from '@/components/common/Skeleton';
+
 interface HomeBannerProps {
   data: BannerData;
+  loading?: boolean;
 }
 
-export default function HomeBanner({ data }: HomeBannerProps) {
+export default function HomeBanner({ data, loading }: HomeBannerProps) {
+  if (loading) return <BannerSkeleton />;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

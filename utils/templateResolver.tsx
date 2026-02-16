@@ -13,6 +13,7 @@ import VisaPageTemplate from '@/templates/VisaTemplate';
 import SingleListing from '@/templates/SingleListing';
 import AboutUSTemplate from '@/templates/AboutUSTemplate';
 import ReviewsTemplate from '@/templates/ReviewsTemplate';
+import NotFound from '@/app/not-found';
 
 // Template resolver - maps template_name to component
 export function resolveTemplate(templateName: string, pageData: PageData) {
@@ -82,7 +83,7 @@ export function resolveTemplate(templateName: string, pageData: PageData) {
       return <ReviewsTemplate data={pageData} />;
 
     default:
-      return <WithoutBannerTemplate data={pageData} />;
+      return <NotFound />;
   }
 }
 

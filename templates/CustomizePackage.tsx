@@ -14,37 +14,41 @@ interface CustomizePackageProps {
 export default function CustomizePackage({ data }: CustomizePackageProps) {
     const [packageType, setPackageType] = useState<'umrah' | 'hajj'>('umrah');
     const [formData, setFormData] = useState<{
-        departureAirport: string;
-        departureDate: Date | null;
-        nightsInMAK: number;
-        nightsInMAD: number;
-        accommodation: string;
-        roomType: string;
-        mealType: string;
-        distance: string;
-        passengers: { adults: number; children: number; infants: number };
         name: string;
         email: string;
         phone: string;
-        captcha: string;
-        message: string;
-        hajjType?: string;
+        contactDetail: {
+            departureAirport: string;
+            departureDate: Date | null;
+            nightsInMAK: number;
+            nightsInMAD: number;
+            accommodation: string;
+            roomType: string;
+            mealType: string;
+            distance: string;
+            passengers: { adults: number; children: number; infants: number };
+            message: string;
+            hajjType?: string;
+            captcha: string;
+        }
     }>({
-        departureAirport: '',
-        departureDate: null,
-        nightsInMAK: 2,
-        nightsInMAD: 2,
-        accommodation: '',
-        roomType: '',
-        mealType: '',
-        distance: '',
-        passengers: { adults: 2, children: 0, infants: 0 },
         name: '',
         email: '',
         phone: '',
-        captcha: '',
-        message: '',
-        hajjType: ''
+        contactDetail: {
+            departureAirport: '',
+            departureDate: null,
+            nightsInMAK: 2,
+            nightsInMAD: 2,
+            accommodation: '',
+            roomType: '',
+            mealType: '',
+            distance: '',
+            passengers: { adults: 2, children: 0, infants: 0 },
+            message: '',
+            hajjType: '',
+            captcha: ''
+        }
     });
 
     const datePickerRef = useRef<DatePicker>(null);
@@ -80,7 +84,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
         setFormData(prev => {
-            const currentValue = prev.passengers[type];
+            const currentValue = prev.contactDetail.passengers[type];
             let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
             if (type === 'adults' && newValue < 1) newValue = 1;
@@ -88,20 +92,23 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
 
             return {
                 ...prev,
-                passengers: {
-                    ...prev.passengers,
-                    [type]: newValue
+                contactDetail: {
+                    ...prev.contactDetail,
+                    passengers: {
+                        ...prev.contactDetail.passengers,
+                        [type]: newValue
+                    }
                 }
             };
         });
     };
 
     const handleDateChange = (date: Date | null) => {
-        setFormData(prev => ({ ...prev, departureDate: date }));
+        setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, departureDate: date } }));
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, [name]: value } }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -135,7 +142,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="departureAirport"
-                                                    value={formData.departureAirport}
+                                                    value={formData.contactDetail.departureAirport}
                                                     onChange={handleSelectChange}
                                                     placeholder="Departure Airport"
                                                     required
@@ -149,7 +156,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field icon-right">
                                                 <div className="form-group icon-group custom-datepicker-wrapper">
                                                     <DatePicker
-                                                        selected={formData.departureDate}
+                                                        selected={formData.contactDetail.departureDate}
                                                         onChange={handleDateChange}
                                                         placeholderText="Departure Date"
                                                         dateFormat="dd/MM/yyyy"
@@ -173,19 +180,19 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <NightSelect
                                                 name="nightsInMAK"
                                                 label="Nights In MAK"
-                                                value={formData.nightsInMAK}
-                                                onChange={(name, val) => setFormData(prev => ({ ...prev, [name]: val }))}
+                                                value={formData.contactDetail.nightsInMAK}
+                                                onChange={(name, val) => setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, [name]: val } }))}
                                             />
                                             <NightSelect
                                                 name="nightsInMAD"
                                                 label="Nights In MAD"
-                                                value={formData.nightsInMAD}
-                                                onChange={(name, val) => setFormData(prev => ({ ...prev, [name]: val }))}
+                                                value={formData.contactDetail.nightsInMAD}
+                                                onChange={(name, val) => setFormData(prev => ({ ...prev, contactDetail: { ...prev.contactDetail, [name]: val } }))}
                                             />
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="accommodation"
-                                                    value={formData.accommodation}
+                                                    value={formData.contactDetail.accommodation}
                                                     onChange={handleSelectChange}
                                                     placeholder="Accommodation"
                                                     position="right"
@@ -203,7 +210,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="roomType"
-                                                    value={formData.roomType}
+                                                    value={formData.contactDetail.roomType}
                                                     onChange={handleSelectChange}
                                                     placeholder="Room Type"
                                                     position="right"
@@ -218,7 +225,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="mealType"
-                                                    value={formData.mealType}
+                                                    value={formData.contactDetail.mealType}
                                                     onChange={handleSelectChange}
                                                     placeholder="Meal Type"
                                                     position="right"
@@ -233,7 +240,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="distance"
-                                                    value={formData.distance}
+                                                    value={formData.contactDetail.distance}
                                                     onChange={handleSelectChange}
                                                     placeholder="Distance"
                                                     position="full"
@@ -252,7 +259,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="departureAirport"
-                                                    value={formData.departureAirport}
+                                                        value={formData.contactDetail.departureAirport}
                                                     onChange={handleSelectChange}
                                                     placeholder="Departure Airport"
                                                     required
@@ -266,7 +273,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field icon-right">
                                                 <div className="form-group icon-group custom-datepicker-wrapper">
                                                     <DatePicker
-                                                        selected={formData.departureDate}
+                                                            selected={formData.contactDetail.departureDate}
                                                         onChange={handleDateChange}
                                                         placeholderText="Departure Date"
                                                         dateFormat="dd/MM/yyyy"
@@ -289,7 +296,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field">
                                                 <CustomSelect
                                                     name="Accomodation"
-                                                    value={formData.Accomodation}
+                                                        value={formData.contactDetail.accommodation}
                                                     onChange={handleSelectChange}
                                                     placeholder="Accomodation"
                                                     position="right"
@@ -311,14 +318,14 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                     <input
                                                         type="text"
                                                         name="passengers"
-                                                        value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                            value={`${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`}
                                                         readOnly
                                                         placeholder="Passengers"
                                                         className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
                                                         style={{ pointerEvents: 'none' }}
                                                     />
                                                     <div className="passenger-badge">
-                                                        {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                            {(formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants).toString().padStart(2, '0')}
                                                     </div>
                                                 </div>
 
@@ -328,7 +335,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                             <span>Adult(s)</span>
                                                             <div className="counter-controls">
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                                                                <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                                    <span className="count-value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
                                                             </div>
                                                         </div>
@@ -336,7 +343,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                             <span>Child(s)</span>
                                                             <div className="counter-controls">
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                                                                <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                                    <span className="count-value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
                                                             </div>
                                                         </div>
@@ -344,7 +351,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                             <span>Infant(s)</span>
                                                             <div className="counter-controls">
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                                                                <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                                    <span className="count-value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                                                 <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
                                                             </div>
                                                         </div>
@@ -354,7 +361,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             <div className="input-field icon-right">
                                                 <CustomSelect
                                                     name="accommodation"
-                                                    value={formData.accommodation}
+                                                        value={formData.contactDetail.accommodation}
                                                     onChange={handleSelectChange}
                                                     placeholder="Hajj Type"
                                                     position="right"
@@ -380,14 +387,14 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                 <input
                                                     type="text"
                                                     name="passengers"
-                                                    value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                                                    value={`${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`}
                                                     readOnly
                                                     placeholder="Passengers"
                                                     className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
                                                     style={{ pointerEvents: 'none' }}
                                                 />
                                                 <div className="passenger-badge">
-                                                    {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                                                    {(formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants).toString().padStart(2, '0')}
                                                 </div>
                                             </div>
 
@@ -397,7 +404,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                         <span>Adult(s)</span>
                                                         <div className="counter-controls">
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                                                            <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
                                                         </div>
                                                     </div>
@@ -405,7 +412,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                         <span>Child(s)</span>
                                                         <div className="counter-controls">
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                                                            <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
                                                         </div>
                                                     </div>
@@ -413,7 +420,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                                         <span>Infant(s)</span>
                                                         <div className="counter-controls">
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                                                            <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                                            <span className="count-value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                                             <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
                                                         </div>
                                                     </div>
@@ -456,7 +463,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             type="text"
                                             name="captcha"
                                             placeholder="Answer"
-                                            value={formData.captcha}
+                                            value={formData.contactDetail.captcha}
                                             onChange={(e) => {
                                                 const val = e.target.value.replace(/[^0-9]/g, '');
                                                 setFormData(prev => ({ ...prev, captcha: val }));
@@ -472,7 +479,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                                             type="text"
                                             name="message"
                                             placeholder="Type a message"
-                                            value={formData.message}
+                                            value={formData.contactDetail.message}
                                             onChange={handleInputChange}
                                         />
                                     </div>

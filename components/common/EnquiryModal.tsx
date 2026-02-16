@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import '@/styles/components/_enquiry-modal.scss';
 
 interface EnquiryModalProps {
@@ -9,17 +10,25 @@ interface EnquiryModalProps {
     onClose: () => void;
     selectedPackage?: string;
     packageTitle?: string;
+    pageURL?: string;
 }
 
-export default function EnquiryModal({ isOpen, onClose, selectedPackage, packageTitle }: EnquiryModalProps) {
+export default function EnquiryModal({ isOpen, onClose, selectedPackage, packageTitle, pageURL }: EnquiryModalProps) {
+    const router = useRouter();
     const [formData, setFormData] = useState<Record<string, any>>({
         name: '',
         email: '',
         phone: '',
-        passengers: { adults: 1, children: 0, infants: 0 },
-        subject: '',
-        message: '',
-        captchaInput: ''
+        captchaInput: '',
+        contactDetail: {
+            passengers: { adults: 1, children: 0, infants: 0 },
+            subject: '',
+            message: '',
+            packageTitle: packageTitle,
+            selectedPackage: selectedPackage,
+            pageURL: pageURL,
+        }
+
     });
 
     const [captcha, setCaptcha] = useState({ n1: 0, n2: 0, result: 0 });
@@ -51,12 +60,22 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (['name', 'email', 'phone', 'captchaInput'].includes(name)) {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    [name]: value
+                }
+            }));
+        }
     };
 
     const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
         setFormData(prev => {
-            const currentValue = prev.passengers[type];
+            const currentValue = prev.contactDetail.passengers[type];
             let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
             if (type === 'adults' && newValue < 1) newValue = 1;
@@ -64,9 +83,12 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
             return {
                 ...prev,
-                passengers: {
-                    ...prev.passengers,
-                    [type]: newValue
+                contactDetail: {
+                    ...prev.contactDetail,
+                    passengers: {
+                        ...prev.contactDetail.passengers,
+                        [type]: newValue
+                    }
                 }
             };
         });
@@ -86,6 +108,8 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
         // Simulate API call
         setTimeout(() => {
+            console.log("formData", formData);
+            router.push('/success');
             toast.success('Your enquiry has been sent successfully!');
             setIsSubmitting(false);
             onClose();
@@ -94,16 +118,17 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                 name: '',
                 email: '',
                 phone: '',
-                passengers: { adults: 1, children: 0, infants: 0 },
-                subject: '',
-                message: '',
-                captchaInput: ''
+                contactDetail: {
+                    passengers: { adults: 1, children: 0, infants: 0 },
+                    subject: '',
+                    message: '',
+                }
             });
         }, 1500);
     };
 
-    const totalPassengers = formData.passengers.adults + formData.passengers.children + formData.passengers.infants;
-    const passengerLabel = `${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`;
+    const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;
+    const passengerLabel = `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`;
 
     if (!isOpen) return null;
 
@@ -141,7 +166,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                         <span>Adult(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('adults', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.adults.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('adults', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>
@@ -149,7 +174,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                         <span>Child(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('children', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.children.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('children', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>
@@ -157,7 +182,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                         <span>Infant(s)</span>
                                         <div className="counter">
                                             <button type="button" onClick={() => handlePassengerChange('infants', 'dec')} className="minus">-</button>
-                                            <span className="value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                                            <span className="value">{formData.contactDetail.passengers.infants.toString().padStart(2, '0')}</span>
                                             <button type="button" onClick={() => handlePassengerChange('infants', 'inc')} className="plus">+</button>
                                         </div>
                                     </div>
@@ -195,7 +220,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 type="text"
                                 name="subject"
                                 placeholder="Subject*"
-                                value={formData.subject}
+                                value={formData.contactDetail.subject}
                                 onChange={handleChange}
                                 required
                             />
@@ -218,7 +243,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 name="message"
                                 placeholder="Type a Message"
                                 rows={3}
-                                value={formData.message}
+                                value={formData.contactDetail.message}
                                 onChange={handleChange}
                                 required
                             ></textarea>

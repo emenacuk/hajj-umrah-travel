@@ -2,6 +2,8 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { useState, useEffect } from 'react';
+import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData, UmrahPackageData, HajjPackageData, ReviewData } from '@/types';
 import HomeBanner from '@/components/banners/HomeBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
@@ -25,6 +27,19 @@ interface HomeTemplateProps {
 }
 
 export default function HomeTemplate({ data }: HomeTemplateProps) {
+  const [slidersLoaded, setSlidersLoaded] = useState({
+    bestUmrah: false,
+    decemberDeals: false,
+    bestHajj: false,
+    exploration: false
+  });
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const bannerData = data.content?.banner || {};
   const umrahPackages = data.content?.umrahPackages || [];
   const hajjPackages = data.content?.hajjPackages || [];
@@ -74,7 +89,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
   return (
     <>
       {/* Home Banner */}
-      {bannerData && <HomeBanner data={bannerData} />}
+      {bannerData && <HomeBanner data={bannerData} loading={!isMounted} />}
 
       {/* Best Umrah Packages Section */}
       {umrahPackages.length > 0 && (
@@ -106,9 +121,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
 
-            <div className="packages-swiper-wrapper bestpackagesswiper">
+            <div className="packages-swiper-wrapper bestpackagesswiper" style={{ position: 'relative', minHeight: '400px' }}>
+              {!slidersLoaded.bestUmrah && <SliderSkeleton count={2} />}
               <Swiper
                 modules={[Navigation, Pagination]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, bestUmrah: true }))}
+                style={{ display: slidersLoaded.bestUmrah ? 'block' : 'none' }}
                 slidesPerView={1}
                 navigation={{
                   prevEl: '.prev-umrah',
@@ -164,9 +182,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper deals-swiper">
+          <div className="packages-swiper-wrapper deals-swiper" style={{ position: 'relative', minHeight: '400px' }}>
+            {!slidersLoaded.decemberDeals && <SliderSkeleton count={3} />}
             <Swiper
               modules={[Navigation, Pagination]}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, decemberDeals: true }))}
+              style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
               slidesPerView={1.2}
               navigation={{
                 prevEl: '.prev-december',
@@ -283,10 +304,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper">
-            <div className='sliderhere'>
+          <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+            {!slidersLoaded.bestHajj && <SliderSkeleton count={3} />}
+            <div className='sliderhere' style={{ display: slidersLoaded.bestHajj ? 'block' : 'none' }}>
               <Swiper
                 modules={[Navigation, Pagination]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, bestHajj: true }))}
                 slidesPerView={1}
                 navigation={{
                   prevEl: '.prev-haj',
@@ -349,10 +372,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper exploration-swiper">
-            <div className="exploration-swiper-inner">
+          <div className="packages-swiper-wrapper exploration-swiper" style={{ position: 'relative', minHeight: '400px' }}>
+            {!slidersLoaded.exploration && <SliderSkeleton count={3} />}
+            <div className="exploration-swiper-inner" style={{ display: slidersLoaded.exploration ? 'block' : 'none' }}>
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
+                onInit={() => setSlidersLoaded(prev => ({ ...prev, exploration: true }))}
                 slidesPerView="auto"
                 centeredSlides={true}
                 spaceBetween={24}
