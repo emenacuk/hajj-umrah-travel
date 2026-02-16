@@ -109,7 +109,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
         // Simulate API call
         setTimeout(() => {
             console.log("formData", formData);
-            router.push('/success');
+            router.push('/thank-you');
             toast.success('Your enquiry has been sent successfully!');
             setIsSubmitting(false);
             onClose();

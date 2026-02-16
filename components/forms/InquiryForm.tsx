@@ -80,7 +80,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
 
   const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
     setFormData(prev => {
-      const currentValue = prev.contactDetail.passengers[type];
+      const currentValue = prev.passengers[type];
       let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
       if (type === 'adults' && newValue < 1) newValue = 1;
@@ -129,7 +129,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
         });
         generateCaptcha();
         setTimeout(() => {
-          window.location.href = '/success';
+          window.location.href = '/thank-you';
         }, 2000);
       } else {
         toast.error('Submission failed. Please try again.');

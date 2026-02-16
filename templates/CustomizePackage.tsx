@@ -177,7 +177,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                     }
                 });
                 generateCaptcha();
-                router.push('/success');
+                router.push('/thank-you');
             } else {
                 toast.error('Submission failed. Please try again.');
             }
