@@ -18,7 +18,7 @@ export const staticRoutes = [
   '/november-umrah-packages',
   '/hajj-package-2026',
   '/customize-hajj-umrah',
-  '/success',
+  '/thank-you',
   '/about-us',
   '/reviews',
   '/terms-and-conditions',
