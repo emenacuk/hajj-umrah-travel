@@ -121,13 +121,13 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
 
-            <div className="packages-swiper-wrapper bestpackagesswiper" style={{ position: 'relative', minHeight: '400px' }}>
+            <div className="packages-swiper-wrapper bestpackagesswiper" style={{ position: 'relative' }}>
               {!slidersLoaded.bestUmrah && <SliderSkeleton count={2} />}
               <Swiper
                 modules={[Navigation, Pagination]}
                 onInit={() => setSlidersLoaded(prev => ({ ...prev, bestUmrah: true }))}
                 style={{ display: slidersLoaded.bestUmrah ? 'block' : 'none' }}
-                slidesPerView={1}
+                slidesPerView={1.2}
                 navigation={{
                   prevEl: '.prev-umrah',
                   nextEl: '.next-umrah',
@@ -137,7 +137,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 breakpoints={{
-                  640: { slidesPerView: 2 },
+                  640: { slidesPerView: 1 },
                   768: { slidesPerView: 1.2 },
                   992: { slidesPerView: 1.4 },
                   1025: { slidesPerView: 1.6 },
@@ -182,7 +182,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper deals-swiper" style={{ position: 'relative', minHeight: '400px' }}>
+          <div className="packages-swiper-wrapper deals-swiper" style={{ position: 'relative' }}>
             {!slidersLoaded.decemberDeals && <SliderSkeleton count={3} />}
             <Swiper
               modules={[Navigation, Pagination]}
@@ -203,12 +203,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 disableOnInteraction: false
               }}
               breakpoints={{
-                640: { slidesPerView: 2 },
+                640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },
                 1200: { slidesPerView: 2.2 },
-                1600: { slidesPerView: 2.8 },
+                1700: { slidesPerView: 2.8 },
                   
               }}
               className="packages-swiper"
@@ -304,7 +304,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
+          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
             {!slidersLoaded.bestHajj && <SliderSkeleton count={3} />}
             <div className='sliderhere' style={{ display: slidersLoaded.bestHajj ? 'block' : 'none' }}>
               <Swiper
@@ -372,13 +372,13 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper exploration-swiper" style={{ position: 'relative', minHeight: '400px' }}>
+          <div className="packages-swiper-wrapper exploration-swiper" style={{ position: 'relative' }}>
             {!slidersLoaded.exploration && <SliderSkeleton count={3} />}
             <div className="exploration-swiper-inner" style={{ display: slidersLoaded.exploration ? 'block' : 'none' }}>
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 onInit={() => setSlidersLoaded(prev => ({ ...prev, exploration: true }))}
-                slidesPerView="auto"
+                slidesPerView={1}
                 centeredSlides={true}
                 spaceBetween={24}
                 loop={umrahPackages.length > 1}
@@ -391,8 +391,13 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 autoplay={{
-                  delay: 2500,
+                  delay: 3500,
                   disableOnInteraction: false
+                }}
+                breakpoints={{
+                  
+
+                  640: { slidesPerView: 'auto' }
                 }}
                 className="packages-swiper exploration-packages-swiper"
               >
@@ -410,8 +415,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
 
       {/* New Banner and Reviews Sections */}
       <CustomizeBanner />
-     
-
+      <HomeReviews reviews={reviews} cardsPerSlide={2} />
       {/* Umrah & Hajj Services Section */}
       <UmrahHajjServices
         data={{

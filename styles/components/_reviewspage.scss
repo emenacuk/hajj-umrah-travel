@@ -1,41 +1,33 @@
 .reviews-page {
-  margin: 150px 0;
-    .sectionheadingstext {
-    position: relative;
-    padding: 30px 0;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 150px;
-      height: 30px;
-      background: url("/styleup.svg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 150px;
-      height: 30px;
-      background: url("/styledown.svg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-
-  }
+  margin: 150px 0 0;
   .reviews-grid {
     padding: 40px;
+    padding-bottom: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
+}
+@media (max-width:1200px) {
+    .reviews-page {
+        .reviews-grid{
+            padding: 40px 0;
+        }
+    }
+}
+@media (max-width:830px) {
+    .reviews-page {
+        .reviews-grid{
+          gap: 10px;
+        }
+    }
+}
+@media (max-width:767.5px) {
+    .reviews-page {
+      margin-top: 110px;
+        .reviews-grid{
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+    }
 }

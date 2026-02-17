@@ -251,3 +251,32 @@
         margin-top: 50px;
     }
 }
+@media (max-width: 767.5px) {
+    .site-footer {
+        .footer-brand{
+            padding-bottom: 15px;
+        }
+        .footer-main-content{
+            flex-wrap: wrap;
+            gap: 15px;
+            .footer-social{
+                order: 0;
+                width: 100%;
+            }
+            .footer-nav-primary{
+                order: 1;
+            }
+        }
+    }
+}
+@media (max-width: 576.5px) {
+    .site-footer{
+        .footer-payment-methods{
+            gap: 15px;
+            .payment-icon{
+                height: 40px;
+                width: 150px;
+            }
+        }
+    }
+}

@@ -42,7 +42,7 @@
   // margin-top: 100px;
   max-height: 600px;
   overflow-y: scroll;
-  margin: 100px 40px 0px 40px;
+  margin: 100px 0px 0px 0px;
   h2 {
     font-size: 36px;
     font-weight: 700;
@@ -105,4 +105,46 @@
 
 .section.faq-section{
     margin-top: 0px !important;
+}
+@media screen and (max-width:992.5px) {
+  .visa-info-section {
+    .visa-content-grid{
+      grid-template-columns: 1fr;
+      gap: 15px;
+      .visa-image-column{
+        order: 0;
+        .visaImageContainer{
+          max-width: 100%;
+        }
+      }
+      .visa-text-column {
+        order: 1;
+        h2 {
+          font-size: 1.5rem;
+        }
+        p {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .visa-scroll-grid{
+    margin: 50px 0px 0px 0px;
+    h2{
+      font-size: 24px;
+    }
+    h3{
+      font-size: 20px;
+    }
+    p{
+      font-size: 16px;
+    }
+    ul,
+    ol {
+      li {
+        font-size: 16px;
+      }
+    }
+  }
 }

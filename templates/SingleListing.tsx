@@ -41,12 +41,7 @@ export default function SingleListing({ data }: UmrahPackageTemplateProps) {
             </div>
           </div>
 
-          <div className="packages-grid-two-col" style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', 
-            gap: '70px',
-            marginTop: '0px' 
-          }}>
+          <div className="packages-grid-two-col" >
             {filteredPackages.map((pkg: any) => (
               <UmrahPackageCard key={pkg.id} package={pkg} />
             ))}

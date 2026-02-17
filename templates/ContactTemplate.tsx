@@ -117,9 +117,9 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
         <div className="container">
         <div className="customize-grid">
           <div className="form-column">
-            <div className='sectionheadings sectionheadings--center'>
+            <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">December Umrah Deals 2025</h2>
+                <h1 className="section-title">December Umrah Deals 2025</h1>
                 <p className="section-subtitle">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud

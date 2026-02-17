@@ -45,22 +45,24 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                     </div>
                 </div>    
             </div>
-            <div className="reviews-carousel" style={{ position: 'relative', minHeight: '300px' }}>
+            <div className="reviews-carousel" style={{ position: 'relative'}}>
                 {!isLoaded && <SliderSkeleton count={cardsPerSlide} />}
                 <div style={{ display: isLoaded ? 'block' : 'none' }}>
                     <Swiper
                         modules={[Navigation]}
                         onInit={() => setIsLoaded(true)}
-                        slidesPerView={1}
+                        slidesPerView={1.1}
                         navigation={{
                             prevEl: '.prev-review',
                             nextEl: '.next-review',
                         }}
                         breakpoints={{
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                            1280: { slidesPerView: 2 },
-                            1600: { slidesPerView: cardsPerSlide }
+                            576: { slidesPerView: 1.2 },
+                            768: { slidesPerView: 1.8 },
+                            850: { slidesPerView: 2 },
+                            992: { slidesPerView: 2.2 },
+                            1200: { slidesPerView: 2.5 },
+                            1600: { slidesPerView: 3 }
                         }}
                     >
                         {displayReviews.map((review) => (

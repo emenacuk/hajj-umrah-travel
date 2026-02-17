@@ -676,4 +676,51 @@
   .sectionheadings{
     grid-template-columns: 1fr;
   }
+  .partners-section,.home-reviews-section{
+    .sectionheadings{
+      grid-template-columns: 1fr 44px;
+    }
+  }
+}
+@media (max-width: 767.5px) {
+  .section-title{
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .section-subtitle{
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .bestpackages{
+    padding: 50px 0px 0;
+    .sideimage,.sectionheadings{
+      padding:  0 20px;
+      padding-bottom: 30px;
+    }
+    .bestpackagesswiper{
+      .swiper-slide{
+        padding-left: 15px;
+      }
+    }
+  }
+  .dealssection {
+    .swiper-slide{
+      padding-left: 15px;
+    }
+  }
+  .why-us-section {
+    .features-grid {
+      .features-card-wrapper{
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+    }
+  }
+  .exploration-section{
+    .exploration-swiper {
+      .swiper-slide{
+        width: 300px;
+      }
+    }
+  }
 }

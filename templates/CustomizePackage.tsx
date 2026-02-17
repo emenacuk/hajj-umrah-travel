@@ -579,7 +579,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
                             </button>
                         </div>
                         <div className="person-image-wrapper">
-                            <img src="/Hajj-pillgrim.png" alt="Person in Ihram" className="person-image" />
+                            <img src="/umrahpilgrim.png" alt="Person in Ihram" className="person-image" />
                         </div>
                     </div>
                 </div>

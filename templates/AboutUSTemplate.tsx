@@ -55,8 +55,9 @@ export default function AboutUSTemplate({ data }: AboutUSTemplateProps) {
           />
         </div>
       <WhyChoose />
-      <HomeReviews reviews={reviews} cardsPerSlide={2} />
+      
       </div>
+      <HomeReviews reviews={reviews} cardsPerSlide={2} />
     </div>
   )
 }

@@ -537,6 +537,17 @@
       }
      } 
     }
+    &.is-inner-page{
+      .form-row{
+        &.three-cols{
+          display: grid;
+          .form-group{
+            width: 100%;
+          }
+        }
+        
+      }
+    }
   }
 }
 @media screen and (max-width:1200px) {
@@ -552,5 +563,67 @@
       }
      }
     }
+    &.is-inner-page{
+      .form-row{
+        &.three-cols{
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          .form-group{
+            width: 100%;
+          }
+        }
+        &.captcha-row{
+          grid-template-columns:  1fr 1fr 42px;
+          .submit-icon-btn{
+            margin-left: auto;
+          }
+         }
+      }
+    }
   }
+}
+@media screen and (max-width:992.5px) {
+   .premium-inquiry-form {
+    &.is-inner-page{
+        .form-row{
+          &.three-cols{
+            display: flex;
+            flex-wrap: wrap;
+            .form-group{
+              width: calc(50% - 5px);
+              &:last-child{
+                width: 100%;
+              }
+            }
+          }
+          &.captcha-row{
+            grid-template-columns:  1fr 1fr 42px;
+            .submit-icon-btn{
+              margin-left: auto;
+            }
+          }
+        }
+      }
+   }
+}
+@media screen and (max-width:576.5px) {
+    .premium-inquiry-form {
+      &.is-inner-page{
+        .form-row{
+          &.three-cols{
+            display: grid;
+            grid-template-columns: 1fr;
+            .form-group{
+              width: 100%;
+            }
+          }
+          &.captcha-row{
+            grid-template-columns:  1fr;
+            .submit-icon-btn{
+              margin-left: auto;
+            }
+          }
+        }
+      }
+    }
 }

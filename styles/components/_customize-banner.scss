@@ -125,4 +125,27 @@
             }
         }
     }
+    .customize-banner {
+        
+        .banner-area {
+            background-position: left center !important;
+            padding: 35px 20px 35px;
+            h2{
+                font-size: 34px;
+                line-height: 40px;
+                span {
+                    font-size: 24px;
+                    line-height: 1.2;
+                }
+            }
+            p{
+                font-size: 14px;
+                margin: 10px 0 20px;
+            }
+        }
+        .customize-btn{
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+    }
 }

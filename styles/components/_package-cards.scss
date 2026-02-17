@@ -379,3 +379,15 @@
     }
   }
 }
+@media screen and (max-width:576.5px){
+  .package-card{
+    grid-template-columns:1fr;
+    gap: 15px;
+    .package-content {
+      h2{
+        font-size: 20px;
+        line-height: 26px;
+      }
+    }
+  }
+}

@@ -66,13 +66,14 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/3-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
-              {!slidersLoaded.threeStar && <SliderSkeleton count={2} />}
+              </div>
+                <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+                  {!slidersLoaded.threeStar && <SliderSkeleton count={2} />}
                   <Swiper
                     key="three-star-swiper"
                     modules={[Navigation, Pagination]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, threeStar: true }))}
-                style={{ opacity: slidersLoaded.threeStar ? 1 : 0 }}
+                    onInit={() => setSlidersLoaded(prev => ({ ...prev, threeStar: true }))}
+                    style={{ opacity: slidersLoaded.threeStar ? 1 : 0 }}
                     slidesPerView={1}
                     spaceBetween={24}
                     navigation={{
@@ -82,8 +83,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     className="packages-swiper"
                     breakpoints={{
                       640: { slidesPerView: 1 },
-                      1024: { slidesPerView: 2 },
-                      1280: { slidesPerView: 2 },
+                      768: { slidesPerView: 1.2 },
+                      992: { slidesPerView: 1.4 },
+                      1025: { slidesPerView: 1.6 },
+                      1200: { slidesPerView: 2.2 },
+                      1700: { slidesPerView: 2.8 },
                     }}
                   >
                     {threeStarPackages.map((pkg: any) => (
@@ -93,7 +97,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     ))}
                   </Swiper>
                 </div>
-               </div>
+               
             </section>
           )}
 
@@ -122,15 +126,14 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/4-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-             
-
-            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
-              {!slidersLoaded.fourStar && <SliderSkeleton count={2} />}
+              </div>
+                <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+                  {!slidersLoaded.fourStar && <SliderSkeleton count={2} />}
                   <Swiper
                     key="four-star-swiper"
                     modules={[Navigation, Pagination]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, fourStar: true }))}
-                style={{ opacity: slidersLoaded.fourStar ? 1 : 0 }}
+                    onInit={() => setSlidersLoaded(prev => ({ ...prev, fourStar: true }))}
+                    style={{ opacity: slidersLoaded.fourStar ? 1 : 0 }}
                     slidesPerView={1}
                     spaceBetween={24}
                     navigation={{
@@ -140,8 +143,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     className="packages-swiper"
                     breakpoints={{
                       640: { slidesPerView: 1 },
-                      1024: { slidesPerView: 2 },
-                      1280: { slidesPerView: 2 },
+                      768: { slidesPerView: 1.2 },
+                      992: { slidesPerView: 1.4 },
+                      1025: { slidesPerView: 1.6 },
+                      1200: { slidesPerView: 2.2 },
+                      1700: { slidesPerView: 2.8 },
                     }}
                   >
                     {fourStarPackages.map((pkg: any) => (
@@ -151,7 +157,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     ))}
                   </Swiper>
                 </div>
-               </div>
+               
             </section>
           )}
           {fiveStarPackages.length > 0 && (
@@ -178,35 +184,36 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                     <Link href="/5-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
                   </div>
                 </div>
-             
-
-            <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
-              {!slidersLoaded.fiveStar && <SliderSkeleton count={2} />}
-                  <Swiper
-                    key="five-star-swiper"
-                    modules={[Navigation, Pagination]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, fiveStar: true }))}
-                style={{ opacity: slidersLoaded.fiveStar ? 1 : 0 }}
-                    slidesPerView={1}
-                    spaceBetween={24}
-                    navigation={{
-                      prevEl: '#prev-5star',
-                      nextEl: '#next-5star',
-                    }}
-                    className="packages-swiper"
-                    breakpoints={{
-                      640: { slidesPerView: 1 },
-                      1024: { slidesPerView: 2 },
-                      1280: { slidesPerView: 2 },
-                    }}
-                  >
-                    {fiveStarPackages.map((pkg: any) => (
-                      <SwiperSlide key={pkg.id}>
-                        <UmrahPackageCard package={pkg} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
+              </div>
+              <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+                {!slidersLoaded.fiveStar && <SliderSkeleton count={2} />}
+                <Swiper
+                  key="five-star-swiper"
+                  modules={[Navigation, Pagination]}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, fiveStar: true }))}
+              style={{ opacity: slidersLoaded.fiveStar ? 1 : 0 }}
+                  slidesPerView={1}
+                  spaceBetween={24}
+                  navigation={{
+                    prevEl: '#prev-5star',
+                    nextEl: '#next-5star',
+                  }}
+                  className="packages-swiper"
+                  breakpoints={{
+                    640: { slidesPerView: 1 },
+                    768: { slidesPerView: 1.2 },
+                    992: { slidesPerView: 1.4 },
+                    1025: { slidesPerView: 1.6 },
+                    1200: { slidesPerView: 2.2 },
+                    1700: { slidesPerView: 2.8 },
+                  }}
+                >
+                  {fiveStarPackages.map((pkg: any) => (
+                    <SwiperSlide key={pkg.id}>
+                      <UmrahPackageCard package={pkg} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </section>
           )}

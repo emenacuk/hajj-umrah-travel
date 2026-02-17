@@ -1,0 +1,47 @@
+.packages-grid-two-col{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 0px;
+}
+@media (max-width: 1200px) {
+    .packages-grid-two-col {
+        gap: 15px;
+        .package-card{
+            grid-template-columns: 1fr;
+        }
+    }
+}
+@media (max-width: 767.5px) {
+    .package-card{
+        grid-template-columns: 1fr;
+        .package-content {
+            h2{
+                font-size: 20px;
+                line-height: 26px;
+            }
+            .package-price{
+                .price-amount{
+                    font-size: 35px;
+                    line-height: 39px;
+                }
+            }
+            .hotels{
+                gap: 10px;
+                .package-hotel{
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+            .package-actions{
+                flex-wrap: wrap;
+            }
+        }
+    }
+}
+@media (max-width: 576.5px) {
+    .packages-grid-two-col{
+        gap: 15px;
+        grid-template-columns: 1fr;
+    }
+}

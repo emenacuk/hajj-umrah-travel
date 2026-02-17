@@ -13,13 +13,15 @@ export default function ReviewsTemplate({ data }: ReviewsTemplateProps) {
     return (
         <div className='reviews-page'>
             <div className='container'>
-                <div className='sectionheadingstext'>
-                    <h2 className="section-title">What Our Customers Say</h2>
-                    <p className="section-subtitle">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip
-                    </p>
+                <div className='sectionheadings'>
+                    <div className='sectionheadingstext'>
+                        <h2 className="section-title">What Our Customers Say</h2>
+                        <p className="section-subtitle">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip
+                        </p>
+                    </div>
                 </div>
                 <div className='reviews-grid'>
                     {reviews.map((review: ReviewData) => (

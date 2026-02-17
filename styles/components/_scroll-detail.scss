@@ -174,3 +174,36 @@
         }
     }
 }
+@media (max-width: 767.5px) {
+    .scroll-detail-section {
+        .scroll-detail-wrapper{
+            .content{
+                .text-content {
+                    .scroll-content {
+                        h2{
+                            font-size: 24px;
+                            margin-bottom: 12px;
+                        }
+                        h3{
+                            font-size: 20px;
+                            margin-bottom: 12px;
+                        }
+                        p{
+                            font-size: 14px;
+                            line-height: 1.2;
+                            margin-bottom: 12px;
+                        }
+                        ul{
+                            margin-bottom: 12px;
+                            li{
+                                font-size: 14px;
+                                line-height: 1.2;
+                                margin-bottom: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
