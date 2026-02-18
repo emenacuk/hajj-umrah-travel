@@ -1,61 +1,46 @@
 // Special Pages Styles (404, Success)
 .thank-you-page {
-  min-height: 100vh;
+  margin-top: 110px;
   position: relative;
   background-color: #fff;
-  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  + .site-footer{
+    margin-top: 0;
+  }
   .image-wrapper {
-    position: absolute;
-    top: 135px;
-    left: 0;
     width: 100%;
-    height: calc(100% - 135px);
+    height: 100%;
     background-image: url("/bg-1.jpg");
     background-size: cover;
     object-fit: cover;
     background-position: center;
     background-repeat: no-repeat;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 100%;
-    padding: 0;
-  }
-
-  .side-lanterns{
-    position: absolute;
-    top: 0px; // Offset slightly upwards to look like they hang from outside
-    left: 0;
-    width: 100%;
-    height: 450px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 4%;
-    z-index: 1;
-    pointer-events: none; // Ensure they don't block clicks
-    
-    .lantern-left, .lantern-right {
-      width: 180px;
+      position: relative;
+    &::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 300px;
       height: 100%;
-      background-size: contain;
-      background-position: top center;
-      background-repeat: no-repeat;
+      background: url('/lantern-left.png')  top center no-repeat;
+      background-size: contain !important;
+      max-height: 395px;  
     }
-
-    .lantern-left{
-      background-image: url("/lantern-left.png");
-    }
-    
-    .lantern-right{
-      background-image: url("/lantern-right.png");
+    &:after{
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background: url('/lantern-right.png')  top center no-repeat;
+      background-size: contain !important;
+      max-height: 395px;  
     }
   }
-
   .thank-you-content {
     display: flex;
     flex-direction: column;
@@ -65,7 +50,7 @@
     position: relative;
     padding: 0 20px;
     z-index: 2;
-
+  
     .thank-top-messages {
       position: absolute;
       top: 40px;
@@ -81,8 +66,8 @@
         text-align: center;
 
         p {
-          font-size: 24px;
-          font-weight: 400;
+          font-size: 26px;
+          font-weight: 500;
           margin-bottom: 0px;
           color: white;
           font-family: var(--font-body);
@@ -93,63 +78,61 @@
           }
         }
       }
+      .error-messages{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        .error-right{
+          text-align: right;
+        }
+        p{
+          font-size: 22px;
+          color: #fff;
+          button{
+            text-decoration: none;
+            font-size: 22px;
+            color: #fff;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+          }
+        }
+      }
     }
 
     .thank-you-title {
-      font-family: "Montserrat", sans-serif;
-      font-size: 180px;
-      font-weight: 900;
-      color: transparent;
-      -webkit-text-stroke: 6px white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 40px 0;
-      line-height: 0.9;
-      text-transform: uppercase;
-      text-align: center;
-
-      .word {
+        font-family: var(--font-heading);
+        font-size: 170px;
+        font-weight: 900;
+        color: transparent;
+        -webkit-text-stroke: 6px #ffffff; 
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        gap: 10px;
-      }
-
-      span {
+        margin: 40px 0;
+        line-height: 0.9;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: 14px;
         position: relative;
-        display: inline-block;
-        padding: 0 5px;
-
-        &.char-o {
-          &::before {
-            content: "";
-            position: absolute;
-            top: 25%;
-            left: 22.5%;
-            width: 55%;
-            height: 50%;
-            border: 6px solid #fff;
-            border-radius: 50%;
-            box-shadow: 3px 3px 0px #d4af37;
-            z-index: -1;
+        &::before {
+          content: attr(data-text);
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: -1;
+          color: transparent;
+          -webkit-text-stroke: 10px   var(--color-primary); 
+          letter-spacing: 14px;
+        }
+        &.error-title{
+          font-size: 180px;
+          + .thank-you-buttons{
+            width: 100%;
           }
         }
-
-        &.char-u {
-          &::before {
-            content: "";
-            position: absolute;
-            bottom: 30%;
-            left: 25%;
-            width: 50%;
-            height: 6px;
-            background: #fff;
-            box-shadow: 2px 2px 0px #d4af37;
-            z-index: -1;
-          }
-        }
-      }
     }
 
     .thank-you-buttons {
@@ -204,75 +187,90 @@
       }
     }
   }
+}
 
   // Large Desktop
-  @media (max-width: 1400px) {
+@media screen and (max-width:1650px) and (min-width:1450px) {
+  .thank-you-page {
     .thank-you-content {
-      .thank-you-title {
-        font-size: 140px;
+      .thank-you-title{
+          font-size: 138px;
         -webkit-text-stroke: 5px white;
       }
     }
   }
-
-  @media (max-width: 1200px) {
-    .image-wrapper {
-      top: 100px;
-      height: calc(100% - 100px);
-    }
-    
-    .side-lanterns {
-      height: 350px;
-      .lantern-left, .lantern-right { width: 140px; }
-    }
-    
-    .thank-you-content {
-      min-height: calc(100vh - 100px);
-      
-      .thank-top-messages {
-        top: 30px;
-        .thank-top p { font-size: 20px; }
+}
+@media screen and (max-width:1450px) {
+    .thank-you-page {
+      .image-wrapper{
+        &::before,&::after{
+          content: "";
+          width: 192px;
+          max-height: 380px;
+        }
       }
-      
-      .thank-you-title {
-        font-size: 120px;
-        -webkit-text-stroke: 4px white;
+      .thank-you-content {
+        .thank-you-title{
+            font-size: 120px;
+          -webkit-text-stroke: 5px white;
+        }
+      }
+    }
+  
+    
+}
+@media screen and (min-width:1200px) {
+  .thank-you-page {
+    .thank-you-content {
+      .thank-you-title{
+          br{
+            display: none;
+          }
       }
     }
   }
+}
+
+@media (max-width: 1200px) {
+  .thank-you-page .thank-you-content .thank-you-title.error-title{
+    font-size: 160px;
+  }
+  .thank-you-page .thank-you-content .thank-top-messages .error-messages{
+    flex-direction: column;
+    align-items: center;
+    .error-right,.error-left{
+      text-align: center;
+    }
+  }
+}
 
   // Tablet Portrait
-  @media (max-width: 992px) {
-    .side-lanterns {
-      height: 280px;
-      .lantern-left, .lantern-right { width: 100px; }
+  @media (max-width: 992px) {    
+    .thank-you-page {
+      .thank-you-content {
+        .thank-top-messages {
+          .thank-top{
+            p{
+              font-size: 18px;
+            }
+          }
+        }
+        .thank-you-title{
+            font-size: 100px;
+        }
+      }
     }
-    
-    .thank-you-content {
-      .thank-you-title {
-        font-size: 100px;
-        -webkit-text-stroke: 4px white;
-        
-        span.char-o::before { border-width: 4px; }
-        span.char-u::before { height: 4px; }
+    .thank-you-page .thank-you-content .thank-you-title.error-title{
+      font-size: 130px;
+      letter-spacing: 2px;
+      &::before{
+        letter-spacing: 2px;
       }
     }
   }
 
   // Mobile Overhaul (Phone)
   @media (max-width: 767px) {
-    .image-wrapper {
-      top: 0;
-      height: 100%;
-    }
-
-    .side-lanterns {
-      height: 200px;
-      padding: 0 10px;
-      top: 80px; // Stay below hamburger
-      .lantern-left, .lantern-right { width: 60px; }
-    }
-
     .thank-you-content {
       justify-content: flex-start;
       padding-top: 180px; // PUSH BELLOW LOGO
@@ -289,27 +287,6 @@
           line-height: 1.5;
         }
       }
-
-      .thank-you-title {
-        font-size: 55px;
-        -webkit-text-stroke: 2px white;
-        filter: drop-shadow(3px 3px 0px #d4af37);
-        margin: 20px 0;
-
-        .word {
-          gap: 5px;
-        }
-
-        span.char-o::before { 
-          border-width: 2px;
-          box-shadow: 1px 1px 0px #d4af37;
-        }
-        span.char-u::before { 
-          height: 2px;
-          box-shadow: 1px 1px 0px #d4af37;
-        }
-      }
-
       .thank-you-buttons {
         position: relative;
         bottom: 0;
@@ -317,7 +294,7 @@
         transform: none;
         margin-top: 30px;
         width: 100%;
-        max-width: 220px;
+        max-width: 260px;
 
         .btn {
           width: 100%;
@@ -326,15 +303,76 @@
         }
       }
     }
+    .thank-you-page {
+      .thank-you-content {
+        .thank-top-messages {
+          .thank-top{
+            p{
+              font-size: 18px;
+            }
+          }
+        }
+        .thank-you-title{
+            font-size: 100px;
+        }
+      }
+      .image-wrapper{
+        &::after,
+        &::before{
+          width: 98px;
+        }
+      }
+    }
   }
 
-  // Adjust for very short screens (like 720p rotated or small phones)
-  @media (max-height: 700px) and (max-width: 767px) {
-    .thank-you-content {
-      padding-top: 140px;
-      .thank-you-title { font-size: 45px; margin: 10px 0; }
-      .thank-top-messages { margin-bottom: 10px; .thank-top p { font-size: 16px; } }
+@media (max-width: 576px) {
+   .thank-you-page {
+      .thank-you-content {
+        .thank-you-buttons{
+          max-width: 100%;
+        }
+        .thank-top-messages {
+          padding: 0 19%;
+          .thank-top{
+            p{
+              font-size: 16px;
+            }
+          }
+        }
+        .thank-you-title{
+            font-size: 80px;
+            -webkit-text-stroke: 4px white;
+            &::before{
+              -webkit-text-stroke: 8px var(--color-primary);  
+            }
+        }
+      }
+      .image-wrapper{
+        &::after,
+        &::before{
+          width: 98px;
+        }
+      }
     }
+  .thank-you-page .thank-you-content .thank-top-messages .error-messages{
+      .error-right,.error-left{
+        p{
+          font-size: 13px;
+          button{
+            font-size: 13px;
+          }
+          br{
+            display: none;
+          }
+        }
+        text-align: center;
+      }
+  }
+  .thank-you-page .thank-you-content .thank-you-title.error-title + .thank-you-buttons{
+    flex-direction: column;
+  }
+  .thank-you-page .thank-you-content .thank-you-title.error-title{
+    font-size: 90px;
   }
 }
 

@@ -29,22 +29,21 @@ export default function PackageContactInfo({ contact }: PackageContactInfoProps)
                         </div>
                     </Link>
                     <Link href={`mailto:${contact.email}`}>
-                    <div className="contact-info-pill">
-                        <div className="contact-icon">
-                            <div className="notification-badge">1</div>
-                            <img src="/message.svg" alt="Email Us" />
+                        <div className="contact-info-pill">
+                            <div className="contact-icon">
+                                <img src="/message.svg" alt="Email Us" />
+                            </div>
+                            <div className="contact-text">
+                                <span className="contact-label">Email Us!</span>
+                                <span className="contact-value">{contact.email}</span>
+                            </div>
                         </div>
-                        <div className="contact-text">
-                            <span className="contact-label">Email Us!</span>
-                            <span className="contact-value">{contact.email}</span>
-                        </div>
-                    </div>
                     </Link>
                     <Link
-                    href={`${contact.whatsapp}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contactitemlink whatsapp"
+                        href={`${contact.whatsapp}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="contactitemlink whatsapp"
                     >
                         <div className="contact-info-pill">
                             <div className="contact-icon">

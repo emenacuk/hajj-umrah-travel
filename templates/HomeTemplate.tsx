@@ -209,7 +209,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 1025: { slidesPerView: 1.6 },
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
-                  
+
               }}
               className="packages-swiper"
             >
@@ -320,11 +320,11 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 breakpoints={{
-                  
+
 
                   640: { slidesPerView: 2 },
                   992: { slidesPerView: 2.2 },
-                  1025: { slidesPerView: 2.5},
+                  1025: { slidesPerView: 2.5 },
                   1200: { slidesPerView: 2 },
                   1500: { slidesPerView: 3 },
                 }}
@@ -335,14 +335,14 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   </SwiperSlide>
                 ))}
               </Swiper>
-               <div className="swiper-pagination-custom haj-pagination"></div>
+              <div className="swiper-pagination-custom haj-pagination"></div>
             </div>
             <div className='imagearea'>
               <img src="/Hajj-pillgrim.png" alt="" />
             </div>
           </div>
 
-         
+
         </section>
       )}
 
@@ -391,11 +391,11 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 autoplay={{
-                  delay: 3500,
+                  delay: 1500,
                   disableOnInteraction: false
                 }}
                 breakpoints={{
-                  
+
 
                   640: { slidesPerView: 'auto' }
                 }}
@@ -480,7 +480,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
         <div className="partners-logos">
           <Swiper
             modules={[Navigation]}
-            slidesPerView="auto"
+            slidesPerView={2.2}
             spaceBetween={24}
             navigation={{
               prevEl: '.partner-prev',

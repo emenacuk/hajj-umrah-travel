@@ -16,10 +16,31 @@ export default function Header() {
     useEffect(() => {
         const checkBanner = () => {
             const banner = document.querySelector('.inner-banner');
-            setHasInnerBanner(!!banner);
+            const exists = !!banner;
+            setHasInnerBanner(exists);
         };
-        const timer = setTimeout(checkBanner, 100);
-        return () => clearTimeout(timer);
+
+        // Initial checks
+        checkBanner();
+        // Check again after a short delay to account for React rendering
+        const rafId = requestAnimationFrame(checkBanner);
+        const timeoutId = setTimeout(checkBanner, 100);
+
+        // Observer for any subsequent DOM changes
+        const observer = new MutationObserver(() => {
+            checkBanner();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        return () => {
+            observer.disconnect();
+            cancelAnimationFrame(rafId);
+            clearTimeout(timeoutId);
+        };
     }, [pathname]);
 
     useEffect(() => {
@@ -109,10 +130,10 @@ export default function Header() {
 
                     {/* Navigation Pills */}
                     <nav className="nav-pills">
-                        <Link href="/umrah" className={`nav-pill ${isActive('/umrah') ? 'active' : ''}`}>
+                        <Link href="/best-umrah-packages-2025-2026" className={`nav-pill ${isActive('/umrah') ? 'active' : ''}`}>
                             Umrah
                         </Link>
-                        <Link href="/hajj" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
+                        <Link href="/hajj-package-2026" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
                             Hajj Package
                         </Link>
                         <Link href="/customize-hajj-umrah" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>

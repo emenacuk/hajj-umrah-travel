@@ -176,10 +176,13 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                   )}
                   <Swiper
                     onSwiper={setThumbsSwiper}
-                    slidesPerView={4}
+                    slidesPerView={3}
                     freeMode={true}
                     watchSlidesProgress={true}
                     modules={[FreeMode, Navigation, Thumbs]}
+                    breakpoints={{
+                      992: { slidesPerView: 4 }
+                    }}
                     className="thumbs-gallery-swiper"
                   >
                     {images.map((img: string, index: number) => (
@@ -337,36 +340,40 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
               <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
             </div>
           </div>
-          <div className="related-pkgs-grid" style={{ position: 'relative', minHeight: '400px' }}>
-            {!isRelatedLoaded && <SliderSkeleton count={2} />}
-            <Swiper
-              modules={[Navigation, Pagination]}
-              onInit={() => setIsRelatedLoaded(true)}
-              style={{ display: isRelatedLoaded ? 'block' : 'none' }}
-              spaceBetween={30}
-              slidesPerView={1}
-              navigation={{
-                prevEl: '.prev-related',
-                nextEl: '.next-related',
-              }}
-              pagination={{
-                el: '.related-pagination-custom',
-                clickable: true
-              }}
-              breakpoints={{
-                768: { slidesPerView: 2 },
-                1200: { slidesPerView: 2 }
-              }}
-              className="related-packages-swiper"
-            >
-              {relatedPackages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <div className="swiper-pagination-custom related-pagination-custom"></div>
-          </div>
+        </div>
+        <div className="related-pkgs-grid" style={{ position: 'relative' }}>
+          {!isRelatedLoaded && <SliderSkeleton count={2} />}
+          <Swiper
+            modules={[Navigation, Pagination]}
+            onInit={() => setIsRelatedLoaded(true)}
+            style={{ display: isRelatedLoaded ? 'block' : 'none' }}
+            spaceBetween={30}
+            slidesPerView={1}
+            navigation={{
+              prevEl: '.prev-related',
+              nextEl: '.next-related',
+            }}
+            pagination={{
+              el: '.related-pagination-custom',
+              clickable: true
+            }}
+            breakpoints={{
+              640: { slidesPerView: 1 },
+              768: { slidesPerView: 1.2 },
+              992: { slidesPerView: 1.4 },
+              1025: { slidesPerView: 1.6 },
+              1200: { slidesPerView: 2.2 },
+              1700: { slidesPerView: 2.8 },
+            }}
+            className="related-packages-swiper"
+          >
+            {relatedPackages.map((pkg: any) => (
+              <SwiperSlide key={pkg.id}>
+                <UmrahPackageCard package={pkg} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div className="swiper-pagination-custom related-pagination-custom"></div>
         </div>
       </section>
       <EnquiryModal

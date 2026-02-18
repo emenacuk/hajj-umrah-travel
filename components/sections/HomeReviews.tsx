@@ -26,11 +26,11 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
             <div className="container">
                 <div className='sectionheadings'>
                     <div className='sectionheadingstext'>
-                        <h2 className="section-title">Explore Our Umrah Packages</h2>
+                        <h2 className="section-title">What Our Clients Says</h2>
                         <p className="section-subtitle">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip
                         </p>
                     </div>
                     <div className='rightside justify-content-end'>
@@ -43,9 +43,9 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                             </button>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
-            <div className="reviews-carousel" style={{ position: 'relative'}}>
+            <div className="reviews-carousel" style={{ position: 'relative' }}>
                 {!isLoaded && <SliderSkeleton count={cardsPerSlide} />}
                 <div style={{ display: isLoaded ? 'block' : 'none' }}>
                     <Swiper
@@ -80,7 +80,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                                                 <div className='reviewerinfo'>
                                                     <h4 className="reviewer-name">{review.name}</h4>
                                                     <p className="reviewer-location">{review.location}</p>
-                                                </div>                                       
+                                                </div>
                                                 <div className="reviewer-rating">
                                                     {Array.from({ length: 5 }).map((_, i) => (
                                                         <span key={i} className={i < review.rating ? 'star-filled' : 'star-empty'}>
@@ -90,7 +90,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </SwiperSlide>
                         ))}

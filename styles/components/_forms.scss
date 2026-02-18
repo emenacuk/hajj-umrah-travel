@@ -16,6 +16,7 @@
     display: flex;
     gap: 15px;
     width: 100%;
+
     &.three-cols {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -319,6 +320,10 @@
     cursor: pointer;
     transition: background 0.3s;
 
+    .textbtn {
+      display: none;
+    }
+
     &:hover {
       background: var(--color-primary-dark);
     }
@@ -526,104 +531,140 @@
 @media screen and (max-width:1600px) and (min-width:1200px) {
   .premium-inquiry-form {
     .form-row {
-     &.three-cols{
-      display: flex;
-      flex-wrap: wrap;
-      .form-group{
-        width: calc(50% - 5px);
-        &:last-child{
-          width: 100%;
-        }
-      }
-     } 
-    }
-    &.is-inner-page{
-      .form-row{
-        &.three-cols{
-          display: grid;
-          .form-group{
+      &.three-cols {
+        display: flex;
+        flex-wrap: wrap;
+
+        .form-group {
+          width: calc(50% - 5px);
+
+          &:last-child {
             width: 100%;
           }
         }
-        
+      }
+    }
+
+    &.is-inner-page {
+      .form-row {
+        &.three-cols {
+          display: grid;
+
+          .form-group {
+            width: 100%;
+          }
+        }
+
       }
     }
   }
 }
+
 @media screen and (max-width:1200px) {
   .premium-inquiry-form {
     .form-row {
-     &.three-cols{
-      grid-template-columns: 1fr;
-     } 
-     &.captcha-row{
-      grid-template-columns: 1fr;
-      .submit-icon-btn{
-        margin-left: auto;
+      &.three-cols {
+        grid-template-columns: 1fr;
       }
-     }
+
+      &.captcha-row {
+        grid-template-columns: 1fr;
+
+        .submit-icon-btn {
+          margin-left: auto;
+        }
+      }
     }
-    &.is-inner-page{
-      .form-row{
-        &.three-cols{
+
+    &.is-inner-page {
+      .form-row {
+        &.three-cols {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          .form-group{
+
+          .form-group {
             width: 100%;
           }
         }
-        &.captcha-row{
-          grid-template-columns:  1fr 1fr 42px;
-          .submit-icon-btn{
+
+        &.captcha-row {
+          grid-template-columns: 1fr 1fr 42px;
+
+          .submit-icon-btn {
             margin-left: auto;
           }
-         }
+        }
+      }
+    }
+  }
+
+  .premium-inquiry-form .form-row.captcha-row .submit-icon-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 15px;
+    padding: 10px 15px;
+    gap: 5px;
+
+    .textbtn {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+@media screen and (max-width:992.5px) {
+  .premium-inquiry-form {
+    &.is-inner-page {
+      .form-row {
+        &.three-cols {
+          display: flex;
+          flex-wrap: wrap;
+
+          .form-group {
+            width: calc(50% - 5px);
+
+            &:last-child {
+              width: 100%;
+            }
+          }
+        }
+
+        &.captcha-row {
+          grid-template-columns: 1fr 1fr 42px;
+
+          .submit-icon-btn {
+            margin-left: auto;
+          }
+        }
       }
     }
   }
 }
-@media screen and (max-width:992.5px) {
-   .premium-inquiry-form {
-    &.is-inner-page{
-        .form-row{
-          &.three-cols{
-            display: flex;
-            flex-wrap: wrap;
-            .form-group{
-              width: calc(50% - 5px);
-              &:last-child{
-                width: 100%;
-              }
-            }
-          }
-          &.captcha-row{
-            grid-template-columns:  1fr 1fr 42px;
-            .submit-icon-btn{
-              margin-left: auto;
-            }
+
+@media screen and (max-width:576.5px) {
+  .premium-inquiry-form {
+    &.is-inner-page {
+      .form-row {
+        &.three-cols {
+          display: grid;
+          grid-template-columns: 1fr;
+
+          .form-group {
+            width: 100%;
           }
         }
-      }
-   }
-}
-@media screen and (max-width:576.5px) {
-    .premium-inquiry-form {
-      &.is-inner-page{
-        .form-row{
-          &.three-cols{
-            display: grid;
-            grid-template-columns: 1fr;
-            .form-group{
-              width: 100%;
-            }
-          }
-          &.captcha-row{
-            grid-template-columns:  1fr;
-            .submit-icon-btn{
-              margin-left: auto;
-            }
+
+        &.captcha-row {
+          grid-template-columns: 1fr;
+
+          .submit-icon-btn {
+            margin-left: auto;
           }
         }
       }
     }
+  }
 }

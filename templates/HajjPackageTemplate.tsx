@@ -44,7 +44,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
 
           {/* All Hajj Shifting Packages Slider */}
           {shiftingPackages.length > 0 && (
-            <section className="section exploration-section">
+            <section className="section exploration-section" style={{ paddingTop: 0 }}>
               <div className="container">
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
@@ -184,7 +184,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               </div>
               <FAQ items={faqs} />
             </div>
-            
+
           </section>
         )}
       </section>

@@ -162,6 +162,9 @@ img {
 .container-fluid {
   padding: 0 53px;
   max-width: 100%;
+  @media screen and (max-width:1400px) {
+    padding: 0 20px; 
+  }
 }
 
 // Buttons
@@ -374,5 +377,27 @@ img {
 }
 
 .static-section{
-  margin: 150px 0;
+  margin: 150px 0 0;
+  @media screen and (max-width: 992.5px) {
+    margin: 100px 0 0;
+  }
+}
+
+@media screen and (max-width: 992.5px) {
+  .content-body {
+    h2{
+      font-size: 24px;
+    }
+    h3{
+      font-size: 20px;
+    }
+    p{
+      font-size: 16px;
+    }
+    ul{
+      li{
+        font-size: 16px;
+      }
+    }
+  }
 }
