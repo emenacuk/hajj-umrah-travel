@@ -12,6 +12,7 @@ import { dynamicParams } from '@/data/static-routes';
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || API_BASE_URL.replace('/api', '') || '';
 const USE_MOCK_DATA = !API_BASE_URL || process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
 
 // Fetch page data from API
@@ -20,7 +21,7 @@ export async function fetchPageData(slug: string): Promise<any> {
   if (USE_MOCK_DATA) {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     if (slug.startsWith('blog/')) {
       const postSlug = slug.replace('blog/', '');
       const post = mockBlogPageData.content.posts?.find((p: BlogPost) => p.slug === postSlug) || mockBlogPageData.content.posts?.[0];

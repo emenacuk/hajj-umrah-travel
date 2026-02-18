@@ -82,7 +82,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
 
   const handlePassengerChange = (type: 'adults' | 'children' | 'infants', operation: 'inc' | 'dec') => {
     setFormData(prev => {
-      const currentValue = prev.contactDetail.passengers[type];
+      const currentValue = prev.passengers[type];
       let newValue = operation === 'inc' ? currentValue + 1 : currentValue - 1;
 
       if (type === 'adults' && newValue < 1) newValue = 1;
@@ -114,7 +114,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
 
   return (
     <section className="contact-package-section">
-        <div className="container">
+      <div className="container">
         <div className="customize-grid">
           <div className="form-column">
             <div className='sectionheadings'>
@@ -260,10 +260,10 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
             <div className="contact-person-image-wrapper">
               <img src="/contactimage.png" alt="Person in Ihram" className="contact-person-image" />
             </div>
-            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 }
 

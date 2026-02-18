@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { MEDIA_BASE_URL } from '@/utils/api'
 
 interface ScrollDetailProps {
     title?: string;
