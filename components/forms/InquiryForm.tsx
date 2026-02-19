@@ -10,10 +10,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
 
 interface InquiryFormProps {
-  data: InquiryFormData;
+  data?: InquiryFormData; // Optional - form works with static fields until API is ready
 }
 
 export default function InquiryForm({ data }: InquiryFormProps) {
+  // Form works independently with static fields
+  // When API "get setting" is available, we can use data.fields to configure form dynamically
+  // For now, form uses hardcoded static fields as before
   const pathname = usePathname();
   const [formData, setFormData] = useState<Record<string, any>>({
     passengers: { adults: 1, children: 0, infants: 0 },

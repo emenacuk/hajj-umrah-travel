@@ -35,7 +35,7 @@ export default function SingleListing({ data }: UmrahPackageTemplateProps) {
             <div className='sectionheadingstext'>
               <h2 className="section-title">{data.title}</h2>
               <p className="section-subtitle">
-                Explore our exclusive collection of {starRating} star Umrah packages and more. 
+                Explore our exclusive collection of {starRating} star Umrah packages and more.
                 Designed to provide comfort and spiritual peace during your holy journey.
               </p>
             </div>
@@ -168,7 +168,7 @@ export default function SingleListing({ data }: UmrahPackageTemplateProps) {
                 </div>
               </div>
               <FAQ items={faqs} />
-            </div>            
+            </div>
           </section>
         )}
       </section>

@@ -13,6 +13,7 @@ import HomeReviews from '@/components/sections/HomeReviews';
 import PackageContactInfo from '@/components/sections/PackageContactInfo';
 
 import { useSearchParams } from 'next/navigation';
+import { getImageUrl } from '@/utils/api';
 
 import EnquiryModal from '@/components/common/EnquiryModal';
 import BookingModal from '@/components/common/BookingModal';
@@ -59,7 +60,7 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
     const faqs = data.content?.faqs || [];
     const contact = data.content?.contact || {};
 
-    const images = packageData.images || [packageData.image];
+    const images = (packageData.images || [packageData.image]).map((img: string) => getImageUrl(img));
 
     return (
         <div className="package-detail-page">
@@ -289,7 +290,7 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                                             >
                                                 {hotel.images?.map((img: string, idx: number) => (
                                                     <SwiperSlide key={idx}>
-                                                        <img src={img} alt={hotel.name} />
+                                                        <img src={getImageUrl(img)} alt={hotel.name} />
                                                     </SwiperSlide>
                                                 ))}
                                             </Swiper>

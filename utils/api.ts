@@ -1,152 +1,301 @@
-import { BlogPost } from '@/types';
-// Import mock data
-import {
-  mockHomePageData,
-  mockContactPageData,
-  mockBlogPageData,
-  getMockUmrahPackage,
-  getMockHajjPackage,
-  mockHomePageData as mockData
-} from '@/data/mockData';
-import { dynamicParams } from '@/data/static-routes';
+// API Configuration - Hardcoded URLs (no env file needed)
+const API_BASE_URL = 'https://hajj-umrah.holyvibes.co.uk/api';
+export const MEDIA_BASE_URL = 'https://hajj-umrah.holyvibes.co.uk';
 
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
-export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || API_BASE_URL.replace('/api', '') || '';
-const USE_MOCK_DATA = !API_BASE_URL || process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
+// API Response Types
+export interface ApiResponse<T> {
+  status: number;
+  message: string;
+  result: T;
+}
 
-// Fetch page data from API
+export interface PageApiResult {
+  id: number;
+  title: string;
+  parent_id: string;
+  page_template: string;
+  search_engine: number;
+  banner_heading: string;
+  banner_subheading: string | null;
+  seo_content_enable: number;
+  page_url: string | null;
+  url_type: string;
+  browser_title: string;
+  meta_keywords: string | null;
+  meta_description: string;
+  scroll_description: string;
+  widgets_content: string;
+  script: string;
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
+  faqs_heading: string;
+  faqs_subheading: string;
+  sort_order: number;
+  status: number;
+  section1_image_url: string | null;
+  section3_image_url: string | null;
+  scroll_image_url: string | null;
+  airline_heading: string | null;
+  airline_subheading: string | null;
+  services_heading: string | null;
+  services_subheading: string | null;
+  services_image_url: string | null;
+  services_items: string | null;
+  ourclientsays_widget: Array<{
+    heading: string;
+    sub_heading: string;
+    reviews_ids: string;
+  }>;
+  section_1_widget: Array<{
+    heading: string;
+    subheading: string;
+    umrah_type: string;
+    umrah_package_ids: string;
+    star: string;
+    button_text: string;
+    button_link: string;
+    slider_enable: string;
+  }>;
+  section_2_widget: Array<{
+    heading: string;
+    subheading: string;
+    umrah_type: string;
+    umrah_package_ids: string;
+    star: string;
+    button_text: string;
+    button_link: string;
+    slider_enable: string;
+  }>;
+  section_3_widget: Array<{
+    heading: string;
+    subheading: string;
+    hajj_type: string;
+    hajj_package_ids: string;
+    button_text: string;
+    button_link: string;
+    slider_enable: string;
+  }>;
+  section_4_widget: Array<{
+    heading: string;
+    subheading: string;
+    umrah_type: string;
+    umrah_package_ids: string;
+    star: string;
+    button_text: string;
+    button_link: string;
+    slider_enable: string;
+  }>;
+}
+
+// Fetch page data from API using /get-page endpoint (GET request)
 export async function fetchPageData(slug: string): Promise<any> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 100));
+  // API expects GET request - for home page, no query param needed (as shown in Postman)
+  // For other pages, slug might be needed as query parameter
+  const url = slug === 'home'
+    ? `${API_BASE_URL}/get-page`
+    : `${API_BASE_URL}/get-page?slug=${encodeURIComponent(slug)}`;
 
-    if (slug.startsWith('blog/')) {
-      const postSlug = slug.replace('blog/', '');
-      const post = mockBlogPageData.content.posts?.find((p: BlogPost) => p.slug === postSlug) || mockBlogPageData.content.posts?.[0];
+  console.log('[API] Fetching page data:', { url, slug });
 
-      return {
-        template_name: 'blog_detail',
-        title: post?.title || 'Blog Post',
-        content: {
-          banner: {
-            title: post?.title || 'Blog Post',
-            image: '/innerbg.jpg'
-          },
-          body: `
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <h2>What are the primary reasons for visiting Makkah and Madinah?</h2>
-                    <img src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=1200" alt="Makkah" />
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <h2>How does travel logistics influence your decision?</h2>
-                    <img src="https://images.unsplash.com/photo-1565552136439-3898162e082c?w=1200" alt="Logistics" />
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                    <h2>Are there direct flights, and what are the travel times?</h2>
-                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200" alt="Flights" />
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                    <h2>What are the flight options available to Makkah and Madinah?</h2>
-                    <img src="https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=1200" alt="Options" />
-                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-                    <h2>Footwear for Men during Umrah</h2>
-                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-                `,
-          latestPosts: mockBlogPageData.content.posts?.filter((p: BlogPost) => p.slug !== postSlug).slice(0, 10) || []
-        }
-      };
-    }
-
-    switch (slug) {
-      case 'home':
-        return mockHomePageData;
-      case 'contact':
-        return mockContactPageData;
-      case 'blog':
-        return mockBlogPageData;
-      case '3-star-umrah-packages':
-      case '4-star-umrah-packages':
-      case '5-star-umrah-packages':
-        return {
-          template_name: 'singleumrahtemplate',
-          title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-          content: {
-            banner: {
-              title: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-              description: `Experience the finest ${slug.split('-')[0]} star Umrah pilgrimage with our specially curated packages.`,
-              image: '/homebanner.png'
-            },
-            faqs: mockHomePageData.content.faqs || []
-          }
-        };
-      case 'hajj-package-2026':
-        return {
-          template_name: 'hajj_package',
-          title: 'Hajj Packages 2026',
-          content: {
-            banner: {
-              title: 'Hajj Packages 2026',
-              description: 'Join us for the journey of a lifetime. Book your Hajj 2026 package today with Bismillah Travel.',
-              image: '/homebanner.png'
-            },
-            faqs: mockHomePageData.content.faqs || []
-          }
-        };
-      case 'customize-hajj-umrah':
-        return {
-          template_name: 'customize_package',
-          title: 'Customize Your Hajj & Umrah Package',
-          content: {
-            banner: {
-              title: 'Customize Your Package',
-              description: 'Tailor your spiritual journey to your preferences.',
-              image: '/homebanner.png'
-            }
-          }
-        };
-      default:
-        // Check if it's a known static route
-        const isGeneralSlug = dynamicParams.general.some(p => p.slug === slug);
-        if (isGeneralSlug) {
-          return {
-            template_name: 'without_banner',
-            title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '),
-            content: {
-              description: `This is the ${slug} page.`
-            }
-          };
-        }
-        return null;
-    }
-  }
-
-  // Real API call
   try {
-    const response = await fetch(`${API_BASE_URL}/pages/${slug}`, {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
       cache: 'no-store', // Ensure SSR
+      next: { revalidate: 0 }, // Disable caching
     });
 
+    console.log('[API] Response status:', response.status, response.statusText);
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch page data: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('[API] Error Response:', errorText);
+      throw new Error(`API Error ${response.status}: ${response.statusText} - ${errorText.substring(0, 200)}`);
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching page data:', error);
-    return null;
+    const responseText = await response.text();
+    console.log('[API] Response text length:', responseText.length);
+
+    let apiResponse: ApiResponse<PageApiResult>;
+    try {
+      apiResponse = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('[API] JSON Parse Error:', parseError);
+      console.error('[API] Response text:', responseText.substring(0, 500));
+      throw new Error('Invalid JSON response from API');
+    }
+
+    console.log('[API] Parsed response:', {
+      status: apiResponse.status,
+      message: apiResponse.message,
+      hasResult: !!apiResponse.result
+    });
+
+    if (apiResponse.status !== 1 || !apiResponse.result) {
+      throw new Error(apiResponse.message || 'API returned unsuccessful status');
+    }
+
+    // Transform API response to match component expectations
+    const transformedData = transformPageData(apiResponse.result);
+    const result = apiResponse.result as any;
+
+    // Fetch section packages separately as requested
+    console.log('[API] Fetching section packages individually...');
+
+    // Section 1: Best Umrah Packages
+    if (result.section_1_widget?.[0]) {
+      const widget = result.section_1_widget[0];
+      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+      if (ids.length > 0) {
+        transformedData.content.section1Packages = await fetchUmrahPackagesByIds(ids);
+      } else if (widget.umrah_type) {
+        transformedData.content.section1Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+      }
+    }
+
+    // Section 2: December Umrah Deals (or similar)
+    if (result.section_2_widget?.[0]) {
+      const widget = result.section_2_widget[0];
+      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+      if (ids.length > 0) {
+        transformedData.content.section2Packages = await fetchUmrahPackagesByIds(ids);
+      } else if (widget.umrah_type) {
+        transformedData.content.section2Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+      }
+    }
+
+    // Section 3: Best Hajj Packages
+    if (result.section_3_widget?.[0]) {
+      const widget = result.section_3_widget[0];
+      const ids = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+      if (ids.length > 0) {
+        transformedData.content.section3Packages = await fetchHajjPackagesByIds(ids);
+      } else if (widget.hajj_type) {
+        transformedData.content.section3Packages = await fetchHajjPackagesByType(widget.hajj_type);
+      }
+    }
+
+    // Section 4: Exploration / Other Deals
+    if (result.section_4_widget?.[0]) {
+      const widget = result.section_4_widget[0];
+      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+      if (ids.length > 0) {
+        transformedData.content.section4Packages = await fetchUmrahPackagesByIds(ids);
+      } else if (widget.umrah_type) {
+        transformedData.content.section4Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+      }
+    }
+
+    // Reviews Section
+    if (result.ourclientsays_widget?.[0]) {
+      const widget = result.ourclientsays_widget[0];
+      const ids = widget.reviews_ids ? parseIdsString(widget.reviews_ids) : [];
+      if (ids.length > 0) {
+        transformedData.content.reviews = await fetchReviewsByIds(ids);
+      }
+    }
+
+    console.log('[API] Section packages and reviews fetched:', {
+      s1: transformedData.content.section1Packages?.length || 0,
+      s2: transformedData.content.section2Packages?.length || 0,
+      s3: transformedData.content.section3Packages?.length || 0,
+      s4: transformedData.content.section4Packages?.length || 0,
+      reviews: transformedData.content.reviews?.length || 0,
+    });
+
+    return transformedData;
+  } catch (error: any) {
+    console.error('[API] Error fetching page data:', {
+      message: error?.message,
+      name: error?.name,
+      slug,
+      url,
+      error: error
+    });
+    throw error; // Re-throw to let calling code handle it
   }
 }
 
-// Fetch Umrah packages
-export async function fetchUmrahPackages(): Promise<any[]> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return mockData.content.umrahPackages || [];
+// Transform API page data to component format
+function transformPageData(apiData: PageApiResult): any {
+  // Map API template names to our template resolver names
+  let templateName = 'home';
+  if (apiData.page_template) {
+    const templateLower = apiData.page_template.toLowerCase();
+    if (templateLower.includes('home')) {
+      templateName = 'home';
+    } else if (templateLower.includes('umrah')) {
+      templateName = templateLower.includes('single') ? 'single_umrah' : 'umrah_package';
+    } else if (templateLower.includes('hajj')) {
+      templateName = templateLower.includes('single') ? 'single_hajj' : 'hajj_package';
+    } else if (templateLower.includes('contact')) {
+      templateName = 'contact';
+    } else if (templateLower.includes('blog')) {
+      templateName = 'blog';
+    } else {
+      // Fallback: convert to snake_case
+      templateName = apiData.page_template.toLowerCase().replace(/\s+/g, '_');
+    }
   }
 
-  // Real API call
+  return {
+    template_name: templateName,
+    title: apiData.title,
+    content: {
+      banner: {
+        title: apiData.banner_heading,
+        subtitle: apiData.banner_subheading,
+        description: apiData.banner_subheading,
+      },
+      faqs: apiData.faqs || [],
+      faqs_heading: apiData.faqs_heading,
+      faqs_subheading: apiData.faqs_subheading,
+      scroll_description: apiData.scroll_description,
+      scroll_image_url: apiData.scroll_image_url,
+      section1_image_url: apiData.section1_image_url,
+      section3_image_url: apiData.section3_image_url,
+      // Widget data
+      section_1_widget: apiData.section_1_widget || [],
+      section_2_widget: apiData.section_2_widget || [],
+      section_3_widget: apiData.section_3_widget || [],
+      section_4_widget: (apiData as any).section_4_widget || [],
+      ourclientsays_widget: apiData.ourclientsays_widget || [],
+      // Services data
+      services_heading: apiData.services_heading,
+      services_subheading: apiData.services_subheading,
+      services_image_url: apiData.services_image_url,
+      services_items: apiData.services_items,
+    },
+    meta: {
+      title: apiData.browser_title,
+      description: apiData.meta_description,
+      keywords: apiData.meta_keywords,
+    },
+    // Keep raw API data for reference
+    _raw: apiData,
+  };
+}
+
+// Fetch Umrah packages by IDs (POST per API_INTEGRATION_GUIDE or GET as verified by user)
+export async function fetchUmrahPackagesByIds(ids: string[]): Promise<any[]> {
+  if (!ids || ids.length === 0) {
+    return [];
+  }
+
+  const idsStr = ids.map(id => id.trim()).join(',');
+  const url = `${API_BASE_URL}/umrah-packages?package_ids=${idsStr}`;
+
+  console.log('[API] Fetching Umrah packages by IDs:', url);
+
   try {
-    const response = await fetch(`${API_BASE_URL}/umrah/packages`, {
+    // Try GET request first as verified by user
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
       cache: 'no-store',
     });
 
@@ -154,24 +303,179 @@ export async function fetchUmrahPackages(): Promise<any[]> {
       throw new Error(`Failed to fetch Umrah packages: ${response.statusText}`);
     }
 
-    return await response.json();
+    const apiResponse = await response.json();
+    console.log('[API] Umrah packages by IDs response:', { status: apiResponse.status, hasResult: !!apiResponse.result });
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      // Handle nested data array or direct array
+      let rawPackages = [];
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        rawPackages = apiResponse.result.data;
+      } else if (Array.isArray(apiResponse.result)) {
+        rawPackages = apiResponse.result;
+      }
+      return rawPackages.map((pkg: any) => mapPackageData(pkg, 'umrah'));
+    }
+
+    // Fallback if structured response not found but it's an array
+    if (Array.isArray(apiResponse)) {
+      return apiResponse.map((pkg: any) => mapPackageData(pkg, 'umrah'));
+    }
+
+    return [];
   } catch (error) {
-    console.error('Error fetching Umrah packages:', error);
+    console.error('Error fetching Umrah packages by IDs:', error);
+    // Legacy fallback to POST if GET fails or as second attempt
+    try {
+      const postResponse = await fetch(`${API_BASE_URL}/umrah/packages-by-ids`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
+        cache: 'no-store',
+      });
+      if (postResponse.ok) {
+        const postData = await postResponse.json();
+        if (postData.status === 1 && postData.result) {
+          let rawPackages = [];
+          if (postData.result.data && Array.isArray(postData.result.data)) {
+            rawPackages = postData.result.data;
+          } else if (Array.isArray(postData.result)) {
+            rawPackages = postData.result;
+          }
+          return rawPackages.map((pkg: any) => mapPackageData(pkg, 'umrah'));
+        }
+      }
+    } catch (postError) {
+      console.error('POST fallback also failed:', postError);
+    }
+    return fetchAllUmrahPackages(ids);
+  }
+}
+
+// Fetch Umrah packages by type
+export async function fetchUmrahPackagesByType(type: string): Promise<any[]> {
+  if (!type || type.trim() === '') {
+    return [];
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/umrah-packages?type=${encodeURIComponent(type.trim())}`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Umrah packages by type: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let rawPackages = [];
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        rawPackages = apiResponse.result.data;
+      } else {
+        rawPackages = Array.isArray(apiResponse.result) ? apiResponse.result : [];
+      }
+      return rawPackages.map((pkg: any) => mapPackageData(pkg, 'umrah'));
+    }
+    return (Array.isArray(apiResponse) ? apiResponse : []).map((pkg: any) => mapPackageData(pkg, 'umrah'));
+  } catch (error) {
+    console.error('Error fetching Umrah packages by type:', error);
     return [];
   }
 }
 
-// Fetch Hajj packages
-export async function fetchHajjPackages(): Promise<any[]> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return mockData.content.hajjPackages || [];
+// Fetch all Umrah packages and filter by IDs
+async function fetchAllUmrahPackages(filterIds?: string[]): Promise<any[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/umrah-packages`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Umrah packages: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    let packages = [];
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        packages = apiResponse.result.data;
+      } else {
+        packages = Array.isArray(apiResponse.result) ? apiResponse.result : [];
+      }
+    } else if (Array.isArray(apiResponse)) {
+      packages = apiResponse;
+    }
+
+    // Transform all packages
+    const mappedPackages = packages.map((pkg: any) => mapPackageData(pkg, 'umrah'));
+
+    // Filter by IDs if provided
+    if (filterIds && filterIds.length > 0) {
+      return mappedPackages.filter((pkg: any) =>
+        filterIds.includes(String(pkg.id)) || filterIds.includes(String(pkg.package_id))
+      );
+    }
+
+    return mappedPackages;
+  } catch (error) {
+    console.error('Error fetching all Umrah packages:', error);
+    return [];
+  }
+}
+
+// Fetch Hajj packages by type
+export async function fetchHajjPackagesByType(type: string): Promise<any[]> {
+  if (!type || type.trim() === '') {
+    return [];
   }
 
-  // Real API call
   try {
-    const response = await fetch(`${API_BASE_URL}/hajj/packages`, {
+    const response = await fetch(`${API_BASE_URL}/hajj-packages?type=${encodeURIComponent(type.trim())}`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Hajj packages by type: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let rawPackages = [];
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        rawPackages = apiResponse.result.data;
+      } else {
+        rawPackages = Array.isArray(apiResponse.result) ? apiResponse.result : [];
+      }
+      return rawPackages.map((pkg: any) => mapPackageData(pkg, 'hajj'));
+    }
+    return (Array.isArray(apiResponse) ? apiResponse : []).map((pkg: any) => mapPackageData(pkg, 'hajj'));
+  } catch (error) {
+    console.error('Error fetching Hajj packages by type:', error);
+    return [];
+  }
+}
+
+// Fetch Hajj packages by IDs
+export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
+  if (!ids || ids.length === 0) {
+    return [];
+  }
+
+  const idsStr = ids.map(id => id.trim()).join(',');
+  const url = `${API_BASE_URL}/hajj-packages?package_ids=${idsStr}`;
+
+  console.log('[API] Fetching Hajj packages by IDs:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
       cache: 'no-store',
     });
 
@@ -179,22 +483,107 @@ export async function fetchHajjPackages(): Promise<any[]> {
       throw new Error(`Failed to fetch Hajj packages: ${response.statusText}`);
     }
 
-    return await response.json();
+    const apiResponse = await response.json();
+    console.log('[API] Hajj packages by IDs response:', { status: apiResponse.status, hasResult: !!apiResponse.result });
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let rawPackages = [];
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        rawPackages = apiResponse.result.data;
+      } else if (Array.isArray(apiResponse.result)) {
+        rawPackages = apiResponse.result;
+      }
+      return rawPackages.map((pkg: any) => mapPackageData(pkg, 'hajj'));
+    }
+
+    // Fallback if structured response not found but it's an array
+    if (Array.isArray(apiResponse)) {
+      return apiResponse.map((pkg: any) => mapPackageData(pkg, 'hajj'));
+    }
+
+    return [];
   } catch (error) {
-    console.error('Error fetching Hajj packages:', error);
+    console.error('Error fetching Hajj packages by IDs:', error);
+    // Legacy fallback to POST
+    try {
+      const postResponse = await fetch(`${API_BASE_URL}/hajj/packages-by-ids`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
+        cache: 'no-store',
+      });
+      if (postResponse.ok) {
+        const postData = await postResponse.json();
+        if (postData.status === 1 && postData.result) {
+          let rawPackages = [];
+          if (postData.result.data && Array.isArray(postData.result.data)) {
+            rawPackages = postData.result.data;
+          } else if (Array.isArray(postData.result)) {
+            rawPackages = postData.result;
+          }
+          return rawPackages.map((pkg: any) => mapPackageData(pkg, 'hajj'));
+        }
+      }
+    } catch (postError) {
+      console.error('Hajj POST fallback failed:', postError);
+    }
+    return fetchAllHajjPackages(ids);
+  }
+}
+
+// Fetch all Hajj packages and filter by IDs
+async function fetchAllHajjPackages(filterIds?: string[]): Promise<any[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/hajj-packages`, {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Hajj packages: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    let packages = [];
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      if (apiResponse.result.data && Array.isArray(apiResponse.result.data)) {
+        packages = apiResponse.result.data;
+      } else {
+        packages = Array.isArray(apiResponse.result) ? apiResponse.result : [];
+      }
+    } else if (Array.isArray(apiResponse)) {
+      packages = apiResponse;
+    }
+
+    // Transform all packages
+    const mappedPackages = packages.map((pkg: any) => mapPackageData(pkg, 'hajj'));
+
+    // Filter by IDs if provided
+    if (filterIds && filterIds.length > 0) {
+      return mappedPackages.filter((pkg: any) =>
+        filterIds.includes(String(pkg.id)) || filterIds.includes(String(pkg.package_id))
+      );
+    }
+
+    return mappedPackages;
+  } catch (error) {
+    console.error('Error fetching all Hajj packages:', error);
     return [];
   }
 }
 
-// Fetch single package (Umrah)
-export async function fetchUmrahPackage(id: string): Promise<any> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return getMockUmrahPackage(id);
-  }
+// Fetch all Umrah packages
+export async function fetchUmrahPackages(): Promise<any[]> {
+  return fetchAllUmrahPackages();
+}
 
-  // Real API call
+// Fetch all Hajj packages
+export async function fetchHajjPackages(): Promise<any[]> {
+  return fetchAllHajjPackages();
+}
+
+// Fetch single Umrah package by ID
+export async function fetchUmrahPackage(id: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/umrah/packages/${id}`, {
       cache: 'no-store',
@@ -204,22 +593,65 @@ export async function fetchUmrahPackage(id: string): Promise<any> {
       throw new Error(`Failed to fetch Umrah package: ${response.statusText}`);
     }
 
-    return await response.json();
+    const apiResponse = await response.json();
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      return mapPackageData(apiResponse.result, 'umrah');
+    }
+
+    return apiResponse;
   } catch (error) {
     console.error('Error fetching Umrah package:', error);
+    throw error;
+  }
+}
+
+// Fetch single Umrah package by Slug
+export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
+  try {
+    // Stage 1: Try ?slug= or ?package_ids= if it looks like an ID
+    const isNumeric = /^\d+$/.test(slug);
+    const param = isNumeric ? 'package_ids' : 'slug';
+    const queryUrl = `${API_BASE_URL}/umrah-packages?${param}=${slug}`;
+    console.log(`[API] Stage 1 fetching Umrah package by ${param}:`, queryUrl);
+    const queryResponse = await fetch(queryUrl, { cache: 'no-store' });
+    if (queryResponse.ok) {
+      const apiResponse = await queryResponse.json();
+      if (apiResponse.status === 1 && apiResponse.result) {
+        let pkgData = apiResponse.result.data || apiResponse.result;
+        if (Array.isArray(pkgData)) pkgData = pkgData[0];
+        if (pkgData) return mapPackageData(pkgData, 'umrah');
+      }
+    }
+
+    // Stage 2: Try singular path /umrah-packages/${slug}
+    const directUrl = `${API_BASE_URL}/umrah-packages/${slug}`;
+    console.log('[API] Stage 2 fetching Umrah package by slug path:', directUrl);
+    const directResponse = await fetch(directUrl, { cache: 'no-store' });
+    if (directResponse.ok) {
+      const apiResponse = await directResponse.json();
+      if (apiResponse.status === 1 && apiResponse.result) {
+        let pkgData = apiResponse.result.data || apiResponse.result;
+        if (Array.isArray(pkgData)) pkgData = pkgData[0];
+        if (pkgData) return mapPackageData(pkgData, 'umrah');
+      }
+    }
+
+    // Stage 3: Fetch all and filter (most robust fallback)
+    console.log('[API] Stage 3: Searching in all Umrah packages for slug:', slug);
+    const allPackages = await fetchAllUmrahPackages();
+    const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
+    if (pkg) return pkg;
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching Umrah package by slug:', error);
     return null;
   }
 }
 
-// Fetch single package (Hajj)
+// Fetch single Hajj package by ID
 export async function fetchHajjPackage(id: string): Promise<any> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return getMockHajjPackage(id);
-  }
-
-  // Real API call
   try {
     const response = await fetch(`${API_BASE_URL}/hajj/packages/${id}`, {
       cache: 'no-store',
@@ -229,24 +661,108 @@ export async function fetchHajjPackage(id: string): Promise<any> {
       throw new Error(`Failed to fetch Hajj package: ${response.statusText}`);
     }
 
-    return await response.json();
+    const apiResponse = await response.json();
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      return mapPackageData(apiResponse.result, 'hajj');
+    }
+
+    return apiResponse;
   } catch (error) {
     console.error('Error fetching Hajj package:', error);
+    throw error;
+  }
+}
+
+// Fetch single Hajj package by Slug
+export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
+  try {
+    // Stage 1: Try ?slug= or ?package_ids=
+    const isNumeric = /^\d+$/.test(slug);
+    const param = isNumeric ? 'package_ids' : 'slug';
+    const queryUrl = `${API_BASE_URL}/hajj-packages?${param}=${slug}`;
+    console.log(`[API] Stage 1 fetching Hajj package by ${param}:`, queryUrl);
+    const queryResponse = await fetch(queryUrl, { cache: 'no-store' });
+    if (queryResponse.ok) {
+      const apiResponse = await queryResponse.json();
+      if (apiResponse.status === 1 && apiResponse.result) {
+        let pkgData = apiResponse.result.data || apiResponse.result;
+        if (Array.isArray(pkgData)) pkgData = pkgData[0];
+        if (pkgData) return mapPackageData(pkgData, 'hajj');
+      }
+    }
+
+    // Stage 2: Try singular path /hajj-packages/${slug}
+    const directUrl = `${API_BASE_URL}/hajj-packages/${slug}`;
+    console.log('[API] Stage 2 fetching Hajj package by slug path:', directUrl);
+    const directResponse = await fetch(directUrl, { cache: 'no-store' });
+    if (directResponse.ok) {
+      const apiResponse = await directResponse.json();
+      if (apiResponse.status === 1 && apiResponse.result) {
+        let pkgData = apiResponse.result.data || apiResponse.result;
+        if (Array.isArray(pkgData)) pkgData = pkgData[0];
+        if (pkgData) return mapPackageData(pkgData, 'hajj');
+      }
+    }
+
+    // Stage 3: Fetch all and filter
+    console.log('[API] Stage 3: Searching in all Hajj packages for slug:', slug);
+    const allPackages = await fetchAllHajjPackages();
+    const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
+    if (pkg) return pkg;
+
     return null;
+  } catch (error) {
+    console.error('Error fetching Hajj package by slug:', error);
+    return null;
+  }
+}
+
+// Fetch reviews by IDs
+export async function fetchReviewsByIds(ids: string[]): Promise<any[]> {
+  if (!ids || ids.length === 0) {
+    return [];
+  }
+
+  const idsStr = ids.map(id => id.trim()).join(',');
+  const url = `${API_BASE_URL}/reviews?review_ids=${idsStr}`;
+
+  console.log('[API] Fetching reviews by IDs:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch reviews: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    console.log('[API] Reviews fetched:', { status: apiResponse.status, count: apiResponse.result?.reviews?.length });
+
+    if (apiResponse.status === 1 && apiResponse.result?.reviews) {
+      return apiResponse.result.reviews.map(mapReviewData);
+    }
+
+    if (apiResponse.status === 1 && apiResponse.result) {
+      const results = Array.isArray(apiResponse.result) ? apiResponse.result : [];
+      return results.map(mapReviewData);
+    }
+
+    return [];
+  } catch (error) {
+    console.error('Error fetching reviews by IDs:', error);
+    return [];
   }
 }
 
 // Submit inquiry form
 export async function submitInquiry(data: Record<string, any>): Promise<boolean> {
-  // Use mock data if API is not configured
-  if (USE_MOCK_DATA) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log('Mock inquiry submission:', data);
-    // Simulate successful submission
-    return true;
-  }
-
-  // Real API call
   try {
     const response = await fetch(`${API_BASE_URL}/inquiry`, {
       method: 'POST',
@@ -256,10 +772,130 @@ export async function submitInquiry(data: Record<string, any>): Promise<boolean>
       body: JSON.stringify(data),
     });
 
-    return response.ok;
+    const apiResponse = await response.json();
+    return apiResponse.status === 1 || response.ok;
   } catch (error) {
     console.error('Error submitting inquiry:', error);
     return false;
   }
 }
 
+// Helper function to parse comma-separated IDs string
+export function parseIdsString(idsString: string): string[] {
+  if (!idsString || typeof idsString !== 'string') {
+    return [];
+  }
+  return idsString
+    .split(',')
+    .map(id => id.trim())
+    .filter(id => id.length > 0);
+}
+
+// Map raw API review data to standardized format
+export function mapReviewData(review: any): any {
+  return {
+    id: review.id?.toString() || '',
+    name: review.publisher || '',
+    location: review.address || '',
+    rating: parseInt(review.rating?.toString() || '5'),
+    comment: review.review || '',
+    avatar: getImageUrl(review.image_url),
+  };
+}
+
+// Map raw API hotel data to standardized format
+function mapHotelData(hotel: any): any {
+  if (!hotel) return null;
+  return {
+    id: hotel.id,
+    name: hotel.name,
+    location: hotel.hotel_address || hotel.location || (hotel.city_id === 1 ? 'Makkah' : 'Madinah'),
+    rating: parseInt(hotel.hotel_star || hotel.rating || "5"),
+    images: Array.isArray(hotel.images) ? hotel.images.map((img: any) => img.url || img) : [],
+    description: hotel.description || '',
+    amenities: typeof hotel.amenity === 'string' ? JSON.parse(hotel.amenity || '[]') : hotel.amenity || []
+  };
+}
+
+// Map raw API package data to standardized camelCase format
+function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
+  if (!pkg) return null;
+
+  // Extract gallery images
+  let galleryImages = [];
+  if (Array.isArray(pkg.images)) {
+    galleryImages = pkg.images.map((img: any) => img.url || img.image_url || img);
+  } else if (pkg.image_url || pkg.package_image_url || pkg.image) {
+    galleryImages = [pkg.image_url || pkg.package_image_url || pkg.image];
+  }
+
+  // Derive inclusions
+  const inclusions = [];
+  if (pkg.flight === 1) inclusions.push('Return Flights');
+  if (pkg.accomodation === 1) inclusions.push('Premium Accommodations');
+  if (pkg.visa === 1) inclusions.push('Umrah Visa');
+  if (pkg.breakfast === 1) inclusions.push('Breakfast Included');
+  if (pkg.transfer === 1) inclusions.push('Ground Transfers');
+
+  const makkahHotelData = pkg.makkah_hotel ? mapHotelData(pkg.makkah_hotel) : null;
+  const madinahHotelData = pkg.madinah_hotel ? mapHotelData(pkg.madinah_hotel) : null;
+
+  const hotels = [];
+  if (makkahHotelData) hotels.push({ ...makkahHotelData, location: 'Makkah' });
+  if (madinahHotelData) hotels.push({ ...madinahHotelData, location: 'Madinah' });
+
+  return {
+    id: pkg.id || pkg.package_id,
+    title: pkg.title || pkg.package_title,
+    price: parseFloat(String(pkg.price || pkg.package_price || "0")),
+    image: pkg.image_url || pkg.package_image_url || pkg.image,
+    rating: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
+    stars: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
+    nights: parseInt(pkg.package_night || pkg.nights || "0"),
+    pageUrl: pkg.page_url || pkg.slug,
+    makkahHotel: pkg.makkah_hotel?.name || pkg.makkah_hotel_name || pkg.makkah_hotel,
+    madinahHotel: pkg.madinah_hotel?.name || pkg.madinah_hotel_name || pkg.madinah_hotel,
+    makkahNights: parseInt(pkg.makkah_night || "5"),
+    madinahNights: parseInt(pkg.madinah_night || "4"),
+    packageDescription: pkg.description || pkg.package_description,
+    images: galleryImages,
+    hotels: hotels,
+    makkahHotelData: makkahHotelData,
+    madinahHotelData: madinahHotelData,
+    inclusions: inclusions,
+    type: type,
+    _raw: pkg // keep raw data
+  };
+}
+
+export function getImageUrl(imagePath: string | null | undefined, fallback?: string): string {
+  // Return fallback if no path provided
+  if (!imagePath || typeof imagePath !== 'string' || imagePath.trim() === '') {
+    return fallback || '';
+  }
+
+  const trimmedPath = imagePath.trim();
+
+  // If already an absolute URL, return as-is
+  if (trimmedPath.startsWith('http://') || trimmedPath.startsWith('https://')) {
+    return trimmedPath;
+  }
+
+  // If path already starts with /media/, just prepend MEDIA_BASE_URL
+  if (trimmedPath.startsWith('/media/')) {
+    return `${MEDIA_BASE_URL}${trimmedPath}`;
+  }
+
+  // If path starts with / but not /media/, prepend /media
+  if (trimmedPath.startsWith('/')) {
+    return `${MEDIA_BASE_URL}/media${trimmedPath}`;
+  }
+
+  // If path starts with 'media/' (without leading slash), add leading slash
+  if (trimmedPath.startsWith('media/')) {
+    return `${MEDIA_BASE_URL}/${trimmedPath}`;
+  }
+
+  // Otherwise, prepend /media/
+  return `${MEDIA_BASE_URL}/media/${trimmedPath}`;
+}

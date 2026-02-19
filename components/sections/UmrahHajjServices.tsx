@@ -1,5 +1,6 @@
 import React from 'react';
 import { ServicesSectionData } from '@/types';
+import { getImageUrl } from '@/utils/api';
 
 interface UmrahHajjServicesProps {
     data?: ServicesSectionData;
@@ -24,7 +25,7 @@ const UmrahHajjServices: React.FC<UmrahHajjServicesProps> = ({ data }) => {
                         {data.items.map((item) => (
                             <div key={item.id} className="service-card">
                                 <div className="service-icon">
-                                    <img src={item.icon} alt={item.title} />
+                                    <img src={getImageUrl(item.icon)} alt={item.title} />
                                 </div>
                                 <div className="service-info">
                                     <h3>{item.title}</h3>
@@ -34,7 +35,7 @@ const UmrahHajjServices: React.FC<UmrahHajjServicesProps> = ({ data }) => {
                         ))}
                     </div>
                     <div className="services-main-image">
-                        <img src={data.mainImage} alt="Hajj and Umrah Services" />
+                        <img src={getImageUrl(data.mainImage)} alt="Hajj and Umrah Services" />
                     </div>
                 </div>
             </div>

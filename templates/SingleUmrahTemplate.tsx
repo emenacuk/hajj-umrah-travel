@@ -14,10 +14,12 @@ import HomeReviews from '@/components/sections/HomeReviews';
 import PackageContactInfo from '@/components/sections/PackageContactInfo';
 
 import { useSearchParams } from 'next/navigation';
+import { getImageUrl } from '@/utils/api';
 
 import EnquiryModal from '@/components/common/EnquiryModal';
 import BookingModal from '@/components/common/BookingModal';
 import CustomizeModal from '@/components/common/CustomizeModal';
+import DescriptionModal from '@/components/common/DescriptionModal';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -39,6 +41,8 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
   const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
   const [isRelatedLoaded, setIsRelatedLoaded] = useState(false);
+  const [isDescModalOpen, setIsDescModalOpen] = useState(false);
+  const [activeDesc, setActiveDesc] = useState({ title: '', content: '' });
   const searchParams = useSearchParams();
   const [pageURL, setPageURL] = useState('');
 
@@ -52,14 +56,17 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
   }, [searchParams]);
 
   const packageData = data.content?.package || {};
-  const hotels = data.content?.hotels || [];
+  console.log(packageData, "packageData");
+  const hotels = packageData.hotels || data.content?.hotels || [];
   const reviews = data.content?.reviews || [];
   const relatedPackages = data.content?.relatedPackages || [];
-  const inclusions = data.content?.inclusions || [];
+  const inclusions = packageData.inclusions || data.content?.inclusions || [];
   const faqs = data.content?.faqs || [];
   const contact = data.content?.contact || {};
 
-  const images = packageData.images || [packageData.image];
+  const images = (packageData.images && packageData.images.length > 0)
+    ? packageData.images.map((img: string) => getImageUrl(img))
+    : [getImageUrl(packageData.image)];
 
   return (
     <div className="package-detail-page">
@@ -69,7 +76,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
             <div className="pkg-header-left">
               <div className="star-rating">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className={i < (packageData.stars || 4) ? 'star-filled' : 'star'}>
+                  <span key={i} className={i < (packageData.stars || 0) ? 'star-filled' : 'star'}>
                     <img src="/star.svg" alt="Star" />
                   </span>
                 ))}
@@ -112,7 +119,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                   <div className="option-price">
                     <small>starting <br />from</small>
                     <span className="currency">£</span>
-                    <span className="amount">965</span>
+                    <span className="amount">{packageData.price || '965'}</span>
                     <small className="per-person">per<br />person</small>
                   </div>
                 </div>
@@ -129,7 +136,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                   <div className="option-price">
                     <small>starting <br />from</small>
                     <span className="currency">£</span>
-                    <span className="amount">2952</span>
+                    <span className="amount">{(parseFloat(String(packageData.price || '0')) + 1000) || '2952'}</span>
                     <small className="per-person">per<br />person</small>
                   </div>
                 </div>
@@ -204,7 +211,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
         <div className="container">
           <h2 className="section-subtitle-small">PACKAGE DETAILS</h2>
           <p className="pkg-description-text">
-            {packageData.packageDescription || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.'}
+            {packageData.packageDescription}
           </p>
 
           <div className="package-icon-row">
@@ -238,25 +245,12 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
               <button className="btn btn--dark" onClick={() => setIsCustomizeModalOpen(true)}>Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
             </div>
           </div>
-
-          <div className="inclusions-grid">
-            <ul className="inclusions-list">
-              {inclusions.map((item: string, index: number) => (
-                <li key={index} className="inclusion-item">{item}</li>
-              ))}
-              {inclusions.length === 0 && (
-                <>
-                  <li className="inclusion-item">Umrah Visa</li>
-                  <li className="inclusion-item">All Packages Are Based On Quad Sharing</li>
-                  <li className="inclusion-item">Return Flights</li>
-                  <li className="inclusion-item">Ground Transfers Can Be Included On</li>
-                  <li className="inclusion-item">3 Nights in Makkah 3 Star Hotel</li>
-                  <li className="inclusion-item">Direct Flights Can Be Arranged On Special Request</li>
-                  <li className="inclusion-item">2 Nights in Madinah 3</li>
-                </>
-              )}
-            </ul>
-          </div>
+          <div
+            className="inclusions-grid"
+            dangerouslySetInnerHTML={{
+              __html: packageData?.packageDescription || "",
+            }}
+          />
         </div>
       </section>
 
@@ -289,7 +283,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                       >
                         {hotel.images?.map((img: string, idx: number) => (
                           <SwiperSlide key={idx}>
-                            <img src={img} alt={hotel.name} />
+                            <img src={getImageUrl(img)} alt={hotel.name} />
                           </SwiperSlide>
                         ))}
                       </Swiper>
@@ -304,10 +298,15 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                       </div>
                       <h3 className="hotel-card-name">{hotel.name}</h3>
                       <p className="hotel-card-location">Hotel In {hotel.location}</p>
-                      <p className="hotel-card-desc">
-                        {hotel.description || 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.'}
-                      </p>
-                      <Link href="#" className="see-more-link">See More <span><img src="/rightarrow.svg" alt="" /></span></Link>
+
+                      <DescriptionItem
+                        hotelName={hotel.name}
+                        description={hotel.description || ""}
+                        onSeeMore={(title, content) => {
+                          setActiveDesc({ title, content });
+                          setIsDescModalOpen(true);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -316,6 +315,13 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
           </div>
         </div>
       </section>
+
+      <DescriptionModal
+        isOpen={isDescModalOpen}
+        onClose={() => setIsDescModalOpen(false)}
+        title={activeDesc.title}
+        content={activeDesc.content}
+      />
       <PackageContactInfo contact={contact} />
       <HomeReviews reviews={reviews} />
 
@@ -402,5 +408,53 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
       />
 
     </div>
+  );
+}
+
+interface DescriptionItemProps {
+  hotelName: string;
+  description: string;
+  onSeeMore: (title: string, content: string) => void;
+}
+
+function DescriptionItem({ hotelName, description, onSeeMore }: DescriptionItemProps) {
+  const [showSeeMore, setShowSeeMore] = useState(false);
+  const descriptionRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (descriptionRef.current) {
+        const isOverflowing = descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight;
+        setShowSeeMore(isOverflowing);
+      }
+    };
+
+    // Use a small delay to ensure CSS line-clamp is applied
+    const timer = setTimeout(checkOverflow, 100);
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, [description]);
+
+  return (
+    <>
+      <div
+        ref={descriptionRef}
+        className="hotel-card-desc"
+        dangerouslySetInnerHTML={{
+          __html: description,
+        }}
+      />
+      {showSeeMore && (
+        <button
+          className="see-more-link btn-unstyled"
+          onClick={() => onSeeMore(hotelName, description)}
+        >
+          See More <span><img src="/rightarrow.svg" alt="" /></span>
+        </button>
+      )}
+    </>
   );
 }

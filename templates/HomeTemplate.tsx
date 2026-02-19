@@ -16,6 +16,7 @@ import HomeReviews from '@/components/sections/HomeReviews';
 import UmrahHajjServices from '@/components/sections/UmrahHajjServices';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import BlogSection from '@/components/sections/BlogSection';
+import { getImageUrl } from '@/utils/api';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -40,195 +41,209 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
     setIsMounted(true);
   }, []);
 
+  // Extract data from API response
   const bannerData = data.content?.banner || {};
-  const umrahPackages = data.content?.umrahPackages || [];
-  const hajjPackages = data.content?.hajjPackages || [];
   const faqs = data.content?.faqs || [];
   const reviews = data.content?.reviews || [];
-  const features = data.content?.features || [];
+  const section1Widget = data.content?.section_1_widget?.[0];
+  const section2Widget = data.content?.section_2_widget?.[0];
+  const section3Widget = data.content?.section_3_widget?.[0];
+  const section4Widget = data.content?.section_4_widget?.[0];
+  const reviewsWidget = data.content?.ourclientsays_widget?.[0];
 
-  const dummyPosts = [
-    {
-      id: '1',
-      title: 'Is It Better To Go To Makkah Or Madinah First',
-      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      image: '/blog1.png',
-      date: '16 December, 2025',
-      author: 'Admin',
-      slug: 'better-to-go-to-makkah-or-madinah-first'
-    },
-    {
-      id: '2',
-      title: 'How Can Pilgrims Protect Themselves from Getting Sick?',
-      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      image: '/blog1.png',
-      date: '16 December, 2025',
-      author: 'Admin',
-      slug: 'how-can-pilgrims-protect-themselves-from-getting-sick'
-    },
-    {
-      id: '3',
-      title: 'Which Is The Best Time To Perform Umrah',
-      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      image: '/blog1.png',
-      date: '16 December, 2025',
-      author: 'Admin',
-      slug: 'which-is-the-best-time-to-perform-umrah'
-    },
-    {
-      id: '4',
-      title: 'Common Mistakes During Hajj',
-      excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      image: '/blog1.png',
-      date: '16 December, 2025',
-      author: 'Admin',
-      slug: 'common-mistakes-during-hajj'
-    }
-  ];
+  // Get packages from fetched data
+  const section1Packages = data.content?.section1Packages || [];
+  const section2Packages = data.content?.section2Packages || [];
+  const section3Packages = data.content?.section3Packages || [];
+  const section4Packages = data.content?.section4Packages || [];
+
+  // Get images from API and normalize paths
+  const section1Image = getImageUrl(data.content?.section1_image_url);
+  const section3Image = getImageUrl(data.content?.section3_image_url);
+  const scrollImage = getImageUrl(data.content?.scroll_image_url);
+
+  // Services data
+  const servicesData = data.content?.services_heading ? {
+    title: data.content.services_heading,
+    description: data.content.services_subheading || '',
+    mainImage: getImageUrl(data.content.services_image_url),
+    items: data.content.services_items ? JSON.parse(data.content.services_items) : []
+  } : null;
 
   return (
     <>
       {/* Home Banner */}
       {bannerData && <HomeBanner data={bannerData} loading={!isMounted} />}
 
-      {/* Best Umrah Packages Section */}
-      {umrahPackages.length > 0 && (
-        <section className="section bestpackages">
-          <div className='sideimage'>
-            <img src="/umrah-packages.png" alt="" />
-          </div>
-          <div className="leftcontent">
+      {/* Section 1: Best Umrah Packages */}
+      {section1Widget && (
+        <section className={`section bestpackages`}>
+          {section1Image && (
+            <div className='sideimage'>
+              <img src={getImageUrl(section1Image)} alt="" />
+            </div>
+          )}
+          <div className={section1Image ? "leftcontent" : "container"}>
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">Best Umrah Packages 2025-2026</h2>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
-
+                <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section1Widget.heading || '' }} />
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section1Widget.subheading || '' }} />
               </div>
               <div className='rightside'>
-                <div className="swiper-nav-btns">
-                  <button className="swiper-nav-btn prev prev-umrah">
-                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                  </button>
-                  <button className="swiper-nav-btn next next-umrah">
-                    <img src="/nextarrow.svg" alt="" />
-                  </button>
-                </div>
-                <Link href="/best-umrah-packages-2025-2026" className="btn btn--primary">View All Packages</Link>
+                {section1Widget.slider_enable === '1' && (
+                  <div className="swiper-nav-btns">
+                    <button className="swiper-nav-btn prev prev-bestUmrah">
+                      <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                    </button>
+                    <button className="swiper-nav-btn next next-bestUmrah">
+                      <img src="/nextarrow.svg" alt="" />
+                    </button>
+                  </div>
+                )}
+                {section1Widget.button_link && (
+                  <Link href={`/${section1Widget.button_link}`} className="btn btn--primary">
+                    {section1Widget.button_text || 'View All Packages'}
+                  </Link>
+                )}
               </div>
             </div>
 
-            <div className="packages-swiper-wrapper bestpackagesswiper" style={{ position: 'relative' }}>
-              {!slidersLoaded.bestUmrah && <SliderSkeleton count={2} />}
-              <Swiper
-                modules={[Navigation, Pagination]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, bestUmrah: true }))}
-                style={{ display: slidersLoaded.bestUmrah ? 'block' : 'none' }}
-                slidesPerView={1.2}
-                navigation={{
-                  prevEl: '.prev-umrah',
-                  nextEl: '.next-umrah',
-                }}
-                pagination={{
-                  el: '.umraslider-pagination-custom',
-                  clickable: true
-                }}
-                breakpoints={{
-                  640: { slidesPerView: 1 },
-                  768: { slidesPerView: 1.2 },
-                  992: { slidesPerView: 1.4 },
-                  1025: { slidesPerView: 1.6 },
-                  1200: { slidesPerView: 1.3 },
-                  1600: { slidesPerView: 2 },
-                }}
-                className="packages-swiper"
-              >
-                {umrahPackages.map((pkg: UmrahPackageData) => (
-                  <SwiperSlide key={pkg.id}>
-                    <UmrahPackageCard package={pkg} />
-                  </SwiperSlide>
+            {section1Widget.slider_enable === '1' ? (
+              <>
+                <div className="packages-swiper-wrapper bestUmrah-swiper" style={{ position: 'relative' }}>
+                  {!slidersLoaded.bestUmrah && <SliderSkeleton count={2} />}
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    onInit={() => setSlidersLoaded(prev => ({ ...prev, bestUmrah: true }))}
+                    style={{ display: slidersLoaded.bestUmrah ? 'block' : 'none' }}
+                    slidesPerView={1.2}
+                    navigation={{
+                      prevEl: '.prev-bestUmrah',
+                      nextEl: '.next-bestUmrah',
+                    }}
+                    pagination={{
+                      el: '.bestUmrah-pagination',
+                      clickable: true
+                    }}
+                    breakpoints={{
+                      640: { slidesPerView: 1 },
+                      768: { slidesPerView: 1.2 },
+                      992: { slidesPerView: 1.4 },
+                      1025: { slidesPerView: 1.6 },
+                      1200: { slidesPerView: 1.3 },
+                      1600: { slidesPerView: 2 },
+                    }}
+                    className="packages-swiper"
+                  >
+                    {section1Packages.map((pkg: any, index: number) => (
+                      <SwiperSlide key={`bestUmrah-${pkg.id || index}`}>
+                        <UmrahPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+                <div className="swiper-pagination-custom bestUmrah-pagination"></div>
+              </>
+            ) : (
+              <div className="packages-grid-two-col">
+                {section1Packages.map((pkg: any, index: number) => (
+                  <UmrahPackageCard key={`bestUmrah-${pkg.id || index}`} package={pkg} />
                 ))}
-              </Swiper>
-            </div>
-            <div className="swiper-pagination-custom umraslider-pagination-custom"></div>
+              </div>
+            )}
           </div>
         </section>
       )}
-      {umrahPackages.length > 0 && (
+
+      {/* Section 2: December Umrah Deals */}
+      {section2Widget && (
         <section className="section december-deals dealssection">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">December Umrah Deals 2025</h2>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
+                <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section2Widget.heading || '' }} />
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section2Widget.subheading || '' }} />
               </div>
               <div className='rightside'>
-                <div className="swiper-nav-btns">
-                  <button className="swiper-nav-btn prev prev-december">
-                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                  </button>
-                  <button className="swiper-nav-btn next next-december">
-                    <img src="/nextarrow.svg" alt="" />
-                  </button>
-                </div>
-                <Link href="/december-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {section2Widget.slider_enable === '1' && (
+                  <div className="swiper-nav-btns">
+                    <button className="swiper-nav-btn prev prev-decemberDeals">
+                      <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                    </button>
+                    <button className="swiper-nav-btn next next-decemberDeals">
+                      <img src="/nextarrow.svg" alt="" />
+                    </button>
+                  </div>
+                )}
+                {section2Widget.button_link && (
+                  <Link href={`/${section2Widget.button_link}`} className="btn btn--primary">
+                    {section2Widget.button_text || 'View All Packages'}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper deals-swiper" style={{ position: 'relative' }}>
-            {!slidersLoaded.decemberDeals && <SliderSkeleton count={3} />}
-            <Swiper
-              modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, decemberDeals: true }))}
-              style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
-              slidesPerView={1.2}
-              navigation={{
-                prevEl: '.prev-december',
-                nextEl: '.next-december',
-              }}
-              pagination={{
-                el: '.december-pagination',
-                clickable: true
-              }}
-              loop={true} // Enable looping
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false
-              }}
-              breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1.2 },
-                992: { slidesPerView: 1.4 },
-                1025: { slidesPerView: 1.6 },
-                1200: { slidesPerView: 2.2 },
-                1700: { slidesPerView: 2.8 },
 
-              }}
-              className="packages-swiper"
-            >
-              {umrahPackages.map((pkg: UmrahPackageData) => (
-                <SwiperSlide key={`deal-${pkg.id}`}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+          <div className="packages-swiper-container-full">
+            {section2Widget.slider_enable === '1' ? (
+              <>
+                <div className="packages-swiper-wrapper decemberDeals-swiper" style={{ position: 'relative' }}>
+                  {!slidersLoaded.decemberDeals && <SliderSkeleton count={2} />}
+                  <Swiper
+                    modules={[Navigation, Pagination, Autoplay]}
+                    onInit={() => setSlidersLoaded(prev => ({ ...prev, decemberDeals: true }))}
+                    style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
+                    slidesPerView={1.2}
+                    navigation={{
+                      prevEl: '.prev-decemberDeals',
+                      nextEl: '.next-decemberDeals',
+                    }}
+                    pagination={{
+                      el: '.decemberDeals-pagination',
+                      clickable: true
+                    }}
+                    loop={true}
+                    autoplay={{
+                      delay: 2500,
+                      disableOnInteraction: false
+                    }}
+                    breakpoints={{
+                      640: { slidesPerView: 1 },
+                      768: { slidesPerView: 1.2 },
+                      992: { slidesPerView: 1.4 },
+                      1025: { slidesPerView: 1.6 },
+                      1200: { slidesPerView: 2.2 },
+                      1700: { slidesPerView: 2.8 },
+                    }}
+                    className="packages-swiper"
+                  >
+                    {section2Packages.map((pkg: any, index: number) => (
+                      <SwiperSlide key={`decemberDeals-${pkg.id || index}`}>
+                        <UmrahPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+                <div className="container">
+                  <div className="swiper-pagination-custom decemberDeals-pagination"></div>
+                </div>
+              </>
+            ) : (
+              <div className="container">
+                <div className="packages-grid-two-col">
+                  {section2Packages.map((pkg: any, index: number) => (
+                    <UmrahPackageCard key={`decemberDeals-${pkg.id || index}`} package={pkg} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div className="swiper-pagination-custom december-pagination"></div>
-
         </section>
       )}
 
-      {/* Why Choose Us Section */}
+      {/* Why Choose Us Section - Static for now */}
       <section className="section why-us-section">
         <div className="container container-sm">
-
           <div className="features-grid">
             <div className='leftside features-card-wrapper'>
               <div className="feature-card">
@@ -255,7 +270,6 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
             <div className='rightside features-card-wrapper'>
               <div className="feature-card">
-
                 <div className='content'>
                   <h3>Guidance At Every Step</h3>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
@@ -265,7 +279,6 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 </span>
               </div>
               <div className="feature-card">
-
                 <div className='content'>
                   <h3>10,000 + Satisfied Customers</h3>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
@@ -278,97 +291,107 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
           </div>
         </div>
       </section>
-      {/* Best Hajj Packages Section */}
-      {hajjPackages.length > 0 && (
+
+      {/* Section 3: Best Hajj Packages */}
+      {section3Widget && (
         <section className="section hajjsection">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">Best Hajj Packages 2026</h2>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
+                <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section3Widget.heading || '' }} />
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section3Widget.subheading || '' }} />
               </div>
               <div className='rightside'>
-                <div className="swiper-nav-btns">
-                  <button className="swiper-nav-btn prev prev-haj">
-                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                  </button>
-                  <button className="swiper-nav-btn next next-haj">
-                    <img src="/nextarrow.svg" alt="" />
-                  </button>
-                </div>
-                <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {section3Widget.slider_enable === '1' && (
+                  <div className="swiper-nav-btns">
+                    <button className="swiper-nav-btn prev prev-bestHajj">
+                      <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                    </button>
+                    <button className="swiper-nav-btn next next-bestHajj">
+                      <img src="/nextarrow.svg" alt="" />
+                    </button>
+                  </div>
+                )}
+                {section3Widget.button_link && (
+                  <Link href={`/${section3Widget.button_link}`} className="btn btn--primary">
+                    {section3Widget.button_text || 'View All Packages'}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.bestHajj && <SliderSkeleton count={3} />}
-            <div className='sliderhere' style={{ display: slidersLoaded.bestHajj ? 'block' : 'none' }}>
-              <Swiper
-                modules={[Navigation, Pagination]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, bestHajj: true }))}
-                slidesPerView={1}
-                navigation={{
-                  prevEl: '.prev-haj',
-                  nextEl: '.next-haj',
-                }}
-                pagination={{
-                  el: '.haj-pagination',
-                  clickable: true
-                }}
-                breakpoints={{
-
-
-                  640: { slidesPerView: 2 },
-                  992: { slidesPerView: 2.2 },
-                  1025: { slidesPerView: 2.5 },
-                  1200: { slidesPerView: 2 },
-                  1500: { slidesPerView: 3 },
-                }}
-              >
-                {hajjPackages.map((pkg: HajjPackageData) => (
-                  <SwiperSlide key={pkg.id}>
-                    <HajjPackageCard package={pkg} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <div className="swiper-pagination-custom haj-pagination"></div>
-            </div>
-            <div className='imagearea'>
-              <img src="/Hajj-pillgrim.png" alt="" />
-            </div>
-          </div>
+          {section3Widget.slider_enable === '1' ? (
+            <>
+              <div className="packages-swiper-wrapper bestHajj-swiper" style={{ position: 'relative' }}>
+                <div className='sliderhere'>
+                  {!slidersLoaded.bestHajj && <SliderSkeleton count={3} />}
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    onInit={() => setSlidersLoaded(prev => ({ ...prev, bestHajj: true }))}
+                    style={{ display: slidersLoaded.bestHajj ? 'block' : 'none' }}
+                    slidesPerView={1}
+                    navigation={{
+                      prevEl: '.prev-bestHajj',
+                      nextEl: '.next-bestHajj',
+                    }}
+                    pagination={{
+                      el: '.bestHajj-pagination',
+                      clickable: true
+                    }}
+                    breakpoints={{
+                      640: { slidesPerView: 2 },
+                      992: { slidesPerView: 2.2 },
+                      1025: { slidesPerView: 2.5 },
+                      1200: { slidesPerView: 2 },
+                      1500: { slidesPerView: 3 },
+                    }}
+                    className="packages-swiper"
+                  >
+                    {section3Packages.map((pkg: any, index: number) => (
+                      <SwiperSlide key={`bestHajj-${pkg.id || index}`}>
+                        <HajjPackageCard package={pkg} />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                  <div className="swiper-pagination-custom bestHajj-pagination"></div>
+                </div>
+                <div className='imagearea'>
+                  <img src={section3Image} alt="" />
+                </div>
+              </div>
+            </>
+          ) : (
+            null
+          )}
 
 
         </section>
       )}
-
       {/* Explore Our Umrah Packages Section */}
-      {umrahPackages.length > 0 && (
+      {section4Packages.length > 0 && section4Widget && (
         <section className="section exploration-section">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">Explore Our Umrah Packages</h2>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
+                <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section4Widget.heading || '' }} />
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section4Widget.subheading || '' }} />
               </div>
               <div className='rightside'>
-                <div className="swiper-nav-btns">
-                  <button className="swiper-nav-btn prev prev-exploration">
-                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                  </button>
-                  <button className="swiper-nav-btn next next-exploration">
-                    <img src="/nextarrow.svg" alt="" />
-                  </button>
-                </div>
-                <Link href="/umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {section4Widget.slider_enable === '1' && (
+                  <div className="swiper-nav-btns">
+                    <button className="swiper-nav-btn prev prev-exploration">
+                      <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                    </button>
+                    <button className="swiper-nav-btn next next-exploration">
+                      <img src="/nextarrow.svg" alt="" />
+                    </button>
+                  </div>
+                )}
+                {section4Widget.button_link && (
+                  <Link href={`/${section4Widget.button_link}`} className="btn btn--primary">
+                    {section4Widget.button_text || 'View All Packages'}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -381,7 +404,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 slidesPerView={1}
                 centeredSlides={true}
                 spaceBetween={24}
-                loop={umrahPackages.length > 1}
+                loop={section4Packages.length > 1}
                 navigation={{
                   prevEl: '.prev-exploration',
                   nextEl: '.next-exploration',
@@ -391,17 +414,15 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 autoplay={{
-                  delay: 1500,
+                  delay: 2500,
                   disableOnInteraction: false
                 }}
                 breakpoints={{
-
-
                   640: { slidesPerView: 'auto' }
                 }}
                 className="packages-swiper exploration-packages-swiper"
               >
-                {umrahPackages.map((pkg: UmrahPackageData) => (
+                {section4Packages.map((pkg: UmrahPackageData) => (
                   <SwiperSlide key={`explore-${pkg.id}`}>
                     <UmrahExplorationCard package={pkg} />
                   </SwiperSlide>
@@ -412,133 +433,47 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
           </div>
         </section>
       )}
-
-      {/* New Banner and Reviews Sections */}
+      {/* Customize Banner */}
       <CustomizeBanner />
-      <HomeReviews reviews={reviews} cardsPerSlide={2} />
+
+      {/* Reviews Section */}
+      {reviews && reviews.length > 0 && reviewsWidget && (
+        <HomeReviews
+          reviews={reviews}
+          cardsPerSlide={2}
+          heading={reviewsWidget.heading}
+          subheading={reviewsWidget.sub_heading}
+        />
+      )}
+
       {/* Umrah & Hajj Services Section */}
-      <UmrahHajjServices
-        data={{
-          title: "Umrah & Hajj Services",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
-          mainImage: "/umra-hajj-services.png", // placeholder image for now
-          items: [
-            {
-              id: "1",
-              title: "Health And Safety",
-              icon: "/healtsafety.png", // assuming these icons exist or will be added
-              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate"
-            },
-            {
-              id: "2",
-              title: "Transport",
-              icon: "/2-2.png",
-              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate"
-            },
-            {
-              id: "3",
-              title: "Visa",
-              icon: "/2-3.png",
-              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate"
-            },
-            {
-              id: "4",
-              title: "Ziyarats",
-              icon: "/2-4.png",
-              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate"
-            }
-          ]
-        }}
-      />
+      {servicesData && (
+        <UmrahHajjServices data={servicesData} />
+      )}
 
+      {/* Scroll Detail Section */}
+      {data.content?.scroll_description && (
+        <ScrollDetail
+          title="Umrah & Hajj Services Scroll Detail"
+          image={scrollImage}
+          content={data.content.scroll_description}
+        />
+      )}
 
-
-      {/* Partners Section - Placeholder or using image */}
-      <section className="section partners-section">
-        <div className="container">
-          <div className='sectionheadings'>
-            <div className='sectionheadingstext'>
-              <h2 className="section-title">Trusted Travel Connections</h2>
-              <p className="section-subtitle">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip
-              </p>
-            </div>
-            <div className='rightside justify-content-end' >
-              <div className="swiper-nav-btns">
-                <button className="swiper-nav-btn prev partner-prev">
-                  <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                </button>
-                <button className="swiper-nav-btn next partner-next">
-                  <img src="/nextarrow.svg" alt="" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="partners-logos">
-          <Swiper
-            modules={[Navigation]}
-            slidesPerView={2.2}
-            spaceBetween={24}
-            navigation={{
-              prevEl: '.partner-prev',
-              nextEl: '.partner-next',
-            }}
-            breakpoints={{
-              640: { slidesPerView: 4 },
-              1024: { slidesPerView: 8 },
-            }}
-            className="packages-swiper partner-swiper"
-          >
-            {['Air_China-Logo.wine.png', 'Air_China-Logo.wine.png', 'Air_China-Logo.wine.png', 'Air_China-Logo.wine.png'].map((pkg: string) => (
-              <SwiperSlide key={`partner-${pkg}`}>
-                <img src={pkg} alt="Partners" />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>
-
-      <ScrollDetail
-        title="Umrah & Hajj Services Scroll Detail"
-        image="/scrollimg.png"
-        content={`
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-        `}
-      />
       {/* FAQ Section */}
       {faqs.length > 0 && (
         <section className="section faq-section">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">Frequently Asked Questions</h2>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
+                <h2 className="section-title">{data.content?.faqs_heading || 'Frequently Asked Questions'}</h2>
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: data.content?.faqs_subheading || '' }} />
               </div>
             </div>
-
             <FAQ items={faqs} />
           </div>
         </section>
       )}
-
-      {/* Blog Section */}
-      <BlogSection posts={dummyPosts} />
     </>
   );
 }

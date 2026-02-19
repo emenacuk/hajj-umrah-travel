@@ -14,18 +14,23 @@ interface PageProps {
 }
 
 export default async function DynamicPage({ params }: PageProps) {
-  const pageData = await fetchPageData(params.slug);
+  try {
+    const pageData = await fetchPageData(params.slug);
 
-  if (!pageData) {
+    if (!pageData) {
+      notFound();
+    }
+
+    const routeConfig = dynamicParams.general?.find(route => route.slug === params.slug);
+    if (routeConfig?.template) {
+      pageData.template_name = routeConfig.template;
+    }
+
+    return resolveTemplate(pageData.template_name, pageData);
+  } catch (error) {
+    console.error('Error loading page:', error);
     notFound();
   }
-
-  const routeConfig = dynamicParams.general?.find(route => route.slug === params.slug);
-  if (routeConfig?.template) {
-    pageData.template_name = routeConfig.template;
-  }
-
-  return resolveTemplate(pageData.template_name, pageData);
 }
 
 

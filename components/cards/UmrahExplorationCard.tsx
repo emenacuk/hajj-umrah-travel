@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { UmrahPackageData } from '@/types';
+import { getImageUrl } from '@/utils/api';
 
 import { Skeleton } from '@/components/common/Skeleton';
 
@@ -13,9 +14,9 @@ export default function UmrahExplorationCard({ package: pkg, loading }: UmrahExp
 
     return (
         <div className="umrah-exploration-card">
-            <Link href={`/umrah/${pkg.id}`}>
+            <Link href={`/umrah-packages/${pkg.pageUrl}`}>
                 <div className="card-image">
-                    <img src={pkg.image} alt={pkg.title} />
+                    <img src={getImageUrl(pkg.image)} alt={pkg.title} />
                     <div className="card-overlay">
                         <h3>{pkg.title}</h3>
                         <div className="card-divider">

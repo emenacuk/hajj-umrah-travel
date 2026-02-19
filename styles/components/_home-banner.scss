@@ -14,6 +14,22 @@
   }
 
   .banner-text {
+    .banner-heading {
+      margin-bottom: 20px;
+      
+      h1 {
+        color: var(--color-black);
+        font-size: 46px;
+        line-height: 52px;
+        font-weight: 900;
+        margin-bottom: 0;
+
+        span {
+          color: var(--color-primary);
+        }
+      }
+    }
+    
     h1 {
       color: var(--color-black);
       font-size: 46px;
@@ -128,6 +144,23 @@
       align-items: flex-start;
       padding: 122px 0px 50px;
       gap: 20px;
+      >.banner-heading {
+        width: 100%;
+        margin-bottom: 20px;
+        
+        h1 {
+          color: var(--color-dark);
+          font-size: 36px;
+          line-height: 1.2;
+          font-weight: 900;
+          margin-bottom: 0;
+
+          span {
+            color: var(--color-primary);
+          }
+        }
+      }
+      
       >h1 {
         color: var(--color-dark);
         font-size: 36px;
@@ -175,6 +208,13 @@
   .home-banner {
     .banner-content {
       padding: 110px 0px 50px;
+      >.banner-heading {
+        h1 {
+          font-size: 28px;
+          line-height: 32px;
+          margin-bottom: 7px;
+        }
+      }
       h1{
         font-size: 28px;
         line-height: 32px;

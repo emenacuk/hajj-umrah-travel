@@ -1,4 +1,15 @@
 // Package Detail Page Styles
+.btn-unstyled {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
 .package-detail-page {
   padding-top: 120px;
 }
@@ -16,6 +27,14 @@
     display: flex;
     gap: 2px;
     margin-bottom: 10px;
+
+    .star {
+      opacity: 0.2;
+
+      img {
+        filter: grayscale(100%) brightness(0.5);
+      }
+    }
   }
 
   .package-title {
@@ -372,12 +391,14 @@
   padding: 28px;
   border-radius: 18px;
 
-  .inclusions-list {
+  .inclusions-list,
+  ul {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
 
-    .inclusion-item {
+    .inclusion-item,
+    li {
       position: relative;
       padding-left: 15px;
       font-weight: 400;
@@ -523,6 +544,14 @@
       display: flex;
       align-items: center;
       gap: 2px;
+
+      .star {
+        opacity: 0.2;
+
+        img {
+          filter: grayscale(100%) brightness(0.5);
+        }
+      }
     }
 
     .hotel-card-name {
@@ -540,13 +569,18 @@
 
     .hotel-card-desc {
       color: var(--color-text);
-      line-height: 1.2;
+      line-height: 1.4;
       font-size: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       display: -webkit-box;
-      -webkit-line-clamp: 7;
+      -webkit-line-clamp: 5;
+      line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
+
+      p {
+        margin-bottom: 0;
+      }
     }
 
     .see-more-link {
@@ -557,7 +591,7 @@
       align-items: center;
       justify-content: flex-end;
       gap: 5px;
-
+      margin-left: auto;
       span {
         color: var(--color-primary);
       }
@@ -806,10 +840,13 @@
   }
 
   .inclusions-grid {
-    .inclusions-list {
+
+    .inclusions-list,
+    ul {
       gap: 10px;
 
-      .inclusion-item {
+      .inclusion-item,
+      li {
         font-size: 18px;
       }
     }
@@ -943,7 +980,8 @@
     margin-top: -12px;
   }
 
-  .inclusions-grid .inclusions-list .inclusion-item {
+  .inclusions-grid .inclusions-list .inclusion-item,
+  .inclusions-grid ul li {
     font-size: 16px;
   }
 
@@ -1049,7 +1087,8 @@
     justify-content: center;
   }
 
-  .inclusions-grid .inclusions-list {
+  .inclusions-grid .inclusions-list,
+  .inclusions-grid ul {
     grid-template-columns: 1fr;
   }
 
@@ -1083,5 +1122,42 @@
     left: -14px;
     width: 80px;
     height: 80px;
+  }
+}
+
+// Description Modal specific styles
+.description-modal-content {
+
+  .description-modal-body {
+    .modal-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: 25px;
+      font-family: var(--font-body);
+      border-bottom: 2px solid #FDF9F5;
+      padding-bottom: 10px;
+    }
+
+    .description-full-text {
+      color: var(--color-text);
+      font-size: 16px;
+      line-height: 1.6;
+
+      p {
+        margin-bottom: 5px;
+      }
+
+      ul,
+      ol {
+        margin-bottom: 5px;
+        padding-left: 20px;
+
+        li {
+          list-style: disc;
+          margin-bottom: 5px;
+        }
+      }
+    }
   }
 }

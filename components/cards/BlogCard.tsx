@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { BlogPost } from '@/types';
+import { getImageUrl } from '@/utils/api';
 import '@/styles/components/_blog.scss';
 
 interface BlogCardProps {
@@ -11,7 +12,7 @@ export default function BlogCard({ post }: BlogCardProps) {
     <Link href={`/blog/${post.slug}`}>
       <div className="blog-card">      
         <div className="blog-image-wrapper">
-          <img src={post.image} alt={post.title} />
+          <img src={getImageUrl(post.image)} alt={post.title} />
         </div>        
         <div className="blog-content">       
           <h3 className="blog-title">{post.title}</h3>

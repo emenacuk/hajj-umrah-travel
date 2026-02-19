@@ -15,9 +15,11 @@ import { useState } from 'react';
 interface HomeReviewsProps {
     reviews: ReviewData[];
     cardsPerSlide?: number;
+    heading?: string;
+    subheading?: string;
 }
 
-const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 }) => {
+const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4, heading, subheading }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const displayReviews = reviews.length > 0 ? reviews : [];
 
@@ -26,12 +28,10 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
             <div className="container">
                 <div className='sectionheadings'>
                     <div className='sectionheadingstext'>
-                        <h2 className="section-title">What Our Clients Says</h2>
-                        <p className="section-subtitle">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation ullamco laboris nisi ut aliquip
-                        </p>
+                        <h2 className="section-title">{heading || 'What Our Clients Say'}</h2>
+                        {subheading && (
+                            <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: subheading }} />
+                        )}
                     </div>
                     <div className='rightside justify-content-end'>
                         <div className="swiper-nav-btns ">
@@ -73,9 +73,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4 })
                                             <img src={review.avatar || '/placeholder-user.png'} alt={review.name} />
                                         </div>
                                         <div className='review-content'>
-                                            <p>
-                                                {review.comment}
-                                            </p>
+                                            <div className="review-text" dangerouslySetInnerHTML={{ __html: review.comment }} />
                                             <div className="reviewer-details">
                                                 <div className='reviewerinfo'>
                                                     <h4 className="reviewer-name">{review.name}</h4>

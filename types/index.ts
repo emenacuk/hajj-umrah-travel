@@ -30,10 +30,19 @@ export interface PackageData {
   image: string;
   nights?: number;
   stars?: number;
+  pageUrl: string;
   makkahHotel?: string;
   madinahHotel?: string;
+  makkahNights?: number;
+  madinahNights?: number;
   features?: string[];
   description?: string;
+  packageDescription?: string;
+  images?: string[];
+  makkahHotelData?: HotelData;
+  madinahHotelData?: HotelData;
+  inclusions?: string[];
+  _raw?: any;
 }
 
 // Umrah Package (separate from Hajj)

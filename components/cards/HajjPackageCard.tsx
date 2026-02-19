@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { HajjPackageData } from '@/types';
 import '@/styles/components/_package-cards.scss';
+import { getImageUrl } from '@/utils/api';
 
 import { CardSkeleton } from '@/components/common/Skeleton';
 
@@ -14,14 +15,14 @@ export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCa
 
   return (
     <div className="hajj-card " >
-      <Link href={`/hajj/${pkg.id}`}>
+      <Link href={`/hajj-packages/${pkg.pageUrl}`}>
         <div className="package-image-wrapper">
-          <img src={pkg.image} alt={pkg.title} />
+          <img src={getImageUrl(pkg.image)} alt={pkg.title} />
         </div>
       </Link>
 
       <div className="package-content">
-         {pkg.rating && (
+        {pkg.rating && (
           <div className="package-rating">
             {Array.from({ length: 5 }).map((_, i) => (
               <span key={i} className={i < pkg.rating! ? 'star-filled' : 'star'}>
@@ -30,7 +31,7 @@ export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCa
             ))}
           </div>
         )}
-        <Link href={`/hajj/${pkg.id}`}>
+        <Link href={`/hajj-packages/${pkg.pageUrl}`}>
           <h2>{pkg.title}</h2>
         </Link>
         <div className="package-price">
@@ -52,10 +53,10 @@ export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCa
           )}
         </div>
         <div className="package-actions">
-          <Link href={`/hajj/${pkg.id}`} className="btn btn--black">
+          <Link href={`/hajj-packages/${pkg.pageUrl}`} className="btn btn--black">
             Get Details
           </Link>
-          <Link href={`/hajj/${pkg.id}?enquire=true`} className="btn btn--primary">
+          <Link href={`/hajj-packages/${pkg.pageUrl}?enquire=true`} className="btn btn--primary">
             Enquire Now
           </Link>
         </div>
