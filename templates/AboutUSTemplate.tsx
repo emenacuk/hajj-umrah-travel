@@ -22,7 +22,9 @@ export default function AboutUSTemplate({ data }: AboutUSTemplateProps) {
         </div>
         <WhyChoose />
 
-        {reviews.length > 0 && (
+       
+      </div>
+       {reviews.length > 0 && (
           <HomeReviews
             reviews={reviews}
             cardsPerSlide={2}
@@ -30,7 +32,6 @@ export default function AboutUSTemplate({ data }: AboutUSTemplateProps) {
             subheading={reviewsWidget?.sub_heading || reviewsWidget?.description}
           />
         )}
-      </div>
     </div>
   )
 }

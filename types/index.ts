@@ -14,6 +14,14 @@ export interface PageData {
   image_url?: string;
   page_url?: string;
   search_engine?: number;
+  customization_data?: {
+    heading: string;
+    subheading: string;
+    description: string;
+    image_url: string;
+    button_text: string;
+    button_link: string;
+  };
   _raw?: any;
 }
 

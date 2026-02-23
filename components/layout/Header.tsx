@@ -130,13 +130,13 @@ export default function Header() {
 
                     {/* Navigation Pills */}
                     <nav className="nav-pills">
-                        <Link href="/best-umrah-packages-2025-2026" className={`nav-pill ${isActive('/umrah') ? 'active' : ''}`}>
+                        <Link href="/best-umrah-deals.html" className={`nav-pill ${isActive('/umrah') ? 'active' : ''}`}>
                             Umrah
                         </Link>
-                        <Link href="/hajj-package-2026" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
+                        <Link href="/all-hajj-packages.html" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
                             Hajj Package
                         </Link>
-                        <Link href="/customize-hajj-umrah" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>
+                        <Link href="/customise-your-package.html" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>
                             Customize Package
                         </Link>
                     </nav>

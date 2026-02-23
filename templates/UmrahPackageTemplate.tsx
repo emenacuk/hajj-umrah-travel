@@ -4,16 +4,13 @@ import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { SliderSkeleton } from '@/components/common/Skeleton';
-import { PageData, UmrahPackageData, HotelData, ReviewData } from '@/types';
+import { PageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
-import InquiryForm from '@/components/forms/InquiryForm';
-import Reviews from '@/components/common/Reviews';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
-import { mockHomePageData } from '@/data/mockData';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
@@ -24,61 +21,75 @@ interface UmrahPackageTemplateProps {
 
 export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps) {
   const [slidersLoaded, setSlidersLoaded] = useState({
-    threeStar: false,
-    fourStar: false,
-    fiveStar: false
+    section1: false,
+    section2: false,
+    section3: false,
+    section4: false
   });
-  const bannerData = data.content?.banner || {};
-  const faqs = data.content?.faqs || [];
 
-  // Get packages from mock data for sliders
-  const allUmrahPackages = mockHomePageData.content?.umrahPackages || [];
-  const threeStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 3);
-  const fourStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 4);
-  const fiveStarPackages = allUmrahPackages.filter((pkg: any) => pkg.stars === 5);
+  const content = data.content || {};
+  const bannerData = content.banner || {};
+  const faqs = content.faqs || [];
+  const faqsHeading = content.faqs_heading || 'Frequently Asked Questions';
+  const faqsSubheading = content.faqs_subheading || '';
+
+  // Use dynamic packages from API instead of mock data
+  const section1Packages = content.section1Packages || [];
+  const section2Packages = content.section2Packages || [];
+  const section3Packages = content.section3Packages || [];
+  const section4Packages = content.section4Packages || [];
+
+  // Get widget info for headings/subheadings
+  const widget1 = content.section_1_widget?.[0] || {};
+  const widget2 = content.section_2_widget?.[0] || {};
+  const widget3 = content.section_3_widget?.[0] || {};
+  const widget4 = content.section_4_widget?.[0] || {};
 
   return (
     <>
       {/* Banner */}
       {bannerData && <InnerBanner data={bannerData} />}
-      {/* 3 Star Umrah Packages Slider */}
-      {threeStarPackages.length > 0 && (
+
+      {/* Section 1 Slider */}
+      {section1Packages.length > 0 && (
         <section className="section exploration-section">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">3 Star Umrah Packages</h2>
+                <h2 className="section-title">{widget1.heading || 'Umrah Packages'}</h2>
                 <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
+                  {widget1.subheading || widget1.description || ''}
                 </p>
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
-                  <button id='prev-3star' className="swiper-nav-btn prev prev-exploration">
+                  <button id='prev-s1' className="swiper-nav-btn prev prev-exploration">
                     <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
                   </button>
-                  <button id='next-3star' className="swiper-nav-btn next next-exploration">
+                  <button id='next-s1' className="swiper-nav-btn next next-exploration">
                     <img src="/nextarrow.svg" alt="" />
                   </button>
                 </div>
-                <Link href="/3-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {widget1.button_text && (
+                  <Link href={widget1.button_link || '#'} className="btn btn--primary">
+                    {widget1.button_text}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.threeStar && <SliderSkeleton count={2} />}
+            {!slidersLoaded.section1 && <SliderSkeleton count={2} />}
             <Swiper
-              key="three-star-swiper"
+              key="s1-swiper"
               modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, threeStar: true }))}
-              style={{ opacity: slidersLoaded.threeStar ? 1 : 0 }}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, section1: true }))}
+              style={{ opacity: slidersLoaded.section1 ? 1 : 0 }}
               slidesPerView={1}
               spaceBetween={24}
               navigation={{
-                prevEl: '#prev-3star',
-                nextEl: '#next-3star',
+                prevEl: '#prev-s1',
+                nextEl: '#next-s1',
               }}
               className="packages-swiper"
               breakpoints={{
@@ -90,55 +101,56 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1700: { slidesPerView: 2.8 },
               }}
             >
-              {threeStarPackages.map((pkg: any) => (
+              {section1Packages.map((pkg: any) => (
                 <SwiperSlide key={pkg.id}>
                   <UmrahPackageCard package={pkg} />
                 </SwiperSlide>
               ))}
             </Swiper>
           </div>
-
         </section>
       )}
 
-      {/* 4 Star Umrah Packages Slider */}
-      {fourStarPackages.length > 0 && (
+      {/* Section 2 Slider */}
+      {section2Packages.length > 0 && (
         <section className="section exploration-section ">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">4 Star Umrah Packages</h2>
+                <h2 className="section-title">{widget2.heading || 'Umrah Deals'}</h2>
                 <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
+                  {widget2.subheading || widget2.description || ''}
                 </p>
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
-                  <button id='prev-4star' className="swiper-nav-btn prev prev-exploration">
+                  <button id='prev-s2' className="swiper-nav-btn prev prev-exploration">
                     <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
                   </button>
-                  <button id='next-4star' className="swiper-nav-btn next next-exploration">
+                  <button id='next-s2' className="swiper-nav-btn next next-exploration">
                     <img src="/nextarrow.svg" alt="" />
                   </button>
                 </div>
-                <Link href="/4-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {widget2.button_text && (
+                  <Link href={widget2.button_link || '#'} className="btn btn--primary">
+                    {widget2.button_text}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.fourStar && <SliderSkeleton count={2} />}
+            {!slidersLoaded.section2 && <SliderSkeleton count={2} />}
             <Swiper
-              key="four-star-swiper"
+              key="s2-swiper"
               modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, fourStar: true }))}
-              style={{ opacity: slidersLoaded.fourStar ? 1 : 0 }}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, section2: true }))}
+              style={{ opacity: slidersLoaded.section2 ? 1 : 0 }}
               slidesPerView={1}
               spaceBetween={24}
               navigation={{
-                prevEl: '#prev-4star',
-                nextEl: '#next-4star',
+                prevEl: '#prev-s2',
+                nextEl: '#next-s2',
               }}
               className="packages-swiper"
               breakpoints={{
@@ -150,53 +162,56 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1700: { slidesPerView: 2.8 },
               }}
             >
-              {fourStarPackages.map((pkg: any) => (
+              {section2Packages.map((pkg: any) => (
                 <SwiperSlide key={pkg.id}>
                   <UmrahPackageCard package={pkg} />
                 </SwiperSlide>
               ))}
             </Swiper>
           </div>
-
         </section>
       )}
-      {fiveStarPackages.length > 0 && (
+
+      {/* Section 3 Slider */}
+      {section3Packages.length > 0 && (
         <section className="section exploration-section ">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">5 Star Umrah Packages</h2>
+                <h2 className="section-title">{widget3.heading || 'Hajj Packages'}</h2>
                 <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
+                  {widget3.subheading || widget3.description || ''}
                 </p>
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
-                  <button id='prev-5star' className="swiper-nav-btn prev prev-exploration">
+                  <button id='prev-s3' className="swiper-nav-btn prev prev-exploration">
                     <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
                   </button>
-                  <button id='next-5star' className="swiper-nav-btn next next-exploration">
+                  <button id='next-s3' className="swiper-nav-btn next next-exploration">
                     <img src="/nextarrow.svg" alt="" />
                   </button>
                 </div>
-                <Link href="/5-star-umrah-packages" className="btn btn--primary">View All Packages</Link>
+                {widget3.button_text && (
+                  <Link href={widget3.button_link || '#'} className="btn btn--primary">
+                    {widget3.button_text}
+                  </Link>
+                )}
               </div>
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.fiveStar && <SliderSkeleton count={2} />}
+            {!slidersLoaded.section3 && <SliderSkeleton count={2} />}
             <Swiper
-              key="five-star-swiper"
+              key="s3-swiper"
               modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, fiveStar: true }))}
-              style={{ opacity: slidersLoaded.fiveStar ? 1 : 0 }}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, section3: true }))}
+              style={{ opacity: slidersLoaded.section3 ? 1 : 0 }}
               slidesPerView={1}
               spaceBetween={24}
               navigation={{
-                prevEl: '#prev-5star',
-                nextEl: '#next-5star',
+                prevEl: '#prev-s3',
+                nextEl: '#next-s3',
               }}
               className="packages-swiper"
               breakpoints={{
@@ -208,7 +223,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1700: { slidesPerView: 2.8 },
               }}
             >
-              {fiveStarPackages.map((pkg: any) => (
+              {section3Packages.map((pkg: any) => (
                 <SwiperSlide key={pkg.id}>
                   <UmrahPackageCard package={pkg} />
                 </SwiperSlide>
@@ -217,32 +232,84 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
           </div>
         </section>
       )}
+
+
+
+      {/* Section 4 Slider */}
+      {section4Packages.length > 0 && (
+        <section className="section exploration-section ">
+          <div className="container">
+            <div className='sectionheadings'>
+              <div className='sectionheadingstext'>
+                <h2 className="section-title">{widget4.heading || 'Explore Packages'}</h2>
+                <p className="section-subtitle">
+                  {widget4.subheading || widget4.description || ''}
+                </p>
+              </div>
+              <div className='rightside'>
+                <div className="swiper-nav-btns">
+                  <button id='prev-s4' className="swiper-nav-btn prev prev-exploration">
+                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                  </button>
+                  <button id='next-s4' className="swiper-nav-btn next next-exploration">
+                    <img src="/nextarrow.svg" alt="" />
+                  </button>
+                </div>
+                {widget4.button_text && (
+                  <Link href={widget4.button_link || '#'} className="btn btn--primary">
+                    {widget4.button_text}
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+            {!slidersLoaded.section4 && <SliderSkeleton count={2} />}
+            <Swiper
+              key="s4-swiper"
+              modules={[Navigation, Pagination]}
+              onInit={() => setSlidersLoaded(prev => ({ ...prev, section4: true }))}
+              style={{ opacity: slidersLoaded.section4 ? 1 : 0 }}
+              slidesPerView={1}
+              spaceBetween={24}
+              navigation={{
+                prevEl: '#prev-s4',
+                nextEl: '#next-s4',
+              }}
+              className="packages-swiper"
+              breakpoints={{
+                640: { slidesPerView: 1 },
+                768: { slidesPerView: 1.2 },
+                992: { slidesPerView: 1.4 },
+                1025: { slidesPerView: 1.6 },
+                1200: { slidesPerView: 2.2 },
+                1700: { slidesPerView: 2.8 },
+              }}
+            >
+              {section4Packages.map((pkg: any) => (
+                <SwiperSlide key={pkg.id}>
+                  <UmrahPackageCard package={pkg} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </section>
+      )}
+
       <ScrollDetail
-        title="Umrah & Hajj Services Scroll Detail"
-        image="/scrollimg.png"
-        content={`
-          <h2>Welcome to Bismillah Travel – Your Trusted Umrah Travel Agency in the UK</h2>
-          <p>Bismillah Travel is here to help you visit religious places and make Umrah trips that connect with your soul. We're experts at creating meaningful journeys, so your Umrah experience will be not just a trip but a transformative experience. So, start a memorable and moving journey with us, your companion, for the best Umrah travel. We're more than just a travel agency; our mission is to explore spirituality with you, making the experience unforgettable. So, prepare yourself for an unparalleled experience with our Umrah packages.</p>
-          <h3>Umrah Packages</h3>
-          <ul>
-            <li>Premium Accommodations</li>
-            <li>Direct Flight Options</li>
-            <li>Experienced Professional Guides</li>
-            <li>24/7 Spiritual Assistance</li>
-          </ul>
-          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-        `}
+        title={data.title}
+        image={content.scroll_image_url}
+        content={content.scroll_description || content.main_content}
       />
+
       {faqs.length > 0 && (
         <section className="section faq-section">
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className="section-title">Frequently Asked Questions</h2>
+                <h2 className="section-title">{faqsHeading}</h2>
                 <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
+                  {faqsSubheading}
                 </p>
               </div>
             </div>
@@ -254,4 +321,3 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
     </>
   );
 }
-

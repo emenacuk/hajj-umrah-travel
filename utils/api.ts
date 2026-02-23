@@ -81,14 +81,23 @@ export interface PageApiResult {
   }>;
   section_4_widget: Array<{
     heading: string;
-    subheading: string;
+    subheading?: string;
+    description?: string;
     umrah_type: string;
-    umrah_package_ids: string;
-    star: string;
+    umrah_package_ids?: string;
+    star?: string;
     button_text: string;
     button_link: string;
     slider_enable: string;
   }>;
+  customization_data?: {
+    heading: string;
+    subheading: string;
+    description: string;
+    image_url: string;
+    button_text: string;
+    button_link: string;
+  };
 }
 
 // Fetch page data from API using /get-page endpoint (GET request)
@@ -155,57 +164,106 @@ export async function fetchPageData(slug: string): Promise<any> {
     // Fetch section packages separately as requested
     console.log('[API] Fetching section packages individually...');
 
-    // Section 1: Best Umrah Packages
-    if (result.section_1_widget?.[0]) {
-      const widget = result.section_1_widget[0];
-      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-      if (ids.length > 0) {
-        transformedData.content.section1Packages = await fetchUmrahPackagesByIds(ids);
-      } else if (widget.umrah_type) {
-        transformedData.content.section1Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+    // Section 1 Pricing Widget
+    try {
+      if (result.section_1_widget?.[0]) {
+        const widget = result.section_1_widget[0];
+        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+
+        if (uIds.length > 0) {
+          transformedData.content.section1Packages = await fetchUmrahPackagesByIds(uIds);
+        } else if (hIds.length > 0) {
+          transformedData.content.section1Packages = await fetchHajjPackagesByIds(hIds);
+        } else if (widget.umrah_type) {
+          transformedData.content.section1Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+        } else if (widget.hajj_type) {
+          transformedData.content.section1Packages = await fetchHajjPackagesByType(widget.hajj_type);
+        }
       }
+    } catch (e) {
+      console.error('[API] Failed to fetch Section 1 packages:', e);
+      transformedData.content.section1Packages = [];
     }
 
-    // Section 2: December Umrah Deals (or similar)
-    if (result.section_2_widget?.[0]) {
-      const widget = result.section_2_widget[0];
-      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-      if (ids.length > 0) {
-        transformedData.content.section2Packages = await fetchUmrahPackagesByIds(ids);
-      } else if (widget.umrah_type) {
-        transformedData.content.section2Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+    // Section 2 Pricing Widget
+    try {
+      if (result.section_2_widget?.[0]) {
+        const widget = result.section_2_widget[0];
+        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+
+        if (uIds.length > 0) {
+          transformedData.content.section2Packages = await fetchUmrahPackagesByIds(uIds);
+        } else if (hIds.length > 0) {
+          transformedData.content.section2Packages = await fetchHajjPackagesByIds(hIds);
+        } else if (widget.umrah_type) {
+          transformedData.content.section2Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+        } else if (widget.hajj_type) {
+          transformedData.content.section2Packages = await fetchHajjPackagesByType(widget.hajj_type);
+        }
       }
+    } catch (e) {
+      console.error('[API] Failed to fetch Section 2 packages:', e);
+      transformedData.content.section2Packages = [];
     }
 
-    // Section 3: Best Hajj Packages
-    if (result.section_3_widget?.[0]) {
-      const widget = result.section_3_widget[0];
-      const ids = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
-      if (ids.length > 0) {
-        transformedData.content.section3Packages = await fetchHajjPackagesByIds(ids);
-      } else if (widget.hajj_type) {
-        transformedData.content.section3Packages = await fetchHajjPackagesByType(widget.hajj_type);
+    // Section 3 Pricing Widget
+    try {
+      if (result.section_3_widget?.[0]) {
+        const widget = result.section_3_widget[0];
+        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+
+        if (hIds.length > 0) {
+          transformedData.content.section3Packages = await fetchHajjPackagesByIds(hIds);
+        } else if (uIds.length > 0) {
+          transformedData.content.section3Packages = await fetchUmrahPackagesByIds(uIds);
+        } else if (widget.hajj_type) {
+          transformedData.content.section3Packages = await fetchHajjPackagesByType(widget.hajj_type);
+        } else if (widget.umrah_type) {
+          transformedData.content.section3Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+        }
       }
+    } catch (e) {
+      console.error('[API] Failed to fetch Section 3 packages:', e);
+      transformedData.content.section3Packages = [];
     }
 
-    // Section 4: Exploration / Other Deals
-    if (result.section_4_widget?.[0]) {
-      const widget = result.section_4_widget[0];
-      const ids = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-      if (ids.length > 0) {
-        transformedData.content.section4Packages = await fetchUmrahPackagesByIds(ids);
-      } else if (widget.umrah_type) {
-        transformedData.content.section4Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+    // Section 4 Pricing Widget (Exploration)
+    try {
+      if (result.section_4_widget?.[0]) {
+        const widget = result.section_4_widget[0];
+        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+
+        if (uIds.length > 0) {
+          transformedData.content.section4Packages = await fetchUmrahPackagesByIds(uIds);
+        } else if (hIds.length > 0) {
+          transformedData.content.section4Packages = await fetchHajjPackagesByIds(hIds);
+        } else if (widget.umrah_type) {
+          transformedData.content.section4Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+        } else if (widget.hajj_type) {
+          transformedData.content.section4Packages = await fetchHajjPackagesByType(widget.hajj_type);
+        }
       }
+    } catch (e) {
+      console.error('[API] Failed to fetch Section 4 packages:', e);
+      transformedData.content.section4Packages = [];
     }
 
     // Reviews Section
-    if (result.ourclientsays_widget?.[0]) {
-      const widget = result.ourclientsays_widget[0];
-      const ids = widget.reviews_ids ? parseIdsString(widget.reviews_ids) : [];
-      if (ids.length > 0) {
-        transformedData.content.reviews = await fetchReviewsByIds(ids);
+    try {
+      if (result.ourclientsays_widget?.[0]) {
+        const widget = result.ourclientsays_widget[0];
+        const ids = widget.reviews_ids ? parseIdsString(widget.reviews_ids) : [];
+        if (ids.length > 0) {
+          transformedData.content.reviews = await fetchReviewsByIds(ids);
+        }
       }
+    } catch (e) {
+      console.error('[API] Failed to fetch reviews:', e);
+      transformedData.content.reviews = [];
     }
 
     console.log('[API] Section packages and reviews fetched:', {
@@ -282,6 +340,7 @@ function transformPageData(apiData: PageApiResult): any {
         title: apiData.banner_heading,
         subtitle: apiData.banner_subheading,
         description: apiData.banner_subheading,
+        image: (apiData as any).image_url,
       },
       faqs: apiData.faqs || [],
       faqs_heading: apiData.faqs_heading,
@@ -302,7 +361,10 @@ function transformPageData(apiData: PageApiResult): any {
       services_subheading: apiData.services_subheading,
       services_image_url: apiData.services_image_url,
       services_items: apiData.services_items,
+      airline_heading: apiData.airline_heading,
+      airline_subheading: apiData.airline_subheading,
     },
+    customization_data: apiData.customization_data,
     meta: {
       title: apiData.browser_title,
       description: apiData.meta_description,
@@ -881,7 +943,7 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     id: pkg.id || pkg.package_id,
     title: pkg.title || pkg.package_title,
     price: parseFloat(String(pkg.price || pkg.package_price || "0")),
-    image: pkg.image_url || pkg.package_image_url || pkg.image,
+    image: pkg.image_url || pkg.package_image_url || pkg.image || pkg.thumbnail_image_url,
     rating: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
     stars: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
     nights: parseInt(pkg.package_night || pkg.nights || "0"),
@@ -890,7 +952,7 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     madinahHotel: pkg.madinah_hotel?.name || pkg.madinah_hotel_name || pkg.madinah_hotel,
     makkahNights: parseInt(pkg.makkah_night || "5"),
     madinahNights: parseInt(pkg.madinah_night || "4"),
-    packageDescription: pkg.description || pkg.package_description,
+    packageDescription: pkg.description || pkg.package_description || pkg.banner_description,
     images: galleryImages,
     hotels: hotels,
     makkahHotelData: makkahHotelData,
@@ -926,6 +988,11 @@ export function getImageUrl(imagePath: string | null | undefined, fallback?: str
 
   // If path starts with 'media/' (without leading slash), add leading slash
   if (trimmedPath.startsWith('media/')) {
+    return `${MEDIA_BASE_URL}/${trimmedPath}`;
+  }
+
+  // If path starts with 'assets/', don't prepend /media/
+  if (trimmedPath.startsWith('assets/')) {
     return `${MEDIA_BASE_URL}/${trimmedPath}`;
   }
 
