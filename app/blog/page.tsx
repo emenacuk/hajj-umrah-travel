@@ -6,7 +6,7 @@ export default async function BlogPage() {
 
   if (!pageData) {
     const defaultData = {
-      template_name: 'blog',
+      page_template: 'blog',
       title: 'Blog',
       content: {
         posts: [],

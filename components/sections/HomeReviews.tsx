@@ -19,7 +19,7 @@ interface HomeReviewsProps {
     subheading?: string;
 }
 
-const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4, heading, subheading }) => {
+const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, heading, subheading }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const displayReviews = reviews.length > 0 ? reviews : [];
 
@@ -57,12 +57,12 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 4, h
                             nextEl: '.next-review',
                         }}
                         breakpoints={{
-                            576: { slidesPerView: 1.2 },
-                            768: { slidesPerView: 1.8 },
-                            850: { slidesPerView: 2 },
-                            992: { slidesPerView: 2.2 },
-                            1200: { slidesPerView: 2.5 },
-                            1600: { slidesPerView: 3 }
+                            576: { slidesPerView: cardsPerSlide - 1 || 1.2 },
+                            768: { slidesPerView: cardsPerSlide - 0.5 || 1.8 },
+                            850: { slidesPerView: cardsPerSlide - 0.5 || 2 },
+                            992: { slidesPerView: cardsPerSlide - 0.5 || 2.2 },
+                            1200: { slidesPerView: cardsPerSlide || 2.5 },
+                            1600: { slidesPerView: cardsPerSlide || 3 }
                         }}
                     >
                         {displayReviews.map((review) => (

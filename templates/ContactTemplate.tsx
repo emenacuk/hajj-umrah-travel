@@ -113,18 +113,27 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
   };
 
   return (
-    <section className="contact-package-section">
+    <>
+      <section className="contact-package-section">
       <div className="container">
         <div className="customize-grid">
           <div className="form-column">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h1 className="section-title">December Umrah Deals 2025</h1>
-                <p className="section-subtitle">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip
-                </p>
+                  {data?.banner_heading ? (
+                    <div
+                      className="section-title"
+                      dangerouslySetInnerHTML={{ __html: data.banner_heading.replace(/<p>&nbsp;?<\/p>/gi, '') }}
+                    />
+                  ) : (
+                    <h1 className="section-title">Get In Touch</h1>
+                  )}
+                  {data?.banner_subheading && (
+                    <div
+                      className="section-subtitle"
+                      dangerouslySetInnerHTML={{ __html: data.banner_subheading.replace(/<p>&nbsp;?<\/p>/gi, '') }}
+                    />
+                  )}
               </div>
             </div>
 
@@ -263,7 +272,8 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
 
