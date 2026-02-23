@@ -89,6 +89,10 @@ export interface PageApiResult {
     button_link: string;
     slider_enable: string;
   }>;
+  simple_description: string | null;
+  simple_image_url: string | null;
+  simple_image_title: string | null;
+  simple_image_alt: string | null;
 }
 
 // Fetch page data from API using /get-page endpoint (GET request)
@@ -277,6 +281,10 @@ function transformPageData(apiData: PageApiResult): any {
     search_engine: apiData.search_engine,
     image_url: (apiData as any).image_url,
     page_url: apiData.page_url,
+    simple_description: apiData.simple_description || '',
+    simple_image_url: apiData.simple_image_url || '',
+    simple_image_title: apiData.simple_image_title || '',
+    simple_image_alt: apiData.simple_image_alt || '',
     content: {
       banner: {
         title: apiData.banner_heading,
