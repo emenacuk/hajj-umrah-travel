@@ -34,7 +34,7 @@ export default function FAQ({ items }: FAQProps) {
             </button>
             {openIndex === index && (
               <div className="faq-answer">
-                <p>{item.answer}</p>
+                <p dangerouslySetInnerHTML={{ __html: item.answer }} />
               </div>
             )}
           </div>
@@ -55,7 +55,7 @@ export default function FAQ({ items }: FAQProps) {
               </button>
               {openIndex === globalIndex && (
                 <div className="faq-answer">
-                  <p>{item.answer}</p>
+                  <p dangerouslySetInnerHTML={{ __html: item.answer }} />
                 </div>
               )}
             </div>

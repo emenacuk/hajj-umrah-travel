@@ -13,7 +13,7 @@ export default async function HomePage() {
     );
   }
 
-  return resolveTemplate(pageData.template_name || 'home', pageData);
+  return resolveTemplate(pageData.page_template || 'home', pageData);
 }
 
 

@@ -1,7 +1,6 @@
 import { fetchUmrahPackageBySlug } from '@/utils/api';
 import { resolveTemplate } from '@/utils/templateResolver';
 import { notFound } from 'next/navigation';
-import { dynamicParams } from '@/data/static-routes';
 
 interface UmrahPackagePageProps {
   params: {
@@ -17,12 +16,10 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
       notFound();
     }
 
-    // Attempt to find route config for template override, though slug-based fetch is primary
-    const routeConfig = dynamicParams.general?.find(route => route.slug === params.slug);
-    const templateName = routeConfig?.template || 'single_umrah';
+    const templateName = 'single_umrah';
 
     const pageData = {
-      template_name: templateName,
+      page_template: templateName,
       title: packageData.title || packageData.package_title || 'Umrah Package',
       content: {
         package: packageData,
@@ -39,7 +36,7 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
       },
     };
 
-    return resolveTemplate(pageData.template_name, pageData);
+    return resolveTemplate(pageData.page_template, pageData);
   } catch (error) {
     console.error('Error loading Umrah package:', error);
     notFound();

@@ -25,6 +25,7 @@ export interface PageApiResult {
   meta_description: string;
   scroll_description: string;
   widgets_content: string;
+  content: string;
   script: string;
   faqs: Array<{
     question: string;
@@ -46,6 +47,7 @@ export interface PageApiResult {
   ourclientsays_widget: Array<{
     heading: string;
     sub_heading: string;
+    description?: string;
     reviews_ids: string;
   }>;
   section_1_widget: Array<{
@@ -95,7 +97,7 @@ export async function fetchPageData(slug: string): Promise<any> {
   // For other pages, slug might be needed as query parameter
   const url = slug === 'home'
     ? `${API_BASE_URL}/get-page`
-    : `${API_BASE_URL}/get-page?slug=${encodeURIComponent(slug)}`;
+    : `${API_BASE_URL}/get-page?page_url=${encodeURIComponent(slug)}`;
 
   console.log('[API] Fetching page data:', { url, slug });
 
@@ -137,6 +139,13 @@ export async function fetchPageData(slug: string): Promise<any> {
 
     if (apiResponse.status !== 1 || !apiResponse.result) {
       throw new Error(apiResponse.message || 'API returned unsuccessful status');
+    }
+
+    // [ANTI-GRAVITY FIX] Handle API returning Home Page as fallback for invalid slugs
+    // If we're not requesting 'home' and the API returns '0' or 'Home Template', it's a 404
+    if (slug !== 'home' && (apiResponse.result.page_template === '0' || apiResponse.result.page_template === 'Home Template')) {
+      console.warn(`[API] Detected fallback to home for invalid slug: ${slug}`);
+      throw new Error('Page not found');
     }
 
     // Transform API response to match component expectations
@@ -223,8 +232,25 @@ export async function fetchPageData(slug: string): Promise<any> {
 // Transform API page data to component format
 function transformPageData(apiData: PageApiResult): any {
   // Map API template names to our template resolver names
-  let templateName = 'home';
-  if (apiData.page_template) {
+  const templateMapping: Record<string, string> = {
+    'Home Template': 'home',
+    'Hajj Package Template': 'hajj_package',
+    'Umrah Package Template': 'umrah_package',
+    'Package Listing Template': 'listing',
+    'About Us Template': 'about_us',
+    'Contact Us Template': 'contact',
+    'Static With Banner Template': 'static_with_banner',
+    'Static Without Banner Template': 'without_banner',
+    'Blog Template': 'blog',
+    'Reviews Template': 'reviews',
+    'Customization Template': 'customize_package',
+    'Visa Template': 'visa',
+  };
+
+  let templateName = templateMapping[apiData.page_template] || 'home';
+
+  // Fallback check
+  if (!templateMapping[apiData.page_template] && apiData.page_template) {
     const templateLower = apiData.page_template.toLowerCase();
     if (templateLower.includes('home')) {
       templateName = 'home';
@@ -237,14 +263,20 @@ function transformPageData(apiData: PageApiResult): any {
     } else if (templateLower.includes('blog')) {
       templateName = 'blog';
     } else {
-      // Fallback: convert to snake_case
       templateName = apiData.page_template.toLowerCase().replace(/\s+/g, '_');
     }
   }
 
   return {
-    template_name: templateName,
+    id: apiData.id,
+    page_template: apiData.page_template,
+    template_name: templateName, // Keep for internal mapping if needed
     title: apiData.title,
+    banner_heading: apiData.banner_heading,
+    banner_subheading: apiData.banner_subheading,
+    search_engine: apiData.search_engine,
+    image_url: (apiData as any).image_url,
+    page_url: apiData.page_url,
     content: {
       banner: {
         title: apiData.banner_heading,
@@ -264,6 +296,7 @@ function transformPageData(apiData: PageApiResult): any {
       section_3_widget: apiData.section_3_widget || [],
       section_4_widget: (apiData as any).section_4_widget || [],
       ourclientsays_widget: apiData.ourclientsays_widget || [],
+      main_content: apiData.content,
       // Services data
       services_heading: apiData.services_heading,
       services_subheading: apiData.services_subheading,

@@ -1,6 +1,7 @@
 // Page Data Types
 export interface PageData {
-  template_name: string;
+  id?: number;
+  page_template: string;
   title?: string;
   content?: any;
   meta?: {
@@ -8,6 +9,20 @@ export interface PageData {
     description?: string;
     keywords?: string;
   };
+  banner_heading?: string;
+  banner_subheading?: string;
+  image_url?: string;
+  page_url?: string;
+  search_engine?: number;
+  _raw?: any;
+}
+
+export interface CustomizationPageData extends PageData {
+  banner_heading: string;
+  banner_subheading: string;
+  image_url: string;
+  image_alt?: string;
+  image_title?: string;
 }
 
 // Banner Types
