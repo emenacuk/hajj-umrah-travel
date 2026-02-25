@@ -6,12 +6,14 @@ import '@/styles/components/_contactus.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
+import { fetchGeneralSettings, GeneralSettings } from '@/utils/api';
 
 interface ContactTemplateProps {
   data?: PageData;
+  generalSettings?: GeneralSettings;
 }
 
-export default function ContactTemplate({ data }: ContactTemplateProps) {
+export default function ContactTemplate({ data, generalSettings }: ContactTemplateProps) {
   const [packageType, setPackageType] = useState<'umrah' | 'hajj'>('umrah');
   const [formData, setFormData] = useState<{
     departureAirport: string;
@@ -52,6 +54,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
   const datePickerRef = useRef<DatePicker>(null);
   const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
   const passengerRef = useRef<HTMLDivElement>(null);
+  const [settings, setSettings] = useState<GeneralSettings | null>(generalSettings || null);
   const [captchaState, setCaptchaState] = useState({ n1: 0, n2: 0, result: 0 });
 
   const generateCaptcha = () => {
@@ -59,6 +62,16 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
     const n2 = Math.floor(Math.random() * 10);
     setCaptchaState({ n1, n2, result: n1 + n2 });
   };
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const data = await fetchGeneralSettings();
+      if (data) {
+        setSettings(data);
+      }
+    };
+    loadSettings();
+  }, []);
 
   useEffect(() => {
     generateCaptcha();
@@ -111,6 +124,20 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
     console.log('Form Submitted:', formData);
     // Add submission logic here
   };
+
+  const getValue = (key: string) => {
+    if (!settings?.global_variables) return key;
+    let value = key;
+    settings.global_variables.forEach(variable => {
+      if (value && typeof value === 'string') {
+        value = value.replace(variable.code, variable.code_value);
+      }
+    });
+    return value;
+  };
+
+  const footerContents = settings?.footer_setting?.contents;
+  const socialIcons = settings?.footer_setting?.social_media_icons;
 
   return (
     <>
@@ -289,8 +316,16 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
                 <div className="divider"></div>
                 <div className="info-group">
                   <div className="phone-list">
-                    <a href="tel:02039700002">0203 - 970 - 0002</a>
-                    <a href="tel:02039700002">0203 - 970 - 0002</a>
+                    {footerContents?.footer_phone && (
+                      <a href={`tel:${getValue(footerContents.footer_phone).replace(/\s+/g, '')}`}>
+                        {getValue(footerContents.footer_phone)}
+                      </a>
+                    )}
+                    {getValue('[%WHATSAPP%]') !== '[%WHATSAPP%]' && (
+                      <a href={`https://wa.me/${getValue('[%WHATSAPP%]').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+                        {getValue('[%WHATSAPP%]')}
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -307,7 +342,11 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">
-                  <a href="mailto:info@loremipsum.co.uk">info@loremipsum.co.uk</a>
+                  {footerContents?.footer_email && (
+                    <a href={`mailto:${getValue(footerContents.footer_email)}`}>
+                      {getValue(footerContents.footer_email)}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -323,7 +362,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">
-                  Suite No.5 , The Old Dispensary , 30 Romford Road , Stratford London, England, E15 4BZ, United Kingdom
+                  {getValue(footerContents?.footer_address || 'London, United Kingdom')}
                 </div>
               </div>
             </div>
@@ -340,10 +379,26 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
                 <div className="divider"></div>
                 <div className="info-group">
                   <div className="social-icons-contact">
-                    <a href="#" className="social-btn yt"><img src="/youtube.svg" alt="Youtube" /></a>
-                    <a href="#" className="social-btn wa"><img src="/whatsapp.svg" alt="Whatsapp" /></a>
-                    <a href="#" className="social-btn fb"><img src="/fb.svg" alt="Facebook" /></a>
-                    <a href="#" className="social-btn ig"><img src="/insta.svg" alt="Instagram" /></a>
+                    {socialIcons?.social_media_icons_link_input_4 && getValue(socialIcons.social_media_icons_link_input_4) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_4)} target="_blank" rel="noopener noreferrer" className="social-btn yt">
+                        <img src="/youtube.svg" alt="Youtube" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_3 && getValue(socialIcons.social_media_icons_link_input_3) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_3)} target="_blank" rel="noopener noreferrer" className="social-btn wa">
+                        <img src="/whatsapp.svg" alt="Whatsapp" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_1 && getValue(socialIcons.social_media_icons_link_input_1) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_1)} target="_blank" rel="noopener noreferrer" className="social-btn fb">
+                        <img src="/fb.svg" alt="Facebook" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_2 && getValue(socialIcons.social_media_icons_link_input_2) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_2)} target="_blank" rel="noopener noreferrer" className="social-btn ig">
+                        <img src="/insta.svg" alt="Instagram" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
