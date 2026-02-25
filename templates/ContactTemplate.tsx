@@ -6,12 +6,14 @@ import '@/styles/components/_contactus.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
+import { fetchGeneralSettings, GeneralSettings } from '@/utils/api';
 
 interface ContactTemplateProps {
   data?: PageData;
+  generalSettings?: GeneralSettings;
 }
 
-export default function ContactTemplate({ data }: ContactTemplateProps) {
+export default function ContactTemplate({ data, generalSettings }: ContactTemplateProps) {
   const [packageType, setPackageType] = useState<'umrah' | 'hajj'>('umrah');
   const [formData, setFormData] = useState<{
     departureAirport: string;
@@ -52,6 +54,7 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
   const datePickerRef = useRef<DatePicker>(null);
   const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
   const passengerRef = useRef<HTMLDivElement>(null);
+  const [settings, setSettings] = useState<GeneralSettings | null>(generalSettings || null);
   const [captchaState, setCaptchaState] = useState({ n1: 0, n2: 0, result: 0 });
 
   const generateCaptcha = () => {
@@ -59,6 +62,16 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
     const n2 = Math.floor(Math.random() * 10);
     setCaptchaState({ n1, n2, result: n1 + n2 });
   };
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const data = await fetchGeneralSettings();
+      if (data) {
+        setSettings(data);
+      }
+    };
+    loadSettings();
+  }, []);
 
   useEffect(() => {
     generateCaptcha();
@@ -111,6 +124,20 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
     console.log('Form Submitted:', formData);
     // Add submission logic here
   };
+
+  const getValue = (key: string) => {
+    if (!settings?.global_variables) return key;
+    let value = key;
+    settings.global_variables.forEach(variable => {
+      if (value && typeof value === 'string') {
+        value = value.replace(variable.code, variable.code_value);
+      }
+    });
+    return value;
+  };
+
+  const footerContents = settings?.footer_setting?.contents;
+  const socialIcons = settings?.footer_setting?.social_media_icons;
 
   return (
     <>
@@ -272,6 +299,112 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
           </div>
         </div>
       </div>
+      </section>
+
+      <section className="contact-info-cards-section">
+        <div className="container">
+          <div className="contact-info-grid">
+            {/* Talk to UK Experts Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/phone.svg" alt="phone" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Talk To UK<br />Travel Experts</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  <div className="phone-list">
+                    {footerContents?.footer_phone && (
+                      <a href={`tel:${getValue(footerContents.footer_phone).replace(/\s+/g, '')}`}>
+                        {getValue(footerContents.footer_phone)}
+                      </a>
+                    )}
+                    {getValue('[%WHATSAPP%]') !== '[%WHATSAPP%]' && (
+                      <a href={`https://wa.me/${getValue('[%WHATSAPP%]').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+                        {getValue('[%WHATSAPP%]')}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Address Card */}
+            <div className="contact-info-card">
+              <div className="icon-box" style={{ position: 'relative' }}>
+                <img src="/email.svg" alt="email" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Email<br />Address</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  {footerContents?.footer_email && (
+                    <a href={`mailto:${getValue(footerContents.footer_email)}`}>
+                      {getValue(footerContents.footer_email)}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Office Address Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/map.svg" alt="location" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Office<br />Address</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  {getValue(footerContents?.footer_address || 'London, United Kingdom')}
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/social.svg" alt="social" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Our Social<br />Media</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  <div className="social-icons-contact">
+                    {socialIcons?.social_media_icons_link_input_4 && getValue(socialIcons.social_media_icons_link_input_4) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_4)} target="_blank" rel="noopener noreferrer" className="social-btn yt">
+                        <img src="/youtube.svg" alt="Youtube" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_3 && getValue(socialIcons.social_media_icons_link_input_3) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_3)} target="_blank" rel="noopener noreferrer" className="social-btn wa">
+                        <img src="/whatsapp.svg" alt="Whatsapp" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_1 && getValue(socialIcons.social_media_icons_link_input_1) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_1)} target="_blank" rel="noopener noreferrer" className="social-btn fb">
+                        <img src="/fb.svg" alt="Facebook" />
+                      </a>
+                    )}
+                    {socialIcons?.social_media_icons_link_input_2 && getValue(socialIcons.social_media_icons_link_input_2) !== '#' && (
+                      <a href={getValue(socialIcons.social_media_icons_link_input_2)} target="_blank" rel="noopener noreferrer" className="social-btn ig">
+                        <img src="/insta.svg" alt="Instagram" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   );
