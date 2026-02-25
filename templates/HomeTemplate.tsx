@@ -50,6 +50,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
   const section3Widget = data.content?.section_3_widget?.[0];
   const section4Widget = data.content?.section_4_widget?.[0];
   const reviewsWidget = data.content?.ourclientsays_widget?.[0];
+  const blogWidget = data.content?.blog_section_data;
 
   // Get packages from fetched data
   const section1Packages = data.content?.section1Packages || [];
@@ -532,6 +533,16 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <FAQ items={faqs} />
           </div>
         </section>
+      )}
+      {blogWidget && blogWidget.blogs?.length > 0 && (
+        <BlogSection
+          title={blogWidget.heading || ''}
+          description={blogWidget.description || ''}
+          image={getImageUrl(blogWidget.image_url)}
+          blogs={blogWidget.blogs}
+          button_link={blogWidget.button_link}
+          button_text={blogWidget.button_text}
+        />
       )}
     </>
   );
