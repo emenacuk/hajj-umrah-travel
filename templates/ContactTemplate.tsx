@@ -273,6 +273,84 @@ export default function ContactTemplate({ data }: ContactTemplateProps) {
         </div>
       </div>
       </section>
+
+      <section className="contact-info-cards-section">
+        <div className="container">
+          <div className="contact-info-grid">
+            {/* Talk to UK Experts Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/phone.svg" alt="phone" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Talk To UK<br />Travel Experts</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  <div className="phone-list">
+                    <a href="tel:02039700002">0203 - 970 - 0002</a>
+                    <a href="tel:02039700002">0203 - 970 - 0002</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Address Card */}
+            <div className="contact-info-card">
+              <div className="icon-box" style={{ position: 'relative' }}>
+                <img src="/email.svg" alt="email" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Email<br />Address</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  <a href="mailto:info@loremipsum.co.uk">info@loremipsum.co.uk</a>
+                </div>
+              </div>
+            </div>
+
+            {/* Office Address Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/map.svg" alt="location" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Office<br />Address</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  Suite No.5 , The Old Dispensary , 30 Romford Road , Stratford London, England, E15 4BZ, United Kingdom
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media Card */}
+            <div className="contact-info-card">
+              <div className="icon-box">
+                <img src="/social.svg" alt="social" />
+              </div>
+              <div className="card-content">
+                <div className="label-group">
+                  <h3>Our Social<br />Media</h3>
+                </div>
+                <div className="divider"></div>
+                <div className="info-group">
+                  <div className="social-icons-contact">
+                    <a href="#" className="social-btn yt"><img src="/youtube.svg" alt="Youtube" /></a>
+                    <a href="#" className="social-btn wa"><img src="/whatsapp.svg" alt="Whatsapp" /></a>
+                    <a href="#" className="social-btn fb"><img src="/fb.svg" alt="Facebook" /></a>
+                    <a href="#" className="social-btn ig"><img src="/insta.svg" alt="Instagram" /></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
