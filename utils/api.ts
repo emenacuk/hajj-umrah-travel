@@ -356,6 +356,24 @@ export async function fetchPageData(slug: string): Promise<any> {
       transformedData.content.reviews = [];
     }
 
+    // Blog Section
+    try {
+      const blogSectionData = result.blog_section_data;
+      if (blogSectionData?.blog_ids) {
+        const blogIds = parseIdsString(String(blogSectionData.blog_ids));
+        if (blogIds.length > 0) {
+          const rawBlogs = await getBlogsByIds(blogIds);
+          // Attach mapped blogs onto the blog_section_data object in content
+          transformedData.content.blog_section_data = {
+            ...blogSectionData,
+            blogs: rawBlogs.map(mapBlogData),
+          };
+        }
+      }
+    } catch (e) {
+      console.error('[API] Failed to fetch blog section data:', e);
+    }
+
     console.log('[API] Section packages and reviews fetched:', {
       s1: transformedData.content.section1Packages?.length || 0,
       s2: transformedData.content.section2Packages?.length || 0,
@@ -449,6 +467,7 @@ function transformPageData(apiData: PageApiResult): any {
       section_3_widget: apiData.section_3_widget || [],
       section_4_widget: (apiData as any).section_4_widget || [],
       ourclientsays_widget: apiData.ourclientsays_widget || [],
+      blog_section_data: (apiData as any).blog_section_data || null,
       main_content: apiData.content,
       // Services data
       services_heading: apiData.services_heading,
@@ -1095,4 +1114,64 @@ export function getImageUrl(imagePath: string | null | undefined, fallback?: str
 
   // Default fallback: prepend /media/
   return `${MEDIA_BASE_URL}/media/${trimmedPath}`;
+}
+
+
+export async function getBlogs(): Promise<any[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get-makkah-blog`);
+    const apiResponse = await response.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      return apiResponse.result;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching blog data:', error);
+    return [];
+  }
+}
+export async function getBlogDetail(page_url: string): Promise<any[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get-makkah-blog?page-url=${page_url}`);
+    const apiResponse = await response.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      return apiResponse.result;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching blog data:', error);
+    return [];
+  }
+}
+export async function getBlogsByIds(ids: string[]): Promise<any[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get-makkah-blog?ids=${ids.join(',')}`);
+    const apiResponse = await response.json();
+    // API returns { success: true, blogs: [...] }
+    if (apiResponse.success && Array.isArray(apiResponse.blogs)) {
+      return apiResponse.blogs;
+    }
+    // Fallback: legacy shape { status: 1, result: [...] }
+    if (apiResponse.status === 1 && apiResponse.result) {
+      return apiResponse.result;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching blog data:', error);
+    return [];
+  }
+}
+
+// Map raw API blog data to BlogPost interface shape
+export function mapBlogData(blog: any): any {
+  return {
+    id: String(blog.id || ''),
+    title: blog.title || '',
+    excerpt: blog.short_description || '',
+    content: blog.description || '',
+    image: getImageUrl(blog.image_url),
+    date: blog.publish_date || blog.created_at || '',
+    author: blog.author || '',
+    slug: blog.page_url || '',
+  };
 }

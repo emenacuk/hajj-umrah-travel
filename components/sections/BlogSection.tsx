@@ -10,34 +10,41 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 interface BlogSectionProps {
-    posts: BlogPost[];
+    title: string;
+    description: string;
+    image?: string;
+    blogs: BlogPost[];
+    button_link: string;
+    button_text: string;
 }
 
-export default function BlogSection({ posts }: BlogSectionProps) {
+export default function BlogSection({ title, description, image, blogs, button_link, button_text }: BlogSectionProps) {
     // Assuming the first post is the featured one for the top section layout
-    const featuredPost = posts[0];
-    const sliderPosts = posts.slice(1);
+    const safeBlos = blogs || [];
+    if (safeBlos.length === 0) return null;
+    const featuredPost = safeBlos[0];
+    const sliderPosts = safeBlos.slice(1);
+    // Section image takes priority; fall back to the first blog's image, then static placeholder
+    const featuredImage = image;
 
     return (
         <section className="section blog-section">
             <div className="container">
                 <div className="featured-blog-wrapper">
                     <div className="featured-content">
-                        <h2 className="section-title">Hajj & Umrah Updates</h2>
+                        <h2 className="section-title">{title}</h2>
                         <p className="section-subtitle">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            {description}
                         </p>
                         <div className="featured-footer">
-                            <Link href="/blogs" className="btn btn--primary">
-                                View All Updates
+                            <Link href={button_link} className="btn btn--primary">
+                                {button_text}
                             </Link>
-                            <span className="featured-date">December 16, 2025</span>
+                            <span className="featured-date">{featuredPost?.date || ''}</span>
                         </div>
                     </div>
                     <div className="featured-image-wrapper">
-                        <img src="/blogimage.png" alt="Featured Update" />
+                        <img src={featuredImage} alt={featuredPost?.title || 'Featured Update'} />
                     </div>
                 </div>
 
@@ -56,7 +63,7 @@ export default function BlogSection({ posts }: BlogSectionProps) {
                         }}
                         className="blog-swiper"
                     >
-                        {posts.map((post) => (
+                        {safeBlos.map((post) => (
                             <SwiperSlide key={post.id}>
                                 <BlogCard post={post} />
                             </SwiperSlide>
