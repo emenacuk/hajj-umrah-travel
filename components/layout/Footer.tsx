@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { fetchGeneralSettings, GeneralSettings, getImageUrl } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings, getImageUrl } from '@/utils/api';
 
 export default function Footer() {
     const [settings, setSettings] = useState<GeneralSettings | null>(null);
 
     useEffect(() => {
         const loadSettings = async () => {
-            const data = await fetchGeneralSettings();
+            const data = await getGeneralSettings();
             if (data) {
                 setSettings(data);
             }
@@ -107,7 +107,7 @@ export default function Footer() {
                                         <Link key={idx} href={link.href}>{link.text}</Link>
                                     ))}
                                 </div>
-                               
+
                             </div>
                             <div className="footer-payment-methods">
                                 <img src="/dis.svg" alt="Discover" className="payment-icon" />

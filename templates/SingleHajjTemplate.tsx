@@ -59,6 +59,8 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
     const inclusions = data.content?.inclusions || [];
     const faqs = data.content?.faqs || [];
     const contact = data.content?.contact || {};
+    const reviewsWidget = data.content?.ourclientsays_widget;
+    const relatedWidget = data.content?.section_2_widget;
 
     const images = (packageData.images || [packageData.image]).map((img: string) => getImageUrl(img));
 
@@ -330,65 +332,73 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
             </section>
 
             <PackageContactInfo contact={contact} />
-            <HomeReviews reviews={reviews} />
+            {reviews.length > 0 && (
+                <HomeReviews
+                    reviews={reviews}
+                    heading={reviewsWidget?.heading}
+                    subheading={reviewsWidget?.sub_heading}
+                />
+            )}
 
-            <section className="section related-packages-detail">
-                <div className="container">
-                    <div className='sectionheadings'>
-                        <div className='sectionheadingstext'>
-                            <h2 className='section-title'>More Relevant Hajj Packages</h2>
-                            <p className='section-subtitle'>
-                                Discover more Hajj pilgrimage options that suit your needs and preferences.
-                            </p>
-                        </div>
-                        <div className='rightside'>
-                            <div className='swiper-nav-btns'>
-                                <button className="swiper-nav-btn prev prev-related">
-                                    <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
-                                </button>
-                                <button className="swiper-nav-btn next next-related">
-                                    <img src="/nextarrow.svg" alt="" />
-                                </button>
+            {relatedPackages.length > 0 && (
+                <section className="section related-packages-detail">
+                    <div className="container">
+                        <div className='sectionheadings'>
+                            <div className='sectionheadingstext'>
+                                <h2 className='section-title'>{relatedWidget?.heading}</h2>
+                                <p className='section-subtitle'>
+                                    {relatedWidget?.subheading}
+                                </p>
                             </div>
-                            <Link href="/hajj-packages" className="btn btn--primary">View All Hajj Packages</Link>
+                            <div className='rightside'>
+                                <div className='swiper-nav-btns'>
+                                    <button className="swiper-nav-btn prev prev-related">
+                                        <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                                    </button>
+                                    <button className="swiper-nav-btn next next-related">
+                                        <img src="/nextarrow.svg" alt="" />
+                                    </button>
+                                </div>
+                                <Link href="/hajj-packages" className="btn btn--primary">View All Hajj Packages</Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="related-pkgs-grid" style={{ position: 'relative' }}>
-                    {!isRelatedLoaded && <SliderSkeleton count={2} />}
-                    <Swiper
-                        modules={[Navigation, Pagination]}
-                        onInit={() => setIsRelatedLoaded(true)}
-                        style={{ display: isRelatedLoaded ? 'block' : 'none' }}
-                        spaceBetween={30}
-                        slidesPerView={1}
-                        navigation={{
-                            prevEl: '.prev-related',
-                            nextEl: '.next-related',
-                        }}
-                        pagination={{
-                            el: '.related-pagination-custom',
-                            clickable: true
-                        }}
-                        breakpoints={{
-                            640: { slidesPerView: 1 },
-                            768: { slidesPerView: 1.2 },
-                            992: { slidesPerView: 1.4 },
-                            1025: { slidesPerView: 1.6 },
-                            1200: { slidesPerView: 2.2 },
-                            1700: { slidesPerView: 2.8 },
-                        }}
-                        className="related-packages-swiper"
-                    >
-                        {relatedPackages.map((pkg: any) => (
-                            <SwiperSlide key={pkg.id}>
-                                <HajjPackageCard package={pkg} />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                    <div className="swiper-pagination-custom related-pagination-custom"></div>
-                </div>
-            </section>
+                    <div className="related-pkgs-grid" style={{ position: 'relative' }}>
+                        {!isRelatedLoaded && <SliderSkeleton count={2} />}
+                        <Swiper
+                            modules={[Navigation, Pagination]}
+                            onInit={() => setIsRelatedLoaded(true)}
+                            style={{ display: isRelatedLoaded ? 'block' : 'none' }}
+                            spaceBetween={30}
+                            slidesPerView={1}
+                            navigation={{
+                                prevEl: '.prev-related',
+                                nextEl: '.next-related',
+                            }}
+                            pagination={{
+                                el: '.related-pagination-custom',
+                                clickable: true
+                            }}
+                            breakpoints={{
+                                640: { slidesPerView: 1 },
+                                768: { slidesPerView: 1.2 },
+                                992: { slidesPerView: 1.4 },
+                                1025: { slidesPerView: 1.6 },
+                                1200: { slidesPerView: 2.2 },
+                                1700: { slidesPerView: 2.8 },
+                            }}
+                            className="related-packages-swiper"
+                        >
+                            {relatedPackages.map((pkg: any) => (
+                                <SwiperSlide key={pkg.id}>
+                                    <HajjPackageCard package={pkg} />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                        <div className="swiper-pagination-custom related-pagination-custom"></div>
+                    </div>
+                </section>
+            )}
             <EnquiryModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

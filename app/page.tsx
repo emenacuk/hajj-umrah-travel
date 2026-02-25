@@ -1,5 +1,15 @@
-import { fetchPageData } from '@/utils/api';
+import { fetchPageData, generatePageMetadata, getGeneralSettings } from '@/utils/api';
 import { resolveTemplate } from '@/utils/templateResolver';
+import PageScript from '@/components/common/PageScript';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [pageData, generalSettings] = await Promise.all([
+    fetchPageData('home'),
+    getGeneralSettings()
+  ]);
+  return generatePageMetadata(pageData, generalSettings, 'home');
+}
 
 export default async function HomePage() {
   const pageData = await fetchPageData('home');
@@ -13,7 +23,12 @@ export default async function HomePage() {
     );
   }
 
-  return resolveTemplate(pageData.page_template || 'home', pageData);
+  return (
+    <>
+      <PageScript html={pageData.script} ownerKey="home" />
+      {resolveTemplate(pageData.page_template || 'home', pageData)}
+    </>
+  );
 }
 
 

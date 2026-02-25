@@ -160,7 +160,7 @@ export interface FooterSetting {
 }
 
 // Fetch general settings from API
-export async function fetchGeneralSettings(): Promise<GeneralSettings | null> {
+export async function getGeneralSettings(): Promise<GeneralSettings | null> {
   const url = `${API_BASE_URL}/general-setting`;
   console.log('[API] Fetching general settings:', url);
 
@@ -464,6 +464,7 @@ function transformPageData(apiData: PageApiResult): any {
       description: apiData.meta_description,
       keywords: apiData.meta_keywords,
     },
+    script: extractPageScript(apiData),
     // Keep raw API data for reference
     _raw: apiData,
   };
@@ -809,7 +810,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
       if (apiResponse.status === 1 && apiResponse.result) {
         let pkgData = apiResponse.result.data || apiResponse.result;
         if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return mapPackageData(pkgData, 'umrah');
+        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
       }
     }
 
@@ -822,7 +823,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
       if (apiResponse.status === 1 && apiResponse.result) {
         let pkgData = apiResponse.result.data || apiResponse.result;
         if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return mapPackageData(pkgData, 'umrah');
+        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
       }
     }
 
@@ -830,7 +831,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
     console.log('[API] Stage 3: Searching in all Umrah packages for slug:', slug);
     const allPackages = await fetchAllUmrahPackages();
     const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
-    if (pkg) return pkg;
+    if (pkg) return enrichPackageWithWidgets(pkg);
 
     return null;
   } catch (error) {
@@ -853,7 +854,7 @@ export async function fetchHajjPackage(id: string): Promise<any> {
     const apiResponse = await response.json();
 
     if (apiResponse.status === 1 && apiResponse.result) {
-      return mapPackageData(apiResponse.result, 'hajj');
+      return enrichPackageWithWidgets(mapPackageData(apiResponse.result, 'hajj'));
     }
 
     return apiResponse;
@@ -877,7 +878,7 @@ export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
       if (apiResponse.status === 1 && apiResponse.result) {
         let pkgData = apiResponse.result.data || apiResponse.result;
         if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return mapPackageData(pkgData, 'hajj');
+        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
       }
     }
 
@@ -890,7 +891,7 @@ export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
       if (apiResponse.status === 1 && apiResponse.result) {
         let pkgData = apiResponse.result.data || apiResponse.result;
         if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return mapPackageData(pkgData, 'hajj');
+        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
       }
     }
 
@@ -898,13 +899,49 @@ export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
     console.log('[API] Stage 3: Searching in all Hajj packages for slug:', slug);
     const allPackages = await fetchAllHajjPackages();
     const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
-    if (pkg) return pkg;
+    if (pkg) return enrichPackageWithWidgets(pkg);
 
     return null;
   } catch (error) {
     console.error('Error fetching Hajj package by slug:', error);
     return null;
   }
+}
+
+/**
+ * Enriches package data with widget content (reviews, related packages)
+ */
+async function enrichPackageWithWidgets(packageData: any): Promise<any> {
+  if (!packageData) return null;
+  const raw = packageData._raw || {};
+
+  // Fetch reviews if available
+  if (raw.ourclientsays_widget?.[0]) {
+    const widget = raw.ourclientsays_widget[0];
+    const ids = parseIdsString(widget.reviews_ids);
+    if (ids.length > 0) {
+      packageData.reviews = await fetchReviewsByIds(ids);
+    }
+  }
+
+  // Fetch related packages if available
+  if (raw.section_2_widget?.[0]) {
+    const widget = raw.section_2_widget[0];
+    const uIds = parseIdsString(widget.umrah_package_ids);
+    const hIds = parseIdsString(widget.hajj_package_ids);
+
+    if (uIds.length > 0) {
+      packageData.relatedPackages = await fetchUmrahPackagesByIds(uIds);
+    } else if (hIds.length > 0) {
+      packageData.relatedPackages = await fetchHajjPackagesByIds(hIds);
+    } else if (widget.umrah_type) {
+      packageData.relatedPackages = await fetchUmrahPackagesByType(widget.umrah_type);
+    } else if (widget.hajj_type) {
+      packageData.relatedPackages = await fetchHajjPackagesByType(widget.hajj_type);
+    }
+  }
+
+  return packageData;
 }
 
 // Fetch reviews by IDs
@@ -1059,6 +1096,12 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     breakfast: pkg.breakfast,
     transfer: pkg.transfer,
     qurbani: pkg.qurbani,
+    meta: {
+      title: pkg.browser_title,
+      description: pkg.meta_description,
+      keywords: pkg.meta_keywords,
+    },
+    script: extractPageScript(pkg),
     _raw: pkg // keep raw data
   };
 }
@@ -1095,4 +1138,100 @@ export function getImageUrl(imagePath: string | null | undefined, fallback?: str
 
   // Default fallback: prepend /media/
   return `${MEDIA_BASE_URL}/media/${trimmedPath}`;
+}
+
+
+/**
+ * Robustly extracts script content from API data based on various possible field names.
+ */
+export function extractPageScript(data: any): string | null {
+  if (!data) return null;
+  // Be permissive with field names since API responses vary between environments.
+  const script =
+    data.pageScript ||
+    data.page_script ||
+    data.page_script_html ||
+    data.page_scripts ||
+    data.header_script ||
+    data.head_script ||
+    data.script ||
+    data.scripts ||
+    null;
+
+  // Return null if empty string or falsy, otherwise return the script
+  return script && typeof script === 'string' && script.trim() !== '' ? script : null;
+}
+
+
+/**
+ * Fetches all blog posts for sitemap and listing.
+ */
+export async function fetchAllBlogPosts(): Promise<any[]> {
+  try {
+    const pageData = await fetchPageData('blog');
+    return pageData?.content?.posts || [];
+  } catch (error) {
+    console.error('Error fetching all blog posts:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetches all navigable pages from the general settings.
+ */
+export async function fetchAllNavPages(): Promise<any[]> {
+  try {
+    const settings = await getGeneralSettings();
+    return settings?.navigation_bar || [];
+  } catch (error) {
+    console.error('Error fetching navigation pages:', error);
+    return [];
+  }
+}
+
+/**
+ * Generates Next.js Metadata object from transformed page data.
+ * Now includes global settings (favicon, robots) and canonical tags.
+ */
+export function generatePageMetadata(pageData: any, generalSettings?: any, slug: string = '') {
+  if (!pageData) return {};
+
+  const { meta, title } = pageData;
+
+  // Extract global settings if provided - generalSettings usually has a 'settings' array
+  const logoSetting = generalSettings?.settings?.find(
+    (s: any) => s.ref_name === 'Website Logo'
+  );
+  const indexSetting = generalSettings?.settings?.find(
+    (s: any) => s.ref_name === 'Google Can Index?'
+  );
+
+  const favicon = logoSetting?.contents?.favicon;
+  const canIndex = indexSetting?.contents?.enable_google_can_index === "1";
+
+  // Base domain for canonical tags
+  const baseUrl = 'https://hajjumrapackages.co.uk';
+  const canonicalUrl = slug === 'home' || slug === '' ? baseUrl : `${baseUrl}/${slug}`;
+
+  return {
+    title: meta?.title || title || 'Hajj & Umrah Packages',
+    description: meta?.description || '',
+    keywords: meta?.keywords || '',
+    icons: {
+      icon: favicon ? getImageUrl(favicon) : undefined,
+    },
+    robots: {
+      index: canIndex,
+      follow: canIndex,
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: meta?.title || title,
+      description: meta?.description || '',
+      url: canonicalUrl,
+      type: 'website',
+    }
+  };
 }
