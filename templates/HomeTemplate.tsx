@@ -26,7 +26,7 @@ import Link from 'next/link';
 interface HomeTemplateProps {
   data: PageData;
 }
-
+let airlinearray = ['air1.webp', 'air2.webp', 'air3.webp', 'air4.webp', 'air5.webp', 'air6.webp', 'air7.webp', 'air8.webp', 'air9.webp', 'air10.webp', 'air11.webp'];
 export default function HomeTemplate({ data }: HomeTemplateProps) {
   const [slidersLoaded, setSlidersLoaded] = useState({
     bestUmrah: false,
@@ -63,11 +63,24 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
   const scrollImage = getImageUrl(data.content?.scroll_image_url);
 
   // Services data
+  const rawServicesItems = data.content?.services_items;
+  let parsedItems = [];
+  try {
+    parsedItems = typeof rawServicesItems === 'string' ? JSON.parse(rawServicesItems) : (Array.isArray(rawServicesItems) ? rawServicesItems : []);
+  } catch (e) {
+    console.error('Error parsing services_items:', e);
+  }
+
   const servicesData = data.content?.services_heading ? {
     title: data.content.services_heading,
     description: data.content.services_subheading || '',
     mainImage: getImageUrl(data.content.services_image_url),
-    items: data.content.services_items ? JSON.parse(data.content.services_items) : []
+    items: parsedItems.map((item: any, index: number) => ({
+      id: item.id || `service-${index}`,
+      title: item.heading || item.title || '',
+      description: item.subheading || item.description || '',
+      icon: item.svg || item.icon || ''
+    }))
   } : null;
 
   return (
@@ -374,7 +387,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section4Widget.heading || '' }} />
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section4Widget.subheading || '' }} />
+                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section4Widget.description || section4Widget.subheading || '' }} />
               </div>
               <div className='rightside'>
                 {section4Widget.slider_enable === '1' && (
@@ -434,7 +447,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
         </section>
       )}
       {/* Customize Banner */}
-      <CustomizeBanner />
+      <CustomizeBanner data={data.customization_data} />
 
       {/* Reviews Section */}
       {reviews && reviews.length > 0 && reviewsWidget && (
@@ -450,6 +463,52 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
       {servicesData && (
         <UmrahHajjServices data={servicesData} />
       )}
+      {/* Partners Section - Placeholder or using image */}
+      <section className="section partners-section">
+        <div className="container">
+          <div className='sectionheadings'>
+            <div className='sectionheadingstext'>
+              <h2 className="section-title">{data.content?.airline_heading}</h2>
+              <p className="section-subtitle">
+                {data.content?.airline_subheading}
+              </p>
+            </div>
+            <div className='rightside justify-content-end' >
+              <div className="swiper-nav-btns">
+                <button className="swiper-nav-btn prev partner-prev">
+                  <img src="/nextarrow.svg" alt="" style={{ transform: 'rotate(180deg)' }} />
+                </button>
+                <button className="swiper-nav-btn next partner-next">
+                  <img src="/nextarrow.svg" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="partners-logos">
+          <Swiper
+            modules={[Navigation]}
+            slidesPerView={2.2}
+            spaceBetween={24}
+            navigation={{
+              prevEl: '.partner-prev',
+              nextEl: '.partner-next',
+            }}
+            breakpoints={{
+              640: { slidesPerView: 4 },
+              1024: { slidesPerView: 8 },
+            }}
+            className="packages-swiper partner-swiper"
+          >
+            {/* Remove dummy fallback logos */}
+            {airlinearray.map((pkg: string) => (
+              <SwiperSlide key={`partner-${pkg}`}>
+                <img src={pkg} alt="Partners" />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </section>
 
       {/* Scroll Detail Section */}
       {data.content?.scroll_description && (

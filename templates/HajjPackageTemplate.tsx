@@ -11,7 +11,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
-import { mockHomePageData } from '@/data/mockData';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
@@ -27,11 +26,16 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
   });
   const bannerData = data.content?.banner || {};
   const faqs = data.content?.faqs || [];
+  const faqsHeading = data.content?.faqs_heading || "Frequently Asked Questions";
+  const faqsSubheading = data.content?.faqs_subheading || "Find answers to common questions about our Hajj packages and the pilgrimage experience.";
 
-  // Get packages from mock data for sliders
-  const allHajjPackages = mockHomePageData.content?.hajjPackages || [];
-  const shiftingPackages = allHajjPackages.filter((pkg: any) => pkg.shifting === true);
-  const nonShiftingPackages = allHajjPackages.filter((pkg: any) => pkg.shifting === false);
+  // Get packages from dynamic API data
+  const shiftingPackages = data.content?.section1Packages || [];
+  const nonShiftingPackages = data.content?.section2Packages || [];
+
+  // Get widget info for headings
+  const shiftingWidget = data.content?.section_1_widget?.[0] || {};
+  const nonShiftingWidget = data.content?.section_2_widget?.[0] || {};
 
   return (
     <>
@@ -48,10 +52,10 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               <div className="container">
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
-                    <h2 className="section-title">All Hajj Shifting Packages</h2>
+                    <h2 className="section-title">{shiftingWidget.heading || "All Hajj Shifting Packages"}</h2>
                     <p className="section-subtitle">
-                      Explore our range of shifting Hajj packages, offering a balance of comfort and convenience
-                      during the most important days of your pilgrimage.
+                      {shiftingWidget.description || shiftingWidget.subheading ||
+                        "Explore our range of shifting Hajj packages, offering a balance of comfort and convenience during the most important days of your pilgrimage."}
                     </p>
                   </div>
                   <div className='rightside'>
@@ -63,7 +67,11 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                         <img src="/nextarrow.svg" alt="" />
                       </button>
                     </div>
-                    <Link href="/hajj-packages" className="btn btn--primary">View All Packages</Link>
+                    {shiftingWidget.button_text && (
+                      <Link href={shiftingWidget.button_link || "/hajj-packages"} className="btn btn--primary">
+                        {shiftingWidget.button_text}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -104,10 +112,10 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               <div className="container">
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
-                    <h2 className="section-title">All Hajj Non-Shifting Packages</h2>
+                    <h2 className="section-title">{nonShiftingWidget.heading || "All Hajj Non-Shifting Packages"}</h2>
                     <p className="section-subtitle">
-                      Our non-shifting Hajj packages provide you with fixed hotel accommodation in Makkah
-                      close to the Haram throughout your entire stay for maximum convenience.
+                      {nonShiftingWidget.description || nonShiftingWidget.subheading ||
+                        "Our non-shifting Hajj packages provide you with fixed hotel accommodation in Makkah close to the Haram throughout your entire stay for maximum convenience."}
                     </p>
                   </div>
                   <div className='rightside'>
@@ -119,7 +127,11 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                         <img src="/nextarrow.svg" alt="" />
                       </button>
                     </div>
-                    <Link href="/hajj-packages" className="btn btn--primary">View All Packages</Link>
+                    {nonShiftingWidget.button_text && (
+                      <Link href={nonShiftingWidget.button_link || "/hajj-packages"} className="btn btn--primary">
+                        {nonShiftingWidget.button_text}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -153,32 +165,23 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               </div>
             </section>
           )}
-          <ScrollDetail
-            title="Hajj Services Detail"
-            image="/scrollimg.png"
-            content={`
-          <h2>Why Choose Bismillah Travel for Your Hajj Journey?</h2>
-          <p>Hajj is the journey of a lifetime, and at Bismillah Travel, we understand the spiritual significance of this pilgrimage. Our goal is to provide a seamless and deeply spiritual experience for every pilgrim. We offer comprehensive Hajj packages tailored to meet your specific needs, whether you prefer shifting or non-shifting accommodations.</p>
-          <h3>Our Hajj Packages Include:</h3>
-          <ul>
-            <li>Premium Accommodations near the Haram</li>
-            <li>Experienced Religious Guides and Group Leaders</li>
-            <li>Full Transportation within Saudi Arabia</li>
-            <li>24/7 On-ground Support</li>
-            <li>Assistance with Visas and Documentation</li>
-          </ul>
-          <p>We take care of all the logistics so you can focus entirely on your worship and connection with Allah (SWT). Join the thousands of satisfied pilgrims who have performed Hajj with Bismillah Travel.</p>
-        `}
-          />
+
+          {data.content?.scroll_description && (
+            <ScrollDetail
+              title={data.title || "Hajj Services Detail"}
+              image={data.content.scroll_image_url || "/scrollimg.png"}
+              content={data.content.scroll_description}
+            />
+          )}
         </div>
         {faqs.length > 0 && (
           <section className="section faq-section">
             <div className="container">
               <div className='sectionheadings'>
                 <div className='sectionheadingstext'>
-                  <h2 className="section-title">Frequently Asked Questions</h2>
+                  <h2 className="section-title">{faqsHeading}</h2>
                   <p className="section-subtitle">
-                    Find answers to common questions about our Hajj packages and the pilgrimage experience.
+                    {faqsSubheading}
                   </p>
                 </div>
               </div>

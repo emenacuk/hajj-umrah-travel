@@ -4,6 +4,8 @@ import { BannerData } from '@/types';
 import InquiryForm from '../forms/InquiryForm';
 import '@/styles/components/_inner-banner.scss';
 
+import { getImageUrl } from '@/utils/api';
+
 import { BannerSkeleton } from '@/components/common/Skeleton';
 
 interface InnerBannerProps {
@@ -47,22 +49,26 @@ const data: BannerData = {
 export default function InnerBanner({ data: bannerData, form = true, loading }: InnerBannerProps) {
   if (loading) return <BannerSkeleton />;
   const formData = bannerData.form || data.form;
-  const backgroundImage = "/innerbg.jpg";
+  const backgroundImage = getImageUrl(bannerData.image, "/innerbg.jpg");
 
   return (
     <section className="inner-banner">
       <div className="banner-background">
-        <img src={backgroundImage} alt={bannerData.title || "Banner"} />
+        <img src={backgroundImage} alt={bannerData.title} />
         <div className="overlay"></div>
       </div>
 
       <div className="container">
         <div className="banner-content">
           <div className="banner-text">
-            <h1>{bannerData.title || "Trusted Hajj & Umrah Packages"}</h1>
-            <p>
-              {bannerData.description || "Experience the spiritual journey of a lifetime with our trusted Hajj & Umrah packages. We provide comprehensive services including flights, hotels, and guidance to ensure your pilgrimage is comfortable and spiritually fulfilling."}
-            </p>
+            <div
+              className="banner-heading"
+              dangerouslySetInnerHTML={{ __html: bannerData.title }}
+            />
+            <div
+              className="banner-description"
+              dangerouslySetInnerHTML={{ __html: bannerData.description || "" }}
+            />
 
             {form === true && (
               formData ? (
@@ -71,7 +77,7 @@ export default function InnerBanner({ data: bannerData, form = true, loading }: 
                 </div>
               ) : (
                 <div className="placeholder-form">Form Data Missing</div>
-                )
+              )
             )}
 
           </div>
