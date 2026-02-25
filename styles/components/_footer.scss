@@ -45,10 +45,6 @@
     .footercontentarea {
         position: relative;
 
-        .container {
-
-            .footeraftercontainer {}
-        }
 
         &::after {
             content: "";
@@ -165,11 +161,22 @@
 
     .footer-nav-secondary {
         margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        h3 {
+            color: var(--color-primary);
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-family: var(--font-body);
+            font-weight: 700;
+        }
 
         .secondary-links {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px 30px;
+            gap: 30px;
 
             a {
                 color: var(--color-primary);
@@ -185,10 +192,48 @@
             }
 
             @media (max-width: 1650px) {
-                gap: 15px 18px;
-
                 a {
                     font-size: 16px;
+                }
+            }
+
+            @media (max-width: 1024px) {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        }
+
+        .footer-contact-info {
+            flex: 1;
+            min-width: 250px;
+
+            h3 {
+                color: var(--color-primary);
+                font-size: 20px;
+                margin-bottom: 25px;
+                font-family: var(--font-body);
+                font-weight: 700;
+            }
+
+            .footer-contact-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: #fff;
+                text-decoration: none;
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 15px;
+                transition: color 0.3s ease;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    object-fit: contain;
+                }
+
+                &:hover {
+                    color: var(--color-primary);
                 }
             }
         }

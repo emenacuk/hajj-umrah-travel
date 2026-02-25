@@ -100,6 +100,92 @@ export interface PageApiResult {
   };
 }
 
+export interface GeneralSettings {
+  settings: Array<{
+    id: number;
+    ref_name: string;
+    is_active: boolean;
+    contents: {
+      main_logo?: string;
+      dark_logo?: string;
+      favicon?: string;
+      footer_logo?: string;
+      header_phone?: string;
+      header_whatsApp?: string;
+    };
+  }>;
+  navigation_bar: NavigationBarItem[];
+  global_variables: GlobalVariable[];
+  footer_setting: FooterSetting;
+}
+
+export interface NavigationBarItem {
+  id: number;
+  title: string;
+  page_url: string;
+  url_type: string;
+  parent_id: string;
+  sort_order: number | null;
+}
+
+export interface GlobalVariable {
+  code: string;
+  code_value: string;
+  is_active: boolean;
+}
+
+export interface FooterSetting {
+  logo: string;
+  social_media_icons: {
+    enable_social_media_icons: string;
+    [key: string]: string | null;
+  };
+  contents: {
+    link_1_heading: string;
+    link_1_content: string;
+    link_2_heading: string;
+    link_2_content: string;
+    footer_contact_heading: string;
+    footer_phone: string;
+    footer_email: string;
+    footer_address: string;
+    footer_copyright_content: string;
+    footer_below_copyright_text: string;
+    [key: string]: string;
+  };
+}
+
+// Fetch general settings from API
+export async function fetchGeneralSettings(): Promise<GeneralSettings | null> {
+  const url = `${API_BASE_URL}/general-setting`;
+  console.log('[API] Fetching general settings:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+    }
+
+    const apiResponse: ApiResponse<GeneralSettings> = await response.json();
+
+    if (apiResponse.status !== 1 || !apiResponse.result) {
+      throw new Error(apiResponse.message || 'API returned unsuccessful status');
+    }
+
+    return apiResponse.result;
+  } catch (error) {
+    console.error('[API] Error fetching general settings:', error);
+    return null;
+  }
+}
+
 // Fetch page data from API using /get-page endpoint (GET request)
 export async function fetchPageData(slug: string): Promise<any> {
   // API expects GET request - for home page, no query param needed (as shown in Postman)
@@ -976,26 +1062,23 @@ export function getImageUrl(imagePath: string | null | undefined, fallback?: str
     return trimmedPath;
   }
 
-  // If path already starts with /media/, just prepend MEDIA_BASE_URL
-  if (trimmedPath.startsWith('/media/')) {
-    return `${MEDIA_BASE_URL}${trimmedPath}`;
+  // For paths that should be used directly with MEDIA_BASE_URL
+  if (
+    trimmedPath.startsWith('/storage/') ||
+    trimmedPath.startsWith('/userfiles/') ||
+    trimmedPath.startsWith('assets/') ||
+    trimmedPath.startsWith('/media/')
+  ) {
+    // If it starts with / already, don't add another one
+    const separator = trimmedPath.startsWith('/') ? '' : '/';
+    return `${MEDIA_BASE_URL}${separator}${trimmedPath}`;
   }
 
-  // If path starts with / but not /media/, prepend /media
+  // Fixed mapping for /media/ prefixing
   if (trimmedPath.startsWith('/')) {
     return `${MEDIA_BASE_URL}/media${trimmedPath}`;
   }
 
-  // If path starts with 'media/' (without leading slash), add leading slash
-  if (trimmedPath.startsWith('media/')) {
-    return `${MEDIA_BASE_URL}/${trimmedPath}`;
-  }
-
-  // If path starts with 'assets/', don't prepend /media/
-  if (trimmedPath.startsWith('assets/')) {
-    return `${MEDIA_BASE_URL}/${trimmedPath}`;
-  }
-
-  // Otherwise, prepend /media/
+  // Default fallback: prepend /media/
   return `${MEDIA_BASE_URL}/media/${trimmedPath}`;
 }

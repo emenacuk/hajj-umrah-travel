@@ -4,6 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import '@/styles/components/_header.scss';
+import { fetchGeneralSettings, GeneralSettings, getImageUrl, NavigationBarItem } from '@/utils/api';
+
+interface NavItem {
+    name: string;
+    href: string;
+    submenu?: { name: string; href: string; active?: boolean }[];
+}
 
 export default function Header() {
 
@@ -12,6 +19,17 @@ export default function Header() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [hijriData, setHijriData] = useState({ year: '', dayMonth: '' });
     const [hasInnerBanner, setHasInnerBanner] = useState(false);
+    const [settings, setSettings] = useState<GeneralSettings | null>(null);
+
+    useEffect(() => {
+        const loadSettings = async () => {
+            const data = await fetchGeneralSettings();
+            if (data) {
+                setSettings(data);
+            }
+        };
+        loadSettings();
+    }, []);
 
     useEffect(() => {
         const checkBanner = () => {
@@ -70,45 +88,97 @@ export default function Header() {
         setActiveSubmenu(activeSubmenu === menu ? null : menu);
     };
 
-    const sidebarNav = [
+    const resolveVariable = (text: string | undefined): string => {
+        if (!text || !settings) return text || '';
+        let resolved = text;
+        settings.global_variables.forEach(variable => {
+            if (variable.is_active) {
+                // Use a global regex to replace all occurrences if it's a code
+                const escapedCode = variable.code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                resolved = resolved.replace(new RegExp(escapedCode, 'g'), variable.code_value);
+            }
+        });
+        return resolved;
+    };
+
+    const buildNavTree = (items: NavigationBarItem[]): NavItem[] => {
+        if (!items) return [];
+        const rootItems = items.filter(item => item.parent_id === "0" || !item.parent_id || item.parent_id === "");
+        // Sort root items by sort_order
+        rootItems.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+        return rootItems.map(root => {
+            const children = items.filter(item => item.parent_id === root.id.toString());
+            // Sort children by sort_order
+            children.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+            const formatHref = (url: string) => {
+                if (!url) return '#';
+                if (url.startsWith('http')) return url;
+                if (url === 'home.html' || url === 'index.html') return '/';
+                const formatted = url.replace('.html', '');
+                return formatted.startsWith('/') ? formatted : `/${formatted}`;
+            };
+
+            const item: NavItem = {
+                name: root.title,
+                href: formatHref(root.page_url),
+            };
+
+            if (children.length > 0) {
+                item.submenu = children.map(child => ({
+                    name: child.title,
+                    href: formatHref(child.page_url)
+                }));
+            }
+
+            return item;
+        });
+    };
+
+    // Robust setting lookup
+    const logoSetting = settings?.settings?.find(s =>
+        (s.ref_name && s.ref_name.toLowerCase().includes("logo")) ||
+        s.id === 3 || String(s.id) === "3"
+    );
+    const mainLogo = logoSetting?.contents?.main_logo
+        ? getImageUrl(logoSetting.contents.main_logo)
+        : "/logo.png";
+
+    const contactSetting = settings?.settings?.find(s =>
+        (s.ref_name && s.ref_name.toLowerCase().includes("phone")) ||
+        s.id === 6 || String(s.id) === "6"
+    );
+
+    // Resolve variable and provide specific fallback if resolution fails or setting is missing
+    const rawPhone = contactSetting?.contents?.header_phone || "[%PHONENUMBER%]";
+    const headerPhone = resolveVariable(rawPhone) || "020 8016 5786";
+    const rawWhatsApp = contactSetting?.contents?.header_whatsApp || "+447301759073";
+    const resolvedWhatsApp = resolveVariable(rawWhatsApp);
+    const headerWhatsApp = resolvedWhatsApp.includes('wa.me/')
+        ? resolvedWhatsApp.split('wa.me/').pop() || resolvedWhatsApp
+        : resolvedWhatsApp;
+
+    const sidebarNav: NavItem[] = settings ? buildNavTree(settings.navigation_bar) : [
         { name: 'Home', href: '/' },
         { name: 'Umrah Packages', href: '/umrah' },
-        {
-            name: 'Umrah By Cities',
-            href: '#',
-            submenu: [
-                { name: 'Umrah 2025', href: '/umrah/2025' },
-                { name: 'February Umrah', href: '/umrah/february' },
-                { name: 'Ramadan Umrah', href: '/umrah/ramadan', active: true },
-                { name: 'March Umrah', href: '/umrah/march' },
-                { name: 'Easter Umrah', href: '/umrah/easter' },
-                { name: 'April Umrah', href: '/umrah/april' },
-                { name: 'London Umrah', href: '/umrah/london' },
-                { name: 'Manchester Umrah', href: '/umrah/manchester' },
-                { name: 'December Umrah', href: '/umrah/december' },
-                { name: 'Birmingham Umrah', href: '/umrah/birmingham' },
-            ]
-        },
-        {
-            name: 'Umrah By Seasons',
-            href: '#',
-            submenu: [
-                { name: 'Winter Umrah', href: '/umrah/winter' },
-                { name: 'Summer Umrah', href: '/umrah/summer' },
-            ]
-        },
-        {
-            name: 'Hajj Packages',
-            href: '/hajj',
-            submenu: [
-                { name: 'Hajj 2025', href: '/hajj/2025' },
-                { name: 'Premium Hajj', href: '/hajj/premium' },
-            ]
-        },
+        { name: 'Hajj Packages', href: '/hajj' },
         { name: 'Reviews', href: '/reviews' },
         { name: 'Contact Us', href: '/contact' },
         { name: 'Visa', href: '/visa' },
     ];
+
+    const socialIcons = settings?.footer_setting.social_media_icons;
+
+    const getSocialLink = (platform: string) => {
+        if (!socialIcons) return "#";
+        const keys = Object.keys(socialIcons);
+        const index = keys.find(key =>
+            key.startsWith('social_media_icons_input_') &&
+            socialIcons[key]?.toLowerCase() === platform.toLowerCase()
+        )?.split('_').pop();
+        return index ? (socialIcons[`social_media_icons_link_input_${index}`] as string) || "#" : "#";
+    };
 
     return (
         <>
@@ -123,36 +193,36 @@ export default function Header() {
                         </div>
                         <Link href="/" className="logo-link">
                             <span className={`logo-text`}>
-                                <img src="/logo.png" alt="logo" />
+                                <img src={mainLogo} alt="logo" />
                             </span>
                         </Link>
                     </div>
 
                     {/* Navigation Pills */}
                     <nav className="nav-pills">
-                        <Link href="/best-umrah-deals.html" className={`nav-pill ${isActive('/umrah') ? 'active' : ''}`}>
-                            Umrah
-                        </Link>
-                        <Link href="/all-hajj-packages.html" className={`nav-pill ${isActive('/hajj') ? 'active' : ''}`}>
-                            Hajj Package
-                        </Link>
-                        <Link href="/customise-your-package.html" className={`nav-pill ${isActive('/customize') ? 'active' : ''}`}>
-                            Customize Package
-                        </Link>
+                        {sidebarNav.slice(0, 3).map((item, idx) => (
+                            <Link
+                                key={idx}
+                                href={item.href}
+                                className={`nav-pill ${isActive(item.href) ? 'active' : ''}`}
+                            >
+                                {item.name}
+                            </Link>
+                        ))}
                     </nav>
 
                     {/* Contact Pills */}
                     <div className="contact-pills">
-                        <a href="tel:02081457860" className={`contact-pill outline`}>
-                            0208 - 145 - 7860
+                        <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
+                            {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
                             <span className="icon-whatsapp">
-                                <img src="/whatsappicon.png" alt="whatsappicon" />
+                                <img src="/whatsappicon.png" alt="whatsapp" />
                             </span>
                         </a>
-                        <a href="tel:02081457860" className={`contact-pill outline`}>
-                            0208 - 145 - 7860
+                        <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
+                            {headerPhone}
                             <span className="icon-headset">
-                                <img src="/callicon.png" alt="callicon" />
+                                <img src="/callicon.png" alt="call" />
                             </span>
                         </a>
                     </div>
@@ -170,7 +240,7 @@ export default function Header() {
                         </button>
                         <span className="sidebar-logo">
                             <Link href="/">
-                                <img src="/logo.png" alt="logo" />
+                                <img src={mainLogo} alt="logo" />
                             </Link>
                         </span>
                     </div>
@@ -229,30 +299,30 @@ export default function Header() {
                 <div className="sidebar-footer">
                     <div className='social-wrapper'>
                         <div className="social-icons">
-                            <a href="#" className="social-icon youtube">
-                                <img src="/youtube.svg" alt="" />
+                            <a href={getSocialLink('facebook')} className="social-icon facebook" target="_blank" rel="noopener noreferrer">
+                                <img src="/fb.svg" alt="facebook" />
                             </a>
-                            <a href="#" className="social-icon whatsapp">
-                                <img src="/whatsapp.svg" alt="" />
+                            <a href={getSocialLink('Instagram')} className="social-icon instagram" target="_blank" rel="noopener noreferrer">
+                                <img src="/insta.svg" alt="instagram" />
                             </a>
-                            <a href="#" className="social-icon facebook">
-                                <img src="/fb.svg" alt="" />
+                            <a href={getSocialLink('whatsapp')} className="social-icon whatsapp" target="_blank" rel="noopener noreferrer">
+                                <img src="/whatsapp.svg" alt="whatsapp" />
                             </a>
-                            <a href="#" className="social-icon instagram">
-                                <img src="/insta.svg" alt="" />
+                            <a href={getSocialLink('youtube')} className="social-icon youtube" target="_blank" rel="noopener noreferrer">
+                                <img src="/youtube.svg" alt="youtube" />
                             </a>
                         </div>
                         <div className="contact-pills">
-                            <a href="tel:02081457860" className={`contact-pill outline`}>
-                                0208 - 145 - 7860
+                            <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
+                                {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
                                 <span className="icon-whatsapp">
-                                    <img src="/whatsappicon.png" alt="whatsappicon" />
+                                    <img src="/whatsappicon.png" alt="whatsapp" />
                                 </span>
                             </a>
-                            <a href="tel:02081457860" className={`contact-pill outline`}>
-                                0208 - 145 - 7860
+                            <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
+                                {headerPhone}
                                 <span className="icon-headset">
-                                    <img src="/callicon.png" alt="callicon" />
+                                    <img src="/callicon.png" alt="call" />
                                 </span>
                             </a>
                         </div>
