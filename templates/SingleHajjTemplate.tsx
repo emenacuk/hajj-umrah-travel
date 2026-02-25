@@ -209,31 +209,42 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                     </p>
 
                     <div className="package-icon-row">
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/aiplanewhite.svg" alt="Flight" /></div>
-                            <span>Flight</span>
-                        </div>
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/hotelwhite.svg" alt="Hotel" /></div>
-                            <span>Hotel</span>
-                        </div>
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/visawhite.svg" alt="Visa" /></div>
-                            <span>Visa</span>
-                        </div>
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/transportwhite.svg" alt="Transport" /></div>
-                            <span>Transport</span>
-                        </div>
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/board.svg" alt="Half Board" /></div>
-                            <span>Half Board</span>
-                        </div>
-                        <div className="pkg-icon-item">
-                            <div className="icon-circle"><img src="/qurbani.svg" alt="Qurbani" /></div>
-                            <span>Qurbani</span>
-                        </div>
-
+                        {packageData.flight === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/aiplanewhite.svg" alt="Flight" /></div>
+                                <span>Flight</span>
+                            </div>
+                        )}
+                        {packageData.accomodation === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/hotelwhite.svg" alt="Hotel" /></div>
+                                <span>Hotel</span>
+                            </div>
+                        )}
+                        {packageData.visa === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/visawhite.svg" alt="Visa" /></div>
+                                <span>Visa</span>
+                            </div>
+                        )}
+                        {packageData.transfer === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/transportwhite.svg" alt="Transport" /></div>
+                                <span>Transport</span>
+                            </div>
+                        )}
+                        {packageData.breakfast === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/board.svg" alt="Half Board" /></div>
+                                <span>Half Board</span>
+                            </div>
+                        )}
+                        {packageData.qurbani === 1 && (
+                            <div className="pkg-icon-item">
+                                <div className="icon-circle"><img src="/qurbani.svg" alt="Qurbani" /></div>
+                                <span>Qurbani</span>
+                            </div>
+                        )}
                         <div className="pkg-action-btns">
                             <button className="btn btn--primary" onClick={() => setIsBookingModalOpen(true)}>Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
                             <button className="btn btn--dark" onClick={() => setIsCustomizeModalOpen(true)}>Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>

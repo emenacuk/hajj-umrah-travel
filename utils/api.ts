@@ -1053,6 +1053,12 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     madinahHotelData: madinahHotelData,
     inclusions: inclusions,
     type: type,
+    flight: pkg.flight,
+    accomodation: pkg.accomodation,
+    visa: pkg.visa,
+    breakfast: pkg.breakfast,
+    transfer: pkg.transfer,
+    qurbani: pkg.qurbani,
     _raw: pkg // keep raw data
   };
 }
