@@ -16,7 +16,7 @@ export default function VisaPageTemplate({ data }: VisaPageTemplateProps) {
 
     const introContent = data.simple_description || '';
     const mainContent = data.content?.main_content || '';
-    const introImage = data.simple_image_url ? `${MEDIA_BASE_URL}/${data.simple_image_url}` : "/visa.jpg";
+    const introImage = data.simple_image_url ? `${MEDIA_BASE_URL}/media/${data.simple_image_url}` : "/visa.jpg";
 
     return (
         <>
