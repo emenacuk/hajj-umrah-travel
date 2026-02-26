@@ -7,6 +7,7 @@ import '@/styles/components/_customize-modal.scss';
 import { useRouter } from 'next/navigation';
 import router from 'next/router';
 import { toast } from 'sonner';
+import { sendEmail } from '@/utils/api';
 
 interface CustomizeModalProps {
     isOpen: boolean;
@@ -177,38 +178,71 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
 
         setIsSubmitting(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            console.log("formData", formData);
-            router.push('/thank-you');
-            toast.success('Your enquiry has been sent successfully!');
-            setIsSubmitting(false);
-            onClose();
-            // Reset form
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                captcha: '',
-                contactDetail: {
-                    departureAirport: '',
-                    departureDate: null,
-                    nightsInMAK: 2,
-                    nightsInMAD: 2,
-                    accommodation: '',
-                    roomType: '',
-                    mealType: '',
-                    distance: '',
-                    passengers: { adults: 2, children: 0, infants: 0 },
-                    message: '',
-                    hajjType: '',
-                    type: type,
-                    pageURL: pageURL,
-                    selectedPackage: selectedPackage,
-                    packageTitle: packageTitle
+        try {
+            const submissionData = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                contact_detail: {
+                    departure_airport: formData.contactDetail.departureAirport,
+                    departure_date: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+                    nights_in_mak: formData.contactDetail.nightsInMAK,
+                    nights_in_mad: formData.contactDetail.nightsInMAD,
+                    accommodation: formData.contactDetail.accommodation,
+                    room_type: formData.contactDetail.roomType,
+                    meal_type: formData.contactDetail.mealType,
+                    distance: formData.contactDetail.distance,
+                    message: formData.contactDetail.message,
+                    hajj_type: formData.contactDetail.hajjType,
+                    type: formData.contactDetail.type,
+                    page_url: formData.contactDetail.pageURL,
+                    selected_package: formData.contactDetail.selectedPackage,
+                    package_title: formData.contactDetail.packageTitle,
+                    passenger_count: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`
                 }
-            });
-        }, 1500);
+            };
+
+            const response = await sendEmail(submissionData);
+            const isSuccess = response?.status === 1 || response?.success === true;
+
+            if (isSuccess) {
+                toast.success('Your enquiry has been sent successfully!');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    captcha: '',
+                    contactDetail: {
+                        departureAirport: '',
+                        departureDate: null,
+                        nightsInMAK: 2,
+                        nightsInMAD: 2,
+                        accommodation: '',
+                        roomType: '',
+                        mealType: '',
+                        distance: '',
+                        passengers: { adults: 2, children: 0, infants: 0 },
+                        message: '',
+                        hajjType: '',
+                        type: type,
+                        pageURL: pageURL,
+                        selectedPackage: selectedPackage,
+                        packageTitle: packageTitle
+                    }
+                });
+                generateCaptcha();
+                onClose();
+                setTimeout(() => {
+                    router.push('/thank-you');
+                }, 500);
+            } else {
+                toast.error('Submission failed. Please try again.');
+            }
+        } catch (error) {
+            toast.error('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (!isOpen) return null;

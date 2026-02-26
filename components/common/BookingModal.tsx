@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_booking-modal.scss';
 import { useRouter } from 'next/navigation';
+import { sendEmail } from '@/utils/api';
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -122,31 +123,53 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
         setIsSubmitting(true);
 
-        // Exclude captchaInput from payload
-        const { captchaInput, ...payload } = formData;
-
-        // Simulate API call
-        setTimeout(() => {
-            console.log(payload);
-            router.push('/thank-you');
-            toast.success('Your booking request has been sent successfully!');
-            setIsSubmitting(false);
-            onClose();
-            // Reset form
-            setFormData({
-                name: '',
-                phone: '',
-                email: '',
-                contactDetail: {
-                    packageTitle: packageTitle,
-                    departureAirport: '',
-                    departureDate: null,
-                    selectedPackage: selectedPackage,
-                    pageURL: pageURL,
-                    passengers: { adults: 1, children: 0, infants: 0 },
+        try {
+            const submissionData = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                contact_detail: {
+                    package_title: formData.contactDetail.packageTitle,
+                    departure_airport: formData.contactDetail.departureAirport,
+                    departure_date: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+                    selected_package: formData.contactDetail.selectedPackage,
+                    page_url: formData.contactDetail.pageURL,
+                    passenger_count: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`
                 }
-            });
-        }, 1500);
+            };
+            const response = await sendEmail(submissionData);
+            const isSuccess = response?.status === 1 || response?.success === true;
+
+            if (isSuccess) {
+                toast.success('Your booking request has been sent successfully!');
+                setFormData(prev => ({
+                    ...prev,
+                    name: '',
+                    phone: '',
+                    email: '',
+                    contactDetail: {
+                        packageTitle: packageTitle,
+                        departureAirport: '',
+                        departureDate: null,
+                        selectedPackage: selectedPackage,
+                        pageURL: pageURL,
+                        passengers: { adults: 1, children: 0, infants: 0 },
+                    },
+                    captchaInput: ''
+                }));
+                generateCaptcha();
+                onClose();
+                setTimeout(() => {
+                    router.push('/thank-you');
+                }, 500);
+            } else {
+                toast.error('Submission failed. Please try again.');
+            }
+        } catch (error) {
+            toast.error('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;

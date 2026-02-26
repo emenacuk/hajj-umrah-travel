@@ -116,7 +116,7 @@ export default function Header() {
                 if (!url) return '#';
                 if (url.startsWith('http')) return url;
                 if (url === 'home.html' || url === 'index.html') return '/';
-                const formatted = url.replace('.html', '');
+                const formatted = url;
                 return formatted.startsWith('/') ? formatted : `/${formatted}`;
             };
 

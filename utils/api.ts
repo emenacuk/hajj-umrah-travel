@@ -969,25 +969,6 @@ export async function fetchReviewsByIds(ids: string[]): Promise<any[]> {
   }
 }
 
-// Submit inquiry form
-export async function submitInquiry(data: Record<string, any>): Promise<boolean> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/inquiry`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    const apiResponse = await response.json();
-    return apiResponse.status === 1 || response.ok;
-  } catch (error) {
-    console.error('Error submitting inquiry:', error);
-    return false;
-  }
-}
-
 // Helper function to parse comma-separated IDs string
 export function parseIdsString(idsString: string): string[] {
   if (!idsString || typeof idsString !== 'string') {
@@ -1159,6 +1140,24 @@ export async function getBlogsByIds(ids: string[]): Promise<any[]> {
   } catch (error) {
     console.error('Error fetching blog data:', error);
     return [];
+  }
+}
+
+
+export async function sendEmail(data: any): Promise<any> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/send-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { status: 0, message: 'Error sending email' };
   }
 }
 
