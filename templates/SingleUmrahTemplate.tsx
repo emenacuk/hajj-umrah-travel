@@ -65,6 +65,8 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
   const contact = data.content?.contact || {};
   const reviewsWidget = data.content?.ourclientsays_widget;
   const relatedWidget = data.content?.section_2_widget;
+  const hotelHeading = data.content?.section_1_widget?.[0];
+  const hotelDescription = data.content?.section_1_widget?.[0];
 
   const images = (packageData.images && packageData.images.length > 0)
     ? packageData.images.map((img: string) => getImageUrl(img))
@@ -264,9 +266,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
 
       <section className="section hotel-details-section">
         <div className="container">
-          <h2 className="section-subtitle-small">HOTEL DETAILS:</h2>
+          <h2 className="section-subtitle-small">{hotelHeading?.heading}</h2>
           <p className="pkg-description-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+            {hotelDescription?.description}
           </p>
 
 
@@ -344,7 +346,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className='section-title'>{relatedWidget?.heading || 'More Relevant Packages'}</h2>
+                <h2 className='section-title'>{relatedWidget?.heading || 'More Relevant Packagesdd'}</h2>
                 <p className='section-subtitle'>
                   {relatedWidget?.subheading || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip'}
                 </p>

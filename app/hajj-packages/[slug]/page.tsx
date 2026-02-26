@@ -46,6 +46,7 @@ export default async function HajjPackagePage({ params }: HajjPackagePageProps) 
                 reviews: packageData.reviews || [],
                 relatedPackages: packageData.relatedPackages || [],
                 ourclientsays_widget: packageData._raw?.ourclientsays_widget?.[0],
+                section_1_widget: packageData._raw?.section_1_widget,
                 section_2_widget: packageData._raw?.section_2_widget?.[0],
                 inclusions: packageData.inclusions || [],
                 contact: packageData.contact || {},
