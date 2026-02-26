@@ -159,6 +159,11 @@ export default function Header() {
         ? getImageUrl(logoSetting.contents.main_logo)
         : "/logo.png";
 
+    const darkLogo = logoSetting?.contents?.dark_logo
+        ? getImageUrl(logoSetting.contents.dark_logo)
+        : mainLogo;
+    const displayLogo = isSticky ? mainLogo : (hasInnerBanner ? darkLogo : mainLogo);
+
     const contactSetting = settings?.settings?.find(s =>
         (s.ref_name && s.ref_name.toLowerCase().includes("phone")) ||
         s.id === 6 || String(s.id) === "6"
@@ -200,7 +205,7 @@ export default function Header() {
                         </div>
                         <Link href="/" className="logo-link">
                             <span className={`logo-text`}>
-                                <img src={mainLogo} alt="logo" />
+                                <img src={displayLogo} alt="logo" />
                             </span>
                         </Link>
                     </div>
