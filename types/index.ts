@@ -22,6 +22,10 @@ export interface PageData {
     button_text: string;
     button_link: string;
   };
+  simple_description?: string;
+  simple_image_url?: string;
+  simple_image_alt?: string;
+  simple_image_title?: string;
   _raw?: any;
 }
 
