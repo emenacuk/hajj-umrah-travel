@@ -93,6 +93,16 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
     useEffect(() => {
         if (isOpen) {
             generateCaptcha();
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    packageTitle: packageTitle,
+                    selectedPackage: selectedPackage,
+                    pageURL: pageURL,
+                    type: type,
+                }
+            }));
         }
         const handleClickOutside = (event: MouseEvent) => {
             if (passengerRef.current && !passengerRef.current.contains(event.target as Node)) {
@@ -101,7 +111,7 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen]);
+    }, [isOpen, packageTitle, selectedPackage, pageURL, type]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
