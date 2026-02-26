@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { sendEmail } from '@/utils/api';
 import '@/styles/components/_enquiry-modal.scss';
 
 interface EnquiryModalProps {
@@ -36,6 +38,11 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -106,33 +113,61 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
         setIsSubmitting(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            console.log("formData", formData);
-            router.push('/thank-you');
-            toast.success('Your enquiry has been sent successfully!');
-            setIsSubmitting(false);
-            onClose();
-            // Reset form
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                contactDetail: {
-                    passengers: { adults: 1, children: 0, infants: 0 },
-                    subject: '',
-                    message: '',
+        try {
+            const submissionData = {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                contact_detail: {
+                    subject: formData.contactDetail.subject,
+                    message: formData.contactDetail.message,
+                    package_title: formData.contactDetail.packageTitle,
+                    selected_package: formData.contactDetail.selectedPackage,
+                    page_url: formData.contactDetail.pageURL,
+                    passenger_count: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`
                 }
-            });
-        }, 1500);
+            };
+
+            const response = await sendEmail(submissionData);
+            const isSuccess = response?.status === 1 || response?.success === true;
+
+            if (isSuccess) {
+                toast.success('Your enquiry has been sent successfully!');
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    captchaInput: '',
+                    contactDetail: {
+                        passengers: { adults: 1, children: 0, infants: 0 },
+                        subject: '',
+                        message: '',
+                        packageTitle: packageTitle,
+                        selectedPackage: selectedPackage,
+                        pageURL: pageURL,
+                    }
+                });
+                generateCaptcha();
+                onClose();
+                setTimeout(() => {
+                    router.push('/thank-you');
+                }, 500);
+            } else {
+                toast.error('Submission failed. Please try again.');
+            }
+        } catch (error) {
+            toast.error('An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;
     const passengerLabel = `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`;
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
-    return (
+    return createPortal(
         <div className="enquiry-modal-overlay" onClick={onClose}>
             <div className="enquiry-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
@@ -259,6 +294,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

@@ -206,8 +206,9 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
             <section className="section package-description-section">
                 <div className="container">
                     <h2 className="section-subtitle-small">HAJJ PACKAGE DETAILS</h2>
-                    <p className="pkg-description-text">
-                        {packageData.packageDescription || 'Experience the journey of a lifetime with our comprehensive Hajj packages, designed to make your pilgrimage smooth and memorable.'}
+                    <p className="pkg-description-text"
+                        dangerouslySetInnerHTML={{ __html: packageData.package_detail }}
+                    >
                     </p>
 
                     <div className="package-icon-row">

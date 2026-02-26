@@ -65,6 +65,7 @@ export interface PackageData {
   features?: string[];
   description?: string;
   packageDescription?: string;
+  package_detail?: string;
   images?: string[];
   makkahHotelData?: HotelData;
   madinahHotelData?: HotelData;

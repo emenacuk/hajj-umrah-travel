@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { InquiryFormData } from '@/types';
-import { submitInquiry } from '@/utils/api';
+import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -113,13 +113,20 @@ export default function InquiryForm({ data }: InquiryFormProps) {
 
     try {
       const submissionData = {
-        ...formData,
-        departureDate: formData.departureDate ? formData.departureDate.toISOString().split('T')[0] : '',
-        passengerCount: `${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        contact_detail: {
+          departure_date: formData.departureDate ? formData.departureDate.toISOString().split('T')[0] : '',
+          passenger_count: `${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`,
+          nights: formData.nights,
+          message: formData.message,
+          page_url: pathname,
+        },
       };
-      const success = await submitInquiry(submissionData);
-      if (success) {
-        toast.success('Inquiry submitted successfully!');
+      const response = await sendEmail(submissionData);
+      const isSuccess = response?.status === 1 || response?.success === true;
+      if (isSuccess) {
         setFormData({
           passengers: { adults: 1, children: 0, infants: 0 },
           departureDate: null,
@@ -131,6 +138,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
           captchaInput: ''
         });
         generateCaptcha();
+        toast.success('Inquiry submitted successfully!');
         setTimeout(() => {
           window.location.href = '/thank-you';
         }, 2000);
