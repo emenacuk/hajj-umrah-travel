@@ -1286,18 +1286,41 @@ export async function getBlogsByIds(ids: string[]): Promise<any[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/get-makkah-blog?ids=${ids.join(',')}`);
     const apiResponse = await response.json();
-    // API returns { success: true, blogs: [...] }
-    if (apiResponse.success && Array.isArray(apiResponse.blogs)) {
-      return apiResponse.blogs;
-    }
-    // Fallback: legacy shape { status: 1, result: [...] }
-    if (apiResponse.status === 1 && apiResponse.result) {
-      return apiResponse.result;
+    // API returns { success: true, featured_blogs: [...], latest_blogs: [...] }
+    if (apiResponse.success) {
+      const blogs = [...(apiResponse.featured_blogs || []), ...(apiResponse.latest_blogs || [])];
+      return blogs;
     }
     return [];
   } catch (error) {
     console.error('Error fetching blog data:', error);
     return [];
+  }
+}
+
+/**
+ * Fetches blogs with pagination support.
+ */
+export async function fetchMakkahBlogs(page: number = 1): Promise<any> {
+  const url = `${API_BASE_URL}/get-makkah-blog?page=${page}`;
+  console.log('[API] Fetching blogs:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error('[API] Error fetching blogs:', error);
+    return null;
   }
 }
 
@@ -1308,9 +1331,11 @@ export function mapBlogData(blog: any): any {
     title: blog.title || '',
     excerpt: blog.short_description || '',
     content: blog.description || '',
-    image: getImageUrl(blog.image_url),
+    image: getImageUrl(blog.banner_image_url || blog.image_url),
     date: blog.publish_date || blog.created_at || '',
     author: blog.author || '',
     slug: blog.page_url || '',
+    bannerHeading: blog.banner_heading,
+    bannerDescription: blog.banner_description,
   };
 }

@@ -71,7 +71,11 @@
 }
 
 .trending-section {
-    background-color: var(--color-white); // Or a light gray if needed
+    background-color: var(--color-white); 
+    padding-bottom: 60px;
+    @media (max-width: 1200px) {
+      padding-bottom: 50px;
+    }
 }
 
 .fresh-blog-section {
