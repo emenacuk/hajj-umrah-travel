@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -43,6 +44,11 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
     const dropdownRef = useRef<HTMLDivElement>(null);
     const datePickerRef = useRef<DatePicker>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -175,9 +181,9 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
     const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;
     const passengerLabel = `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`;
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
-    return (
+    return createPortal(
         <div className="booking-modal-overlay" onClick={onClose}>
             <div className="booking-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
@@ -337,6 +343,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

@@ -1,9 +1,11 @@
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { UmrahPackageData } from '@/types';
 import '@/styles/components/_package-cards.scss';
 import { getImageUrl } from '@/utils/api';
 
 import { CardSkeleton } from '@/components/common/Skeleton';
+import EnquiryModal from '@/components/common/EnquiryModal';
 
 interface UmrahPackageCardProps {
   package: UmrahPackageData;
@@ -11,6 +13,7 @@ interface UmrahPackageCardProps {
 }
 
 export default function UmrahPackageCard({ package: pkg, loading }: UmrahPackageCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   if (loading) return <CardSkeleton />;
 
   return (
@@ -57,11 +60,21 @@ export default function UmrahPackageCard({ package: pkg, loading }: UmrahPackage
           <Link href={`/umrah-packages/${pkg.pageUrl}`} className="btn btn--black">
             Get Details
           </Link>
-          <Link href={`/umrah-packages/${pkg.pageUrl}?enquire=true`} className="btn btn--primary">
+          <div
+            className="btn btn--primary"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setIsModalOpen(true)}
+          >
             Enquire Now
-          </Link>
+          </div>
         </div>
       </div>
+      <EnquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        packageTitle={pkg.title}
+        pageURL={`/umrah-packages/${pkg.pageUrl}`}
+      />
     </div>
 
   );
