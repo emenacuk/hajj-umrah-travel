@@ -65,6 +65,8 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
     const contact = data.content?.contact || {};
     const reviewsWidget = data.content?.ourclientsays_widget;
     const relatedWidget = data.content?.section_2_widget;
+    const hotelHeading = data.content?.section_1_widget?.[0];
+    const hotelDescription = data.content?.section_1_widget?.[0];
 
     const images = (packageData.images || [packageData.image]).map((img: string) => getImageUrl(img));
 
@@ -281,9 +283,9 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
 
             <section className="section hotel-details-section">
                 <div className="container">
-                    <h2 className="section-subtitle-small">HOTEL DETAILS:</h2>
+                    <h2 className="section-subtitle-small">{hotelHeading?.heading}</h2>
                     <p className="pkg-description-text">
-                        Stay in premium hotels located close to the Holy Mosques in Makkah and Madinah, ensuring ease of access for your daily prayers.
+                        {hotelDescription?.description}
                     </p>
 
 
