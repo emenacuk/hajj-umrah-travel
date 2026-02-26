@@ -5,6 +5,34 @@
     top: 0;
     width: 100%;
     z-index: 100;
+    transition: all 0.3s ease;
+
+    &.sticky {
+        position: fixed;
+        background-color: var(--color-white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0;
+        animation: slideDown 0.35s ease-out;
+
+        .logo-text {
+            color: var(--color-text) !important;
+        }
+
+        .contact-pills .contact-pill {
+            border-color: var(--color-border) !important;
+            color: var(--color-text) !important;
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }
 
 .header-container {
@@ -227,6 +255,7 @@
                 justify-content: space-between;
                 align-items: center;
                 position: relative;
+
                 a {
                     width: 100%;
                     display: block;
@@ -235,7 +264,8 @@
                     color: var(--color-dark);
                     font-weight: 500;
                     position: relative;
-                    &::after{
+
+                    &::after {
                         content: '';
                         position: absolute;
                         left: 0;
@@ -244,16 +274,18 @@
                         height: 1px;
                         background: #707070;
                     }
+
                     &:hover {
                         color: var(--color-primary);
-                        }
+                    }
                 }
             }
 
             &:first-child .menu-item-wrapper a {
                 padding-top: 0;
             }
-            &:last-child .menu-item-wrapper a::after{
+
+            &:last-child .menu-item-wrapper a::after {
                 display: none;
             }
 
@@ -261,11 +293,12 @@
                 flex-direction: column;
                 align-items: stretch;
                 position: relative;
-               
-                .menu-item-wrapper{
+
+                .menu-item-wrapper {
                     padding-left: 25px;
                     position: relative;
-                    &::after{
+
+                    &::after {
                         content: '';
                         position: absolute;
                         left: 0;
@@ -274,13 +307,15 @@
                         height: 1px;
                         background: #707070;
                     }
-                    a{
-                        &::after{
+
+                    a {
+                        &::after {
                             display: none;
                         }
                     }
                 }
-                .arrow{
+
+                .arrow {
                     position: absolute;
                     left: 0;
                     top: 50%;
@@ -291,15 +326,17 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    img{
+
+                    img {
                         width: 100%;
                         height: 100%;
                         object-fit: contain;
                     }
-                    &.open{
+
+                    &.open {
                         transform: translateY(-50%) rotate(90deg);
-                        img{
-                        }
+
+                        img {}
                     }
                 }
             }
@@ -315,6 +352,7 @@
                 z-index: 2;
                 width: 100%;
                 top: 100%;
+
                 li {
                     border-bottom: 1px solid #707070;
 
@@ -342,15 +380,18 @@
 
     .sidebar-footer {
         padding-top: 40px;
-        .social-wrapper{
+
+        .social-wrapper {
             display: grid;
             grid-template-columns: 80px 1fr;
             gap: 20px;
         }
+
         .social-icons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap:8px;
+            gap: 8px;
+
             .social-icon {
                 width: 35px;
                 height: 35px;
@@ -358,18 +399,21 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                img{
+
+                img {
                     width: 100%;
                     height: 100%;
                     object-fit: contain;
                 }
             }
         }
-        .contact-pills{
+
+        .contact-pills {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            a{
+
+            a {
                 font-size: 16px;
                 justify-content: space-between;
             }
@@ -380,12 +424,14 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 40px;
-            .badge-item{
+
+            .badge-item {
                 position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                &::after{
+
+                &::after {
                     content: '';
                     position: absolute;
                     right: 0;
@@ -395,10 +441,12 @@
                     height: 100%;
                     background: #707070;
                 }
-                &:last-child::after{
+
+                &:last-child::after {
                     display: none;
                 }
             }
+
             img {
                 height: 30px;
                 width: auto;
@@ -419,29 +467,34 @@
     }
 
 }
+
 @media screen and (max-width:1600px) {
-    .nav-pills{
-        .nav-pill{
+    .nav-pills {
+        .nav-pill {
             font-size: 14px;
         }
     }
-    .contact-pills{
-        .contact-pill{
+
+    .contact-pills {
+        .contact-pill {
             font-size: 14px;
         }
     }
-   
+
 }
+
 @media screen and (max-width:1200px) {
-    .nav-pills{
+    .nav-pills {
         display: none;
     }
 }
+
 @media screen and (max-width:767.5px) {
-    .contact-pills{
+    .contact-pills {
         display: none;
     }
-    .logo-section{
+
+    .logo-section {
         width: 100%;
         justify-content: space-between;
     }

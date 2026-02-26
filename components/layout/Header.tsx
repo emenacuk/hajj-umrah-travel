@@ -19,6 +19,7 @@ export default function Header() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [hijriData, setHijriData] = useState({ year: '', dayMonth: '' });
     const [hasInnerBanner, setHasInnerBanner] = useState(false);
+    const [isSticky, setIsSticky] = useState(false);
     const [settings, setSettings] = useState<GeneralSettings | null>(null);
 
     useEffect(() => {
@@ -29,6 +30,19 @@ export default function Header() {
             }
         };
         loadSettings();
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setIsSticky(true);
+            } else {
+                setIsSticky(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     useEffect(() => {
@@ -175,7 +189,7 @@ export default function Header() {
 
     return (
         <>
-            <header className={`site-header ${hasInnerBanner ? 'white' : ''}`}>
+            <header className={`site-header ${hasInnerBanner ? 'white' : ''} ${isSticky ? 'sticky' : ''}`}>
                 <div className="container header-container">
                     {/* Logo Section */}
                     <div className="logo-section">

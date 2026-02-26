@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { InquiryFormData } from '@/types';
 import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
   // When API "get setting" is available, we can use data.fields to configure form dynamically
   // For now, form uses hardcoded static fields as before
   const pathname = usePathname();
+  const router = useRouter();
   const [formData, setFormData] = useState<Record<string, any>>({
     passengers: { adults: 1, children: 0, infants: 0 },
     departureDate: null,
@@ -127,6 +128,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
       const response = await sendEmail(submissionData);
       const isSuccess = response?.status === 1 || response?.success === true;
       if (isSuccess) {
+        toast.success('Inquiry submitted successfully!');
         setFormData({
           passengers: { adults: 1, children: 0, infants: 0 },
           departureDate: null,
@@ -138,10 +140,9 @@ export default function InquiryForm({ data }: InquiryFormProps) {
           captchaInput: ''
         });
         generateCaptcha();
-        toast.success('Inquiry submitted successfully!');
-        setTimeout(() => {
-          window.location.href = '/thank-you';
-        }, 2000);
+        router.push('/thank-you');
+
+
       } else {
         toast.error('Submission failed. Please try again.');
         setIsSubmitting(false);
