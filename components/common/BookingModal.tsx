@@ -53,6 +53,15 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
     useEffect(() => {
         if (isOpen) {
             generateCaptcha();
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    packageTitle: packageTitle,
+                    selectedPackage: selectedPackage,
+                    pageURL: pageURL,
+                }
+            }));
         }
 
         const handleClickOutside = (event: MouseEvent) => {
@@ -63,7 +72,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen]);
+    }, [isOpen, packageTitle, selectedPackage, pageURL]);
 
     const generateCaptcha = () => {
         const n1 = Math.floor(Math.random() * 10);

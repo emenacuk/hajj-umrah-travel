@@ -41,9 +41,13 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
     const [isRelatedLoaded, setIsRelatedLoaded] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const searchParams = useSearchParams();
+    const [pageURL, setPageURL] = useState('');
 
     useEffect(() => {
         setIsMounted(true);
+    }, []);
+    useEffect(() => {
+        setPageURL(window.location.href);
     }, []);
 
     useEffect(() => {
@@ -403,8 +407,9 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
             <EnquiryModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                selectedPackage={selectedTier === 'Standard' ? 'Economy' : 'Premium'}
+                selectedPackage={selectedTier}
                 packageTitle={packageData.title}
+                pageURL={pageURL}
             />
 
             <BookingModal
@@ -412,12 +417,16 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                 onClose={() => setIsBookingModalOpen(false)}
                 packageTitle={packageData.title}
                 selectedPackage={selectedTier}
+                pageURL={pageURL}
             />
 
             <CustomizeModal
                 isOpen={isCustomizeModalOpen}
                 onClose={() => setIsCustomizeModalOpen(false)}
                 type="hajj"
+                packageTitle={packageData.title}
+                selectedPackage={selectedTier}
+                pageURL={pageURL}
             />
 
         </div>

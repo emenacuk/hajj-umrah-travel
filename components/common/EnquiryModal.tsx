@@ -47,6 +47,15 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     useEffect(() => {
         if (isOpen) {
             generateCaptcha();
+            setFormData(prev => ({
+                ...prev,
+                contactDetail: {
+                    ...prev.contactDetail,
+                    packageTitle: packageTitle,
+                    selectedPackage: selectedPackage,
+                    pageURL: pageURL,
+                }
+            }));
         }
 
         const handleClickOutside = (event: MouseEvent) => {
@@ -57,7 +66,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen, packageTitle, selectedPackage]);
+    }, [isOpen, packageTitle, selectedPackage, pageURL]);
 
     const generateCaptcha = () => {
         const n1 = Math.floor(Math.random() * 10);
