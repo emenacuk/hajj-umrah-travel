@@ -6,7 +6,7 @@ import '@/styles/components/_contactus.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
-import { fetchGeneralSettings, GeneralSettings } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings } from '@/utils/api';
 
 interface ContactTemplateProps {
   data?: PageData;
@@ -65,7 +65,7 @@ export default function ContactTemplate({ data, generalSettings }: ContactTempla
 
   useEffect(() => {
     const loadSettings = async () => {
-      const data = await fetchGeneralSettings();
+      const data = await getGeneralSettings();
       if (data) {
         setSettings(data);
       }
@@ -142,11 +142,11 @@ export default function ContactTemplate({ data, generalSettings }: ContactTempla
   return (
     <>
       <section className="contact-package-section">
-      <div className="container">
-        <div className="customize-grid">
-          <div className="form-column">
-            <div className='sectionheadings'>
-              <div className='sectionheadingstext'>
+        <div className="container">
+          <div className="customize-grid">
+            <div className="form-column">
+              <div className='sectionheadings'>
+                <div className='sectionheadingstext'>
                   {data?.banner_heading ? (
                     <div
                       className="section-title"
@@ -161,144 +161,144 @@ export default function ContactTemplate({ data, generalSettings }: ContactTempla
                       dangerouslySetInnerHTML={{ __html: data.banner_subheading.replace(/<p>&nbsp;?<\/p>/gi, '') }}
                     />
                   )}
+                </div>
+              </div>
+
+              <div className="customize-form-wrapper">
+                <form className="customize-form" onSubmit={handleSubmit}>
+
+                  <div className="form-row two-cols">
+                    <div className="input-field">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Name*"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="input-field icon-right" ref={passengerRef}>
+                      <div
+                        className="custom-select-trigger"
+                        onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <input
+                          type="text"
+                          name="passengers"
+                          value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
+                          readOnly
+                          placeholder="Passengers"
+                          className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
+                          style={{ pointerEvents: 'none' }}
+                        />
+                        <div className="passenger-badge">
+                          {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
+                        </div>
+                      </div>
+
+                      {showPassengerDropdown && (
+                        <div className="passenger-dropdown-menu">
+                          <div className="dropdown-item">
+                            <span>Adult(s)</span>
+                            <div className="counter-controls">
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
+                              <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
+                            </div>
+                          </div>
+                          <div className="dropdown-item">
+                            <span>Child(s)</span>
+                            <div className="counter-controls">
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
+                              <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
+                            </div>
+                          </div>
+                          <div className="dropdown-item">
+                            <span>Infant(s)</span>
+                            <div className="counter-controls">
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
+                              <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
+                              <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="form-row two-cols">
+                    <div className="input-field">
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="input-field">
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number*"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row two-cols">
+                    <div className="input-field">
+                      <input
+                        type="text"
+                        name="subject"
+                        placeholder="Subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="input-field badge-right has-text-left">
+                      <input
+                        type="text"
+                        name="captcha"
+                        placeholder="Answer"
+                        value={formData.captcha}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/[^0-9]/g, '');
+                          setFormData(prev => ({ ...prev, captcha: val }));
+                        }}
+                      />
+                      <span className="captcha-badge">{captchaState.n1}+{captchaState.n2}</span>
+                    </div>
+                  </div>
+
+                  <div className="form-row-submit">
+                    <div className="message-field">
+                      <input
+                        type="text"
+                        name="message"
+                        placeholder="Type a message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <button type="submit" className="submit-circle-btn">
+                      <img src="/nextarrow.svg" alt="submit" />
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
 
-            <div className="customize-form-wrapper">
-              <form className="customize-form" onSubmit={handleSubmit}>
-
-                <div className="form-row two-cols">
-                  <div className="input-field">
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Name*"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="input-field icon-right" ref={passengerRef}>
-                    <div
-                      className="custom-select-trigger"
-                      onClick={() => setShowPassengerDropdown(!showPassengerDropdown)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <input
-                        type="text"
-                        name="passengers"
-                        value={`${formData.passengers.adults} ADT - ${formData.passengers.children} CHD - ${formData.passengers.infants} INF`}
-                        readOnly
-                        placeholder="Passengers"
-                        className={`passenger-input ${showPassengerDropdown ? 'active' : ''}`}
-                        style={{ pointerEvents: 'none' }}
-                      />
-                      <div className="passenger-badge">
-                        {(formData.passengers.adults + formData.passengers.children + formData.passengers.infants).toString().padStart(2, '0')}
-                      </div>
-                    </div>
-
-                    {showPassengerDropdown && (
-                      <div className="passenger-dropdown-menu">
-                        <div className="dropdown-item">
-                          <span>Adult(s)</span>
-                          <div className="counter-controls">
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'dec'); }} className="control-btn minus">-</button>
-                            <span className="count-value">{formData.passengers.adults.toString().padStart(2, '0')}</span>
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('adults', 'inc'); }} className="control-btn plus">+</button>
-                          </div>
-                        </div>
-                        <div className="dropdown-item">
-                          <span>Child(s)</span>
-                          <div className="counter-controls">
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'dec'); }} className="control-btn minus">-</button>
-                            <span className="count-value">{formData.passengers.children.toString().padStart(2, '0')}</span>
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('children', 'inc'); }} className="control-btn plus">+</button>
-                          </div>
-                        </div>
-                        <div className="dropdown-item">
-                          <span>Infant(s)</span>
-                          <div className="counter-controls">
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'dec'); }} className="control-btn minus">-</button>
-                            <span className="count-value">{formData.passengers.infants.toString().padStart(2, '0')}</span>
-                            <button type="button" onClick={(e) => { e.preventDefault(); handlePassengerChange('infants', 'inc'); }} className="control-btn plus">+</button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="form-row two-cols">
-                  <div className="input-field">
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="input-field">
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Phone Number*"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row two-cols">
-                  <div className="input-field">
-                    <input
-                      type="text"
-                      name="subject"
-                      placeholder="Subject"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="input-field badge-right has-text-left">
-                    <input
-                      type="text"
-                      name="captcha"
-                      placeholder="Answer"
-                      value={formData.captcha}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9]/g, '');
-                        setFormData(prev => ({ ...prev, captcha: val }));
-                      }}
-                    />
-                    <span className="captcha-badge">{captchaState.n1}+{captchaState.n2}</span>
-                  </div>
-                </div>
-
-                <div className="form-row-submit">
-                  <div className="message-field">
-                    <input
-                      type="text"
-                      name="message"
-                      placeholder="Type a message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <button type="submit" className="submit-circle-btn">
-                    <img src="/nextarrow.svg" alt="submit" />
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div className="contact-image-column">
-            <div className="contact-person-image-wrapper">
-              <img src="/contactimage.png" alt="Person in Ihram" className="contact-person-image" />
+            <div className="contact-image-column">
+              <div className="contact-person-image-wrapper">
+                <img src="/contactimage.png" alt="Person in Ihram" className="contact-person-image" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </section>
 
       <section className="contact-info-cards-section">

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import '@/styles/components/_header.scss';
-import { fetchGeneralSettings, GeneralSettings, getImageUrl, NavigationBarItem } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings, getImageUrl, NavigationBarItem } from '@/utils/api';
 
 interface NavItem {
     name: string;
@@ -23,7 +23,7 @@ export default function Header() {
 
     useEffect(() => {
         const loadSettings = async () => {
-            const data = await fetchGeneralSettings();
+            const data = await getGeneralSettings();
             if (data) {
                 setSettings(data);
             }
@@ -151,22 +151,15 @@ export default function Header() {
     );
 
     // Resolve variable and provide specific fallback if resolution fails or setting is missing
-    const rawPhone = contactSetting?.contents?.header_phone || "[%PHONENUMBER%]";
-    const headerPhone = resolveVariable(rawPhone) || "020 8016 5786";
-    const rawWhatsApp = contactSetting?.contents?.header_whatsApp || "+447301759073";
+    const rawPhone = contactSetting?.contents?.header_phone || "";
+    const headerPhone = resolveVariable(rawPhone);
+    const rawWhatsApp = contactSetting?.contents?.header_whatsApp || "";
     const resolvedWhatsApp = resolveVariable(rawWhatsApp);
-    const headerWhatsApp = resolvedWhatsApp.includes('wa.me/')
+    const headerWhatsApp = resolvedWhatsApp ? (resolvedWhatsApp.includes('wa.me/')
         ? resolvedWhatsApp.split('wa.me/').pop() || resolvedWhatsApp
-        : resolvedWhatsApp;
+        : resolvedWhatsApp) : "";
 
-    const sidebarNav: NavItem[] = settings ? buildNavTree(settings.navigation_bar) : [
-        { name: 'Home', href: '/' },
-        { name: 'Umrah Packages', href: '/umrah' },
-        { name: 'Hajj Packages', href: '/hajj' },
-        { name: 'Reviews', href: '/reviews' },
-        { name: 'Contact Us', href: '/contact' },
-        { name: 'Visa', href: '/visa' },
-    ];
+    const sidebarNav: NavItem[] = settings ? buildNavTree(settings.navigation_bar) : [];
 
     const socialIcons = settings?.footer_setting.social_media_icons;
 
@@ -213,18 +206,22 @@ export default function Header() {
 
                     {/* Contact Pills */}
                     <div className="contact-pills">
-                        <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
-                            {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
-                            <span className="icon-whatsapp">
-                                <img src="/whatsappicon.png" alt="whatsapp" />
-                            </span>
-                        </a>
-                        <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
-                            {headerPhone}
-                            <span className="icon-headset">
-                                <img src="/callicon.png" alt="call" />
-                            </span>
-                        </a>
+                        {headerWhatsApp && (
+                            <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
+                                {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
+                                <span className="icon-whatsapp">
+                                    <img src="/whatsappicon.png" alt="whatsapp" />
+                                </span>
+                            </a>
+                        )}
+                        {headerPhone && (
+                            <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
+                                {headerPhone}
+                                <span className="icon-headset">
+                                    <img src="/callicon.png" alt="call" />
+                                </span>
+                            </a>
+                        )}
                     </div>
                 </div>
             </header>
@@ -313,18 +310,22 @@ export default function Header() {
                             </a>
                         </div>
                         <div className="contact-pills">
-                            <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
-                                {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
-                                <span className="icon-whatsapp">
-                                    <img src="/whatsappicon.png" alt="whatsapp" />
-                                </span>
-                            </a>
-                            <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
-                                {headerPhone}
-                                <span className="icon-headset">
-                                    <img src="/callicon.png" alt="call" />
-                                </span>
-                            </a>
+                            {headerWhatsApp && (
+                                <a href={`https://wa.me/${headerWhatsApp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-pill outline">
+                                    {headerWhatsApp.startsWith('+') ? headerWhatsApp : `+${headerWhatsApp}`}
+                                    <span className="icon-whatsapp">
+                                        <img src="/whatsappicon.png" alt="whatsapp" />
+                                    </span>
+                                </a>
+                            )}
+                            {headerPhone && (
+                                <a href={`tel:${headerPhone.replace(/\s+/g, '')}`} className="contact-pill outline">
+                                    {headerPhone}
+                                    <span className="icon-headset">
+                                        <img src="/callicon.png" alt="call" />
+                                    </span>
+                                </a>
+                            )}
                         </div>
                     </div>
                     <div className="sidebar-badges">

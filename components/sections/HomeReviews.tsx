@@ -28,7 +28,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, h
             <div className="container">
                 <div className='sectionheadings'>
                     <div className='sectionheadingstext'>
-                        <h2 className="section-title">{heading || 'What Our Clients Say'}</h2>
+                        <h2 className="section-title">{heading}</h2>
                         {subheading && (
                             <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: subheading }} />
                         )}

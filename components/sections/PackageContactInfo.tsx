@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import '@/styles/components/_package-detail.scss';
 import Link from 'next/link';
-import { fetchGeneralSettings, GeneralSettings } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings } from '@/utils/api';
 
 interface PackageContactInfoProps {
     contact?: {
@@ -18,7 +18,7 @@ export default function PackageContactInfo({ contact: propContact }: PackageCont
 
     useEffect(() => {
         const loadSettings = async () => {
-            const data = await fetchGeneralSettings();
+            const data = await getGeneralSettings();
             if (data) {
                 setSettings(data);
             }
