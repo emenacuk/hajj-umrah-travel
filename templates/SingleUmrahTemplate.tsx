@@ -212,8 +212,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
       <section className="section package-description-section">
         <div className="container">
           <h2 className="section-subtitle-small">PACKAGE DETAILS</h2>
-          <p className="pkg-description-text">
-            {packageData.packageDescription}
+          <p className="pkg-description-text"
+            dangerouslySetInnerHTML={{ __html: packageData.package_detail }}
+          >
           </p>
 
           <div className="package-icon-row">
