@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_customize-modal.scss';
@@ -77,6 +78,11 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
     const passengerRef = useRef<HTMLDivElement>(null);
     const [captchaState, setCaptchaState] = useState({ n1: 0, n2: 0, result: 0 });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const generateCaptcha = () => {
         const n1 = Math.floor(Math.random() * 10);
@@ -245,9 +251,9 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
-    return (
+    return createPortal(
         <div className="customize-modal-overlay" onClick={onClose}>
             <div className="customize-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
@@ -647,7 +653,8 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
                     </form>
                 </div>
             </div>
-        </div >
+        </div >,
+        document.body
     );
 }
 

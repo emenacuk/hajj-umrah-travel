@@ -1,9 +1,11 @@
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { HajjPackageData } from '@/types';
 import '@/styles/components/_package-cards.scss';
 import { getImageUrl } from '@/utils/api';
 
 import { CardSkeleton } from '@/components/common/Skeleton';
+import EnquiryModal from '@/components/common/EnquiryModal';
 
 interface HajjPackageCardProps {
   package: HajjPackageData;
@@ -11,7 +13,9 @@ interface HajjPackageCardProps {
 }
 
 export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   if (loading) return <CardSkeleton />;
+
 
   return (
     <div className="hajj-card " >
@@ -56,11 +60,21 @@ export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCa
           <Link href={`/hajj-packages/${pkg.pageUrl}`} className="btn btn--black">
             Get Details
           </Link>
-          <Link href={`/hajj-packages/${pkg.pageUrl}?enquire=true`} className="btn btn--primary">
+          <div
+            className="btn btn--primary"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setIsModalOpen(true)}
+          >
             Enquire Now
-          </Link>
+          </div>
         </div>
       </div>
+      <EnquiryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        packageTitle={pkg.title}
+        pageURL={`/hajj-packages/${pkg.pageUrl}`}
+      />
     </div>
   );
 }

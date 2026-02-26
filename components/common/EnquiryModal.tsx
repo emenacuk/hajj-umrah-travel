@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { sendEmail } from '@/utils/api';
@@ -37,6 +38,11 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -159,9 +165,9 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
     const totalPassengers = formData.contactDetail.passengers.adults + formData.contactDetail.passengers.children + formData.contactDetail.passengers.infants;
     const passengerLabel = `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`;
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
-    return (
+    return createPortal(
         <div className="enquiry-modal-overlay" onClick={onClose}>
             <div className="enquiry-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
@@ -288,6 +294,7 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
