@@ -1084,6 +1084,7 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     makkahNights: parseInt(pkg.makkah_night || "5"),
     madinahNights: parseInt(pkg.madinah_night || "4"),
     packageDescription: pkg.description || pkg.package_description || pkg.banner_description,
+    package_detail: pkg.package_detail || pkg.description || pkg.package_description,
     images: galleryImages,
     hotels: hotels,
     makkahHotelData: makkahHotelData,
