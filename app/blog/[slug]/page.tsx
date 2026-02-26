@@ -1,4 +1,4 @@
-import { fetchPageData, generatePageMetadata, getGeneralSettings } from '@/utils/api';
+import { getBlogDetail, generatePageMetadata, getGeneralSettings } from '@/utils/api';
 import BlogDetailTemplate from '@/templates/BlogDetailTemplate';
 import PageScript from '@/components/common/PageScript';
 import { notFound } from 'next/navigation';
@@ -12,19 +12,19 @@ interface BlogPostPageProps {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
-    const fullSlug = `blog/${params.slug}`;
     const [pageData, generalSettings] = await Promise.all([
-      fetchPageData(fullSlug),
+      getBlogDetail(params.slug),
       getGeneralSettings()
     ]);
-    return generatePageMetadata(pageData, generalSettings, fullSlug);
+    if (!pageData) return { title: 'Blog Post' };
+    return generatePageMetadata(pageData, generalSettings, `blog/${params.slug}`);
   } catch (error) {
     return { title: 'Blog Post' };
   }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const pageData = await fetchPageData(`blog/${params.slug}`);
+  const pageData = await getBlogDetail(params.slug);
 
   if (!pageData) {
     notFound();

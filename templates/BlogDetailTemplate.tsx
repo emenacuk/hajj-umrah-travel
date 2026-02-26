@@ -10,7 +10,7 @@ interface BlogDetailTemplateProps {
 export default function BlogDetailTemplate({ data }: BlogDetailTemplateProps) {
   const bannerData = data.content?.banner || {
     title: data.title || '',
-    description: '', // Often empty for detail page banners as title is main focus
+    description: '',
   };
 
   const postContent = data.content?.body || '';
@@ -18,18 +18,18 @@ export default function BlogDetailTemplate({ data }: BlogDetailTemplateProps) {
 
   return (
     <>
-{bannerData && <InnerBanner data={bannerData} form={false} />}
+      {bannerData && <InnerBanner data={bannerData} form={false} />}
 
       <section className="section blog-detail-section">
         <div className="container">
           <div className="blog-detail-grid">
             {/* Main Content Column */}
             <div className="blog-content-column">
-               {postContent ? (
-                 <div className="blog-post-content" dangerouslySetInnerHTML={{ __html: postContent }} />
-               ) : (
-                 <p>Content not found.</p>
-               )}
+              {postContent ? (
+                <div className="blog-post-content" dangerouslySetInnerHTML={{ __html: postContent }} />
+              ) : (
+                <p>Content not found.</p>
+              )}
             </div>
 
             {/* Sidebar Column */}

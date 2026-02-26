@@ -358,17 +358,29 @@ export async function fetchPageData(slug: string): Promise<any> {
 
     // Blog Section
     try {
-      const blogSectionData = result.blog_section_data;
+      let blogSectionData = result.blog_section_data;
+      // Handle stringified JSON which is common in this API for widget data
+      if (typeof blogSectionData === 'string') {
+        try {
+          blogSectionData = JSON.parse(blogSectionData);
+        } catch (e) {
+          console.error('[API] Error parsing blog_section_data string:', e);
+        }
+      }
+
       if (blogSectionData?.blog_ids) {
         const blogIds = parseIdsString(String(blogSectionData.blog_ids));
         if (blogIds.length > 0) {
           const rawBlogs = await getBlogsByIds(blogIds);
-          // Attach mapped blogs onto the blog_section_data object in content
+          // Attach mapped blogs and other data onto the blog_section_data object in content
           transformedData.content.blog_section_data = {
             ...blogSectionData,
             blogs: rawBlogs.map(mapBlogData),
           };
         }
+      } else if (blogSectionData) {
+        // If no blog_ids but we have the object, ensure it's still available
+        transformedData.content.blog_section_data = blogSectionData;
       }
     } catch (e) {
       console.error('[API] Failed to fetch blog section data:', e);
@@ -1251,22 +1263,65 @@ export async function getBlogs(): Promise<any[]> {
     return [];
   }
 }
-export async function getBlogDetail(page_url: string): Promise<any[]> {
+/**
+ * Fetches a single blog post details by slug.
+ */
+export async function getBlogDetail(slug: string): Promise<any> {
+  const url = `${API_BASE_URL}/get-makkah-blog?page_url=${slug}`;
+  console.log('[API] Fetching blog detail:', url);
+
   try {
-    const response = await fetch(`${API_BASE_URL}/get-makkah-blog?page-url=${page_url}`);
-    const apiResponse = await response.json();
-    if (apiResponse.status === 1 && apiResponse.result) {
-      return apiResponse.result;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
     }
-    return [];
+
+    const apiResponse = await response.json();
+    if (apiResponse.success && apiResponse.blog) {
+      const blog = apiResponse.blog;
+
+      // Check if banner_description is truly empty (e.g., "<p>&nbsp;</p>" or just whitespace)
+      const isBannerHeadingEmpty = !blog.banner_heading && (!blog.banner_description || blog.banner_description.replace(/<[^>]*>/g, '').trim() === '');
+      const bannerTitle = isBannerHeadingEmpty ? blog.title : (blog.banner_heading || blog.banner_description);
+
+      return {
+        id: blog.id,
+        page_template: 'blog_detail',
+        title: blog.title,
+        banner_description: blog.banner_description, // For direct access if needed
+        short_description: blog.short_description,   // For direct access if needed
+        content: {
+          banner: {
+            title: bannerTitle,
+            description: blog.short_description || "",
+            image: blog.banner_image_url || blog.image_url,
+          },
+          body: blog.description,
+          latestPosts: (apiResponse.latest_blogs || []).map(mapBlogData),
+        },
+        meta: {
+          title: blog.browser_title,
+          description: blog.meta_description,
+          keywords: blog.meta_keywords,
+        },
+        script: blog.script || null,
+        _raw: blog
+      };
+    }
+    return null;
   } catch (error) {
-    console.error('Error fetching blog data:', error);
-    return [];
+    console.error('[API] Error fetching blog detail:', error);
+    return null;
   }
 }
 export async function getBlogsByIds(ids: string[]): Promise<any[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/get-makkah-blog?ids=${ids.join(',')}`);
+    const response = await fetch(`${API_BASE_URL}/get-makkah-blog?blog_ids=${ids.join(',')}`);
     const apiResponse = await response.json();
     // API returns { success: true, featured_blogs: [...], latest_blogs: [...] }
     if (apiResponse.success) {
