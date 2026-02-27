@@ -283,9 +283,9 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
 
             <section className="section hotel-details-section">
                 <div className="container">
-                    <h2 className="section-subtitle-small">{hotelHeading?.heading || 'HOTEL DETAILSSS:'}</h2>
+                    <h2 className="section-subtitle-small">{hotelHeading?.heading}</h2>
                     <p className="pkg-description-text">
-                        {hotelDescription?.description || 'Test Stay in premium hotels located close to the Holy Mosques in Makkah and Madinah, ensuring ease of access for your daily prayers.'}
+                        {hotelDescription?.description}
                     </p>
 
 

@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
 import { sendEmail } from '@/utils/api';
+import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
 
 interface CustomizePackageProps {
