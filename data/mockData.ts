@@ -2,7 +2,7 @@ import { PageData, UmrahPackageData, HajjPackageData, ReviewData, FAQItem, BlogP
 
 // Mock Home Page Data
 export const mockHomePageData: PageData = {
-  template_name: 'home',
+  page_template: 'Home Template',
   title: 'Trusted Umrah Packages From The UK',
   content: {
     banner: {
@@ -444,7 +444,7 @@ export const mockUmrahPackage: UmrahPackageData & any = {
     'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200',
     'https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=1200',
     'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200',
-     'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200'
+    'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1200'
   ],
   makkahHotel: 'Emaar Andalusia Hotel',
   makkahNights: 5,
@@ -734,7 +734,7 @@ export const mockHajjPackage: HajjPackageData & any = {
 
 // Mock Contact Page Data
 export const mockContactPageData: PageData = {
-  template_name: 'contact',
+  page_template: 'Contact Us Template',
   title: 'Contact Us',
   content: {
     banner: {
@@ -761,7 +761,7 @@ export const mockContactPageData: PageData = {
 
 // Mock Blog Page Data
 export const mockBlogPageData: PageData = {
-  template_name: 'blog',
+  page_template: 'Blog Template',
   title: 'Blog',
   content: {
     banner: {

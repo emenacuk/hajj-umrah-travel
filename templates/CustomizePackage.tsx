@@ -6,7 +6,7 @@ import '@/styles/components/_customize-package.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
-import { submitInquiry } from '@/utils/api';
+import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -154,7 +154,7 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
             };
 
             console.log("the submitted data", submissionData);
-            const success = await submitInquiry(submissionData);
+            const success = await sendEmail(submissionData);
 
             if (success) {
                 toast.success('Your customization request has been submitted successfully!');
