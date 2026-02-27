@@ -12,12 +12,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]);
 
     // 2. Map static pages from navigation (filtering out external links)
-    const staticRoutes = navPages
+    const staticRoutes: MetadataRoute.Sitemap = navPages
         .filter((page: any) => page.url_type === 'page' || page.page_url.startsWith('/'))
         .map((page: any) => ({
             url: `${baseUrl}${page.page_url.startsWith('/') ? page.page_url : `/${page.page_url}`}`,
             lastModified: new Date(),
-            changeFrequency: 'weekly' as const,
+            changeFrequency: 'weekly',
             priority: 0.8,
         }));
 
