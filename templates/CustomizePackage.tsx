@@ -1,22 +1,22 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { PageData } from '@/types';
 import '@/styles/components/_customize-package.scss';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
-import { submitInquiry } from '@/utils/api';
+import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 interface CustomizePackageProps {
     data?: PageData;
 }
 
 export default function CustomizePackage({ data }: CustomizePackageProps) {
-    console.log(data);
     const router = useRouter();
+    const pathname = usePathname();
     const [packageType, setPackageType] = useState<'umrah' | 'hajj'>('umrah');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -119,44 +119,35 @@ export default function CustomizePackage({ data }: CustomizePackageProps) {
         setIsSubmitting(true);
 
         try {
-            // Build the contact detail object conditionally based on package type
-            const baseContactDetail = {
-                departureAirport: formData.contactDetail.departureAirport,
-                departureDate: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+            const contactDetailPayload = {
+                departure_airport: formData.contactDetail.departureAirport,
+                departure_date: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+                passenger_count: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`,
+                nights_in_mak: formData.contactDetail.nightsInMAK,
+                nights_in_mad: formData.contactDetail.nightsInMAD,
                 accommodation: formData.contactDetail.accommodation,
-                passengerCount: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`,
+                room_type: formData.contactDetail.roomType,
+                meal_type: formData.contactDetail.mealType,
+                distance: formData.contactDetail.distance,
+                hajj_type: formData.contactDetail.hajjType,
                 message: formData.contactDetail.message,
+                page_url: pathname,
+                package_type: packageType
             };
-
-            let finalContactDetail = {};
-            if (packageType === 'umrah') {
-                finalContactDetail = {
-                    ...baseContactDetail,
-                    nightsInMAK: formData.contactDetail.nightsInMAK,
-                    nightsInMAD: formData.contactDetail.nightsInMAD,
-                    roomType: formData.contactDetail.roomType,
-                    mealType: formData.contactDetail.mealType,
-                    distance: formData.contactDetail.distance,
-                };
-            } else {
-                finalContactDetail = {
-                    ...baseContactDetail,
-                    hajjType: formData.contactDetail.hajjType,
-                };
-            }
 
             const submissionData = {
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
-                packageType: packageType,
-                contactDetail: finalContactDetail
+                package_type: packageType,
+                contact_detail: contactDetailPayload
             };
 
-            console.log("the submitted data", submissionData);
-            const success = await submitInquiry(submissionData);
+            console.log("Submitting form with data:", submissionData);
+            const response = await sendEmail(submissionData);
+            const isSuccess = response?.status === 1 || response?.success === true;
 
-            if (success) {
+            if (isSuccess) {
                 toast.success('Your customization request has been submitted successfully!');
                 setFormData({
                     name: '',

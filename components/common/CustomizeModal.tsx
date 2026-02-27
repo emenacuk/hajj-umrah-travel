@@ -199,6 +199,7 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
+                package_type: formData.contactDetail.type, // Added to top level
                 contact_detail: {
                     departure_airport: formData.contactDetail.departureAirport,
                     departure_date: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
@@ -210,7 +211,7 @@ export default function CustomizeModal({ isOpen, onClose, type, pageURL, selecte
                     distance: formData.contactDetail.distance,
                     message: formData.contactDetail.message,
                     hajj_type: formData.contactDetail.hajjType,
-                    type: formData.contactDetail.type,
+                    package_type: formData.contactDetail.type, // Renamed from 'type'
                     page_url: formData.contactDetail.pageURL,
                     selected_package: formData.contactDetail.selectedPackage,
                     package_title: formData.contactDetail.packageTitle,
