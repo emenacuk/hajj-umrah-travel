@@ -1132,24 +1132,30 @@ export function getImageUrl(imagePath: string | null | undefined, fallback?: str
     return trimmedPath;
   }
 
-  // For paths that should be used directly with MEDIA_BASE_URL
+  // Handle paths that already start with 'media/' or '/media/'
+  if (trimmedPath.startsWith('media/') || trimmedPath.startsWith('/media/')) {
+    // Ensure it starts with /media/ for consistency if needed, but here we just prepend MEDIA_BASE_URL
+    const normalizedPath = trimmedPath.startsWith('/') ? trimmedPath : `/${trimmedPath}`;
+    return `${MEDIA_BASE_URL}${normalizedPath}`;
+  }
+
+  // For other paths that should be used directly with MEDIA_BASE_URL
   if (
     trimmedPath.startsWith('/storage/') ||
     trimmedPath.startsWith('/userfiles/') ||
     trimmedPath.startsWith('assets/') ||
-    trimmedPath.startsWith('/media/')
+    trimmedPath.startsWith('/assets/')
   ) {
-    // If it starts with / already, don't add another one
     const separator = trimmedPath.startsWith('/') ? '' : '/';
     return `${MEDIA_BASE_URL}${separator}${trimmedPath}`;
   }
 
-  // Fixed mapping for /media/ prefixing
+  // Default fallback: prepend /media/
   if (trimmedPath.startsWith('/')) {
     return `${MEDIA_BASE_URL}/media${trimmedPath}`;
   }
 
-  // Default fallback: prepend /media/
+  // Default case: prepend /media/
   return `${MEDIA_BASE_URL}/media/${trimmedPath}`;
 }
 

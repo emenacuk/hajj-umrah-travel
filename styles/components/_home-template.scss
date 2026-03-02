@@ -122,7 +122,8 @@
 
   }
 
-  .bestpackagesswiper,.bestUmrah-swiper{
+  .bestpackagesswiper,
+  .bestUmrah-swiper {
     .swiper-slide {
       padding-left: 24px;
 
@@ -147,7 +148,8 @@
 
 .hajjsection {
   padding-top: 60px;
-  .packages-swiper-wrapper {
+
+  >.packages-swiper-wrapper {
     display: grid;
     grid-template-columns: 1fr 559px;
     gap: 40px;
@@ -195,41 +197,7 @@
       pointer-events: none;
     }
 
-    .exploration-swiper-inner {
-      width: 88%;
-      max-width: 1400px;
-      margin: 0 auto;
-      overflow: visible;
-      position: relative;
-    }
 
-    .exploration-packages-swiper {
-      overflow: visible !important;
-      width: 100%;
-    }
-
-    .swiper-slide {
-      width: 260px;
-      flex-shrink: 0;
-      height: auto;
-      box-sizing: border-box;
-
-      @media (min-width: 640px) {
-        width: 300px;
-      }
-
-      @media (min-width: 768px) {
-        width: 320px;
-      }
-
-      @media (min-width: 1024px) {
-        width: 360px;
-      }
-
-      @media (min-width: 1280px) {
-        width: 400px;
-      }
-    }
   }
 }
 
@@ -291,10 +259,12 @@
       }
     }
   }
-  &:hover{
-    .card-image{
-      .card-overlay{
-        background-color: rgba(214, 154, 94, 0.6);;
+
+  &:hover {
+    .card-image {
+      .card-overlay {
+        background-color: rgba(214, 154, 94, 0.6);
+        ;
       }
     }
   }
@@ -491,15 +461,18 @@
     max-width: 100%;
   }
 }
-.partners-logos{
- background-color: rgba(214, 154, 94, 0.1);
- padding: 24px 0;
- img{
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
- }
+
+.partners-logos {
+  background-color: rgba(214, 154, 94, 0.1);
+  padding: 24px 0;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
 }
+
 .swiper-pagination-custom {
   display: flex;
   gap: 4px;
@@ -519,150 +492,183 @@
       width: 86px;
     }
   }
-  &.swiper-pagination-lock{
+
+  &.swiper-pagination-lock {
     display: none;
   }
 }
+
 @media screen and (max-width:1600px) and (min-width:1200px) {
-  .bestpackages{
+  .bestpackages {
     grid-template-columns: 300px 1fr;
   }
-  .sectionheadings{
+
+  .sectionheadings {
     grid-template-columns: 1fr 252px;
     gap: 22px;
   }
-  .section-title{
+
+  .section-title {
     font-size: 30px;
     line-height: 36px;
   }
-  .section-subtitle{
+
+  .section-subtitle {
     font-size: 14px;
     line-height: 20px;
   }
-  .section .sectionheadings{
+
+  .section .sectionheadings {
     padding-bottom: 24px;
   }
 }
+
 @media screen and (max-width:1600px) {
-  .why-us-section{
-    .features-grid{
+  .why-us-section {
+    .features-grid {
       grid-template-columns: 1fr 236px 1fr;
       align-items: center;
     }
-    .feature-card{
+
+    .feature-card {
       gap: 10px;
-      .feature-icon{
+
+      .feature-icon {
         width: 70px;
       }
-      .content{
+
+      .content {
         width: calc(100% - 80px);
-        h3{
+
+        h3 {
           font-size: 22px;
           line-height: 28px;
         }
-        p{
+
+        p {
           font-size: 14px;
           line-height: 20px;
         }
       }
     }
   }
+
   .hajjsection {
-    .packages-swiper-wrapper{
+    .packages-swiper-wrapper {
       grid-template-columns: 1fr 355px;
       gap: 24px;
       align-items: center;
     }
   }
-  .umrah-exploration-card{
-    .card-image{
-      .card-overlay{
-        h3{
+
+  .umrah-exploration-card {
+    .card-image {
+      .card-overlay {
+        h3 {
           font-size: 24px;
         }
       }
     }
   }
-  .swiper-pagination-custom{
+
+  .swiper-pagination-custom {
     padding-top: 30px;
   }
 }
+
 @media (max-width: 1200px) {
-  .bestpackages{
-   padding: 50px 20px 0;
-   grid-template-columns: 1fr;
-   gap: 20px;
-   .sideimage{
-    img{
-      margin: 0 auto;
+  .bestpackages {
+    padding: 50px 20px 0;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    .sideimage {
+      img {
+        margin: 0 auto;
+      }
     }
-   }
   }
-  .sectionheadings{
+
+  .sectionheadings {
     gap: 20px;
     grid-template-columns: 1fr 270px;
     padding-bottom: 40px;
   }
-  .dealssection,.hajjsection,.partners-section{
+
+  .dealssection,
+  .hajjsection,
+  .partners-section {
     padding-top: 50px;
   }
+
   .hajjsection {
-    .packages-swiper-wrapper{
+    .packages-swiper-wrapper {
       grid-template-columns: 1fr;
       gap: 20px;
-      padding:  0 20px;
-      .imagearea{
+      padding: 0 20px;
+
+      .imagearea {
         order: 0;
-        img{
+
+        img {
           margin: 0 auto;
         }
       }
-      .sliderhere{
+
+      .sliderhere {
         order: 1;
       }
     }
   }
+
   .exploration-section {
-    .exploration-swiper{
+    .exploration-swiper {
       padding: 60px 0;
     }
   }
-   .umrah-exploration-card{
-    .card-image{
-      .card-overlay{
-        h3{
+
+  .umrah-exploration-card {
+    .card-image {
+      .card-overlay {
+        h3 {
           font-size: 22px;
         }
       }
     }
   }
+
   .why-us-section {
-    .features-grid{
+    .features-grid {
       grid-template-columns: 1fr;
-      .centeredchooose{
-          img{
-            margin: 0 auto;
-            max-width: 200px;
-          }
+
+      .centeredchooose {
+        img {
+          margin: 0 auto;
+          max-width: 200px;
+        }
       }
-      .features-card-wrapper{
+
+      .features-card-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
-        
-        .feature-card{
-          .feature-icon{
+
+        .feature-card {
+          .feature-icon {
             width: 60px;
             order: 0;
           }
-          .content{
+
+          .content {
             order: 1;
             width: calc(100% - 70px);
-            h3{
+
+            h3 {
               font-size: 20px;
               line-height: 26px;
             }
-            p{
+
+            p {
               font-size: 14px;
               line-height: 18px;
             }
@@ -672,53 +678,66 @@
     }
   }
 }
+
 @media (max-width: 992.5px) {
-  .sectionheadings{
+  .sectionheadings {
     grid-template-columns: 1fr;
   }
-  .partners-section,.home-reviews-section{
-    .sectionheadings{
+
+  .partners-section,
+  .home-reviews-section {
+    .sectionheadings {
       grid-template-columns: 1fr 44px;
     }
   }
 }
+
 @media (max-width: 767.5px) {
-  .section-title{
+  .section-title {
     font-size: 22px;
     line-height: 28px;
   }
-  .section-subtitle{
+
+  .section-subtitle {
     font-size: 16px;
     line-height: 22px;
   }
-  .bestpackages{
+
+  .bestpackages {
     padding: 50px 0px 0;
-    .sideimage,.sectionheadings{
-      padding:  0 20px;
+
+    .sideimage,
+    .sectionheadings {
+      padding: 0 20px;
       padding-bottom: 30px;
     }
-    .bestpackagesswiper,.bestUmrah-swiper{
-      .swiper-slide{
+
+    .bestpackagesswiper,
+    .bestUmrah-swiper {
+      .swiper-slide {
         padding-left: 15px;
       }
     }
   }
+
   .dealssection {
-    .swiper-slide{
+    .swiper-slide {
       padding-left: 15px;
     }
   }
+
   .why-us-section {
     .features-grid {
-      .features-card-wrapper{
+      .features-card-wrapper {
         grid-template-columns: 1fr;
         gap: 15px;
       }
     }
   }
-  .exploration-section{
+
+  .exploration-section {
     .exploration-swiper {
-      .swiper-slide{
+      .swiper-slide {
         width: 300px;
       }
     }

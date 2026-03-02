@@ -14,9 +14,11 @@ interface HomeBannerProps {
 
 export default function HomeBanner({ data, loading }: HomeBannerProps) {
   if (loading) return <BannerSkeleton />;
+  const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1200);
     };
@@ -26,11 +28,15 @@ export default function HomeBanner({ data, loading }: HomeBannerProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  if (!mounted) {
+    return <BannerSkeleton />;
+  }
+
   // Render HTML content from API (backend editor sends HTML tags)
   const heading = data.title ? (
-    <div 
-      className="banner-heading" 
-      dangerouslySetInnerHTML={{ __html: data.title }} 
+    <div
+      className="banner-heading"
+      dangerouslySetInnerHTML={{ __html: data.title }}
     />
   ) : null;
 
@@ -68,7 +74,7 @@ export default function HomeBanner({ data, loading }: HomeBannerProps) {
               poster="/homebanner.png"
               style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '24px' }}
             />
-            
+
           </div>
         </div>
       </div>

@@ -1,31 +1,18 @@
-'use client';
-
-import { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import Link from 'next/link';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
+import { isEmptyHtml } from '@/utils/htmlUtils';
+import PackageSlider from '@/components/sliders/PackageSlider';
 
 interface UmrahPackageTemplateProps {
   data: PageData;
 }
 
 export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps) {
-  const [slidersLoaded, setSlidersLoaded] = useState({
-    section1: false,
-    section2: false,
-    section3: false,
-    section4: false
-  });
 
   const content = data.content || {};
   const bannerData = content.banner || {};
@@ -57,9 +44,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget1.heading || 'Umrah Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget1.subheading || widget1.description || ''}
-                </p>
+                {(widget1.subheading || widget1.description) && !isEmptyHtml(widget1.subheading || widget1.description) && (
+                  <p className="section-subtitle">
+                    {widget1.subheading || widget1.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -79,19 +68,12 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.section1 && <SliderSkeleton count={2} />}
-            <Swiper
-              key="s1-swiper"
-              modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, section1: true }))}
-              style={{ opacity: slidersLoaded.section1 ? 1 : 0 }}
-              slidesPerView={1}
-              spaceBetween={24}
-              navigation={{
-                prevEl: '#prev-s1',
-                nextEl: '#next-s1',
-              }}
-              className="packages-swiper"
+            <PackageSlider
+              items={section1Packages}
+              cardType="umrah"
+              navigationPrevEl="#prev-s1"
+              navigationNextEl="#next-s1"
+              skeletonCount={2}
               breakpoints={{
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
@@ -100,13 +82,9 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
               }}
-            >
-              {section1Packages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              slidesPerView={1}
+              spaceBetween={24}
+            />
           </div>
         </section>
       )}
@@ -118,9 +96,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget2.heading || 'Umrah Deals'}</h2>
-                <p className="section-subtitle">
-                  {widget2.subheading || widget2.description || ''}
-                </p>
+                {(widget2.subheading || widget2.description) && !isEmptyHtml(widget2.subheading || widget2.description) && (
+                  <p className="section-subtitle">
+                    {widget2.subheading || widget2.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -140,19 +120,12 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.section2 && <SliderSkeleton count={2} />}
-            <Swiper
-              key="s2-swiper"
-              modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, section2: true }))}
-              style={{ opacity: slidersLoaded.section2 ? 1 : 0 }}
-              slidesPerView={1}
-              spaceBetween={24}
-              navigation={{
-                prevEl: '#prev-s2',
-                nextEl: '#next-s2',
-              }}
-              className="packages-swiper"
+            <PackageSlider
+              items={section2Packages}
+              cardType="umrah"
+              navigationPrevEl="#prev-s2"
+              navigationNextEl="#next-s2"
+              skeletonCount={2}
               breakpoints={{
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
@@ -161,13 +134,9 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
               }}
-            >
-              {section2Packages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              slidesPerView={1}
+              spaceBetween={24}
+            />
           </div>
         </section>
       )}
@@ -179,9 +148,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget3.heading || 'Hajj Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget3.subheading || widget3.description || ''}
-                </p>
+                {(widget3.subheading || widget3.description) && !isEmptyHtml(widget3.subheading || widget3.description) && (
+                  <p className="section-subtitle">
+                    {widget3.subheading || widget3.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -201,19 +172,12 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.section3 && <SliderSkeleton count={2} />}
-            <Swiper
-              key="s3-swiper"
-              modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, section3: true }))}
-              style={{ opacity: slidersLoaded.section3 ? 1 : 0 }}
-              slidesPerView={1}
-              spaceBetween={24}
-              navigation={{
-                prevEl: '#prev-s3',
-                nextEl: '#next-s3',
-              }}
-              className="packages-swiper"
+            <PackageSlider
+              items={section3Packages}
+              cardType="umrah"
+              navigationPrevEl="#prev-s3"
+              navigationNextEl="#next-s3"
+              skeletonCount={2}
               breakpoints={{
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
@@ -222,13 +186,9 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
               }}
-            >
-              {section3Packages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              slidesPerView={1}
+              spaceBetween={24}
+            />
           </div>
         </section>
       )}
@@ -242,9 +202,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget4.heading || 'Explore Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget4.subheading || widget4.description || ''}
-                </p>
+                {(widget4.subheading || widget4.description) && !isEmptyHtml(widget4.subheading || widget4.description) && (
+                  <p className="section-subtitle">
+                    {widget4.subheading || widget4.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -264,19 +226,12 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             </div>
           </div>
           <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
-            {!slidersLoaded.section4 && <SliderSkeleton count={2} />}
-            <Swiper
-              key="s4-swiper"
-              modules={[Navigation, Pagination]}
-              onInit={() => setSlidersLoaded(prev => ({ ...prev, section4: true }))}
-              style={{ opacity: slidersLoaded.section4 ? 1 : 0 }}
-              slidesPerView={1}
-              spaceBetween={24}
-              navigation={{
-                prevEl: '#prev-s4',
-                nextEl: '#next-s4',
-              }}
-              className="packages-swiper"
+            <PackageSlider
+              items={section4Packages}
+              cardType="umrah"
+              navigationPrevEl="#prev-s4"
+              navigationNextEl="#next-s4"
+              skeletonCount={2}
               breakpoints={{
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
@@ -285,22 +240,20 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
               }}
-            >
-              {section4Packages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              slidesPerView={1}
+              spaceBetween={24}
+            />
           </div>
         </section>
       )}
 
-      <ScrollDetail
-        title={data.title}
-        image={content.scroll_image_url}
-        content={content.scroll_description || content.main_content}
-      />
+      {(content.scroll_description || content.main_content) && !isEmptyHtml(content.scroll_description || content.main_content) && (
+        <ScrollDetail
+          title={data.title}
+          image={content.scroll_image_url}
+          content={content.scroll_description || content.main_content}
+        />
+      )}
 
       {faqs.length > 0 && (
         <section className="section faq-section">
@@ -308,9 +261,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{faqsHeading}</h2>
-                <p className="section-subtitle">
-                  {faqsSubheading}
-                </p>
+                {faqsSubheading && !isEmptyHtml(faqsSubheading) && (
+                  <p className="section-subtitle">
+                    {faqsSubheading}
+                  </p>
+                )}
               </div>
             </div>
 

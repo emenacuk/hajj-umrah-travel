@@ -76,10 +76,13 @@
         }
     }
 }
-@media (max-width:1200px) {
-    .reviews-page {
-        .reviews-grid{
-           
-        }
+@media (max-width:768px) {
+   .review-card .reviewcardinner .review-content p {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 10px;
+    }
+    .reviews-carousel .swiper-slide {
+        padding-left: 12px;
     }
 }
