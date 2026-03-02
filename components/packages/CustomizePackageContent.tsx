@@ -42,7 +42,7 @@ export default function CustomizePackageContent({ data }: CustomizePackageConten
                     </div>
                 </div>
 
-                <CustomizeForm packageType={packageType} />
+                <CustomizeForm packageType={packageType} data={data} />
             </div>
 
             <div className="image-column">

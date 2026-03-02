@@ -8,11 +8,14 @@ import { sendEmail } from '@/utils/api';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
+import { PageData } from '@/types';
+
 interface CustomizeFormProps {
     packageType: 'umrah' | 'hajj';
+    data?: PageData;
 }
 
-export default function CustomizeForm({ packageType }: CustomizeFormProps) {
+export default function CustomizeForm({ packageType, data }: CustomizeFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
@@ -112,27 +115,29 @@ export default function CustomizeForm({ packageType }: CustomizeFormProps) {
 
         try {
             const baseContactDetail = {
-                departureAirport: formData.contactDetail.departureAirport,
-                departureDate: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
+                departure_airport: formData.contactDetail.departureAirport,
+                departure_date: formData.contactDetail.departureDate ? formData.contactDetail.departureDate.toISOString().split('T')[0] : '',
                 accommodation: formData.contactDetail.accommodation,
-                passengerCount: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`,
+                passenger_count: `${formData.contactDetail.passengers.adults} ADT - ${formData.contactDetail.passengers.children} CHD - ${formData.contactDetail.passengers.infants} INF`,
                 message: formData.contactDetail.message,
+                package_type: packageType,
+                package_title: data?.title || `Custom ${packageType.charAt(0).toUpperCase() + packageType.slice(1)} Package`,
             };
 
             let finalContactDetail = {};
             if (packageType === 'umrah') {
                 finalContactDetail = {
                     ...baseContactDetail,
-                    nightsInMAK: formData.contactDetail.nightsInMAK,
-                    nightsInMAD: formData.contactDetail.nightsInMAD,
-                    roomType: formData.contactDetail.roomType,
-                    mealType: formData.contactDetail.mealType,
+                    nights_in_mak: formData.contactDetail.nightsInMAK,
+                    nights_in_mad: formData.contactDetail.nightsInMAD,
+                    room_type: formData.contactDetail.roomType,
+                    meal_type: formData.contactDetail.mealType,
                     distance: formData.contactDetail.distance,
                 };
             } else {
                 finalContactDetail = {
                     ...baseContactDetail,
-                    hajjType: formData.contactDetail.hajjType,
+                    hajj_type: formData.contactDetail.hajjType,
                 };
             }
 
@@ -140,8 +145,7 @@ export default function CustomizeForm({ packageType }: CustomizeFormProps) {
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
-                packageType: packageType,
-                contactDetail: finalContactDetail
+                contact_detail: finalContactDetail
             };
 
             const success = await sendEmail(submissionData);
