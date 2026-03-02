@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import '@/styles/components/_package-detail.scss';
 import Link from 'next/link';
-import { getGeneralSettings, GeneralSettings } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings, SettingsContents } from '@/utils/api';
 
 interface PackageContactInfoProps {
     contact?: {
@@ -48,10 +48,11 @@ export default function PackageContactInfo({ contact: propContact }: PackageCont
         s.id === 14 || String(s.id) === "14"
     );
 
-    const headerDigits = resolveVariable(contactSetting?.contents?.header_phone) || propContact?.phone || "020 8016 5786";
+    const contactContents = contactSetting?.contents as SettingsContents | undefined;
+    const headerDigits = resolveVariable(contactContents?.header_phone) || propContact?.phone || "020 8016 5786";
     const headerPhone = headerDigits;
 
-    const rawWhatsApp = contactSetting?.contents?.header_whatsApp || propContact?.whatsapp || "+447301759073";
+    const rawWhatsApp = contactContents?.header_whatsApp || propContact?.whatsapp || "+447301759073";
     const resolvedWhatsApp = resolveVariable(rawWhatsApp);
     const headerWhatsApp = resolvedWhatsApp.includes('wa.me/')
         ? resolvedWhatsApp.split('wa.me/').pop() || resolvedWhatsApp
