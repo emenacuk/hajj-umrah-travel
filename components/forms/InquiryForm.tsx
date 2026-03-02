@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import '@/styles/components/_forms.scss';
+import router from 'next/router';
 
 interface InquiryFormProps {
   data?: InquiryFormData; // Optional - form works with static fields until API is ready
@@ -140,9 +141,10 @@ export default function InquiryForm({ data }: InquiryFormProps) {
           captchaInput: ''
         });
         generateCaptcha();
-        router.push('/thank-you');
-
-
+        toast.success('Inquiry submitted successfully!');
+        setTimeout(() => {
+          router.push('/thank-you');
+        }, 2000);
       } else {
         toast.error('Submission failed. Please try again.');
         setIsSubmitting(false);
