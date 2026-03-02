@@ -68,12 +68,13 @@ export default function PageScript({ html, ownerKey }: PageScriptProps) {
             return;
         }
 
-        // Parse the provided HTML to find <script> tags
+        // Parse the provided HTML to find tags
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html.trim();
-        const scripts = tempDiv.querySelectorAll("script");
+        // Support script, meta, and link tags
+        const elements = tempDiv.querySelectorAll("script, meta, link");
 
-        if (scripts.length === 0) {
+        if (elements.length === 0) {
             return;
         }
 
@@ -81,68 +82,70 @@ export default function PageScript({ html, ownerKey }: PageScriptProps) {
         // This prevents race conditions during navigation
         removeAllPageScripts();
 
-        // Create scripts in <head>
-        scripts.forEach((oldScript) => {
+        // Create elements in <head>
+        elements.forEach((oldEl) => {
             // Double-check: Make sure we haven't been unmounted or scope changed
             if (previousScopeRef.current !== currentScope) {
                 return; // Don't add scripts if scope changed during processing
             }
 
-            // Handle inline script - check for content or attributes
-            if (!oldScript.src) {
-                const content = normalizeInlineScript(oldScript.innerHTML || "");
-                const hasAttributes = oldScript.attributes.length > 0;
-                if (!content && !hasAttributes) {
-                    return; // Skip only completely empty and attribute-less scripts
-                }
-                const scriptType = oldScript.getAttribute("type") || undefined;
+            const tagName = oldEl.tagName.toLowerCase();
+            const newEl = document.createElement(tagName);
 
-                // Check if this exact script already exists (prevent duplicates)
-                if (content && scriptExists(content, scriptType)) {
-                    return; // Skip if duplicate exists
-                }
-            }
+            // Mark ownership
+            (newEl as any).dataset.pageScriptOwner = currentScope;
 
-            const newScript = document.createElement("script");
-
-            // Mark ownership so we can identify and remove later
-            newScript.dataset.pageScriptOwner = currentScope;
-
-            // Get original src value BEFORE browser resolves it (preserve as-is from API)
-            const originalSrc = oldScript.getAttribute("src");
-
-            // Copy all attributes (src, async, defer, type, etc.)
-            // IMPORTANT: Copy attributes first to preserve original values
-            Array.from(oldScript.attributes).forEach((attr) => {
-                // For src attribute, use the original value from getAttribute to avoid browser resolution
-                if (attr.name === "src" && originalSrc !== null) {
-                    newScript.setAttribute(attr.name, originalSrc);
-                } else {
-                    newScript.setAttribute(attr.name, attr.value);
-                }
+            // Copy all attributes
+            Array.from(oldEl.attributes).forEach((attr) => {
+                newEl.setAttribute(attr.name, attr.value);
             });
 
-            // Handle external script
-            if (originalSrc) {
-                // Check if external script already exists (use original src for comparison)
-                const existing = document.head.querySelector(`script[src="${CSS.escape(originalSrc)}"]`);
-                if (existing) {
-                    return; // Skip if duplicate exists
+            if (tagName === 'script') {
+                const oldScript = oldEl as HTMLScriptElement;
+                const newScript = newEl as HTMLScriptElement;
+                const originalSrc = oldScript.getAttribute("src");
+
+                if (!originalSrc) {
+                    const content = normalizeInlineScript(oldScript.innerHTML || "");
+                    if (content) {
+                        // Check for duplicate inline script
+                        if (scriptExists(content, oldScript.getAttribute("type") || undefined)) {
+                            return;
+                        }
+                        newScript.text = content;
+                    }
+                } else {
+                    // Check for duplicate external script
+                    const existing = document.head.querySelector(`script[src="${CSS.escape(originalSrc)}"]`);
+                    if (existing) return;
                 }
-                // Don't set newScript.src directly - it's already set via setAttribute above
-                // This preserves the original URL exactly as provided by the API
-            } else {
-                // Handle inline script
-                const content = normalizeInlineScript(oldScript.innerHTML || "");
-                if (content) {
-                    newScript.text = content;
+            } else if (tagName === 'meta') {
+                const name = oldEl.getAttribute('name');
+                const content = oldEl.getAttribute('content');
+                const property = oldEl.getAttribute('property');
+
+                // Check for duplicate meta tags
+                let selector = 'meta';
+                if (name) selector += `[name="${CSS.escape(name)}"]`;
+                else if (property) selector += `[property="${CSS.escape(property)}"]`;
+
+                const existing = document.head.querySelector(selector);
+                if (existing && existing.getAttribute('content') === content) {
+                    return;
                 }
+            } else if (tagName === 'link') {
+                const rel = oldEl.getAttribute('rel');
+                const href = oldEl.getAttribute('href');
+
+                // Check for duplicate link tags
+                const existing = document.head.querySelector(`link[rel="${CSS.escape(rel || '')}"][href="${CSS.escape(href || '')}"]`);
+                if (existing) return;
             }
 
             // Final check before appending
             if (previousScopeRef.current === currentScope) {
-                document.head.appendChild(newScript);
-                scriptsRef.current.push(newScript);
+                document.head.appendChild(newEl);
+                scriptsRef.current.push(newEl as any);
             }
         });
 

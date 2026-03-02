@@ -116,7 +116,9 @@ export interface GeneralSettings {
       footer_logo?: string;
       header_phone?: string;
       header_whatsApp?: string;
-    };
+      enable_google_can_index?: string;
+      [key: string]: any;
+    } | string;
   }>;
   navigation_bar: NavigationBarItem[];
   global_variables: GlobalVariable[];
@@ -1228,6 +1230,20 @@ export function generatePageMetadata(pageData: any, generalSettings?: any, slug:
   const favicon = logoSetting?.contents?.favicon;
   const canIndex = indexSetting?.contents?.enable_google_can_index === "1";
 
+  // Extract Google Site Verification from SEO Meta Tags in Header
+  let googleVerification = undefined;
+  const seoTagSetting = generalSettings?.settings?.find(
+    (s: any) => s.ref_name === 'SEO Meta Tags in Header'
+  );
+
+  if (seoTagSetting?.is_active && typeof seoTagSetting.contents === 'string') {
+    // Attempt to extract the content attribute from the <meta name="google-site-verification" content="..." />
+    const match = seoTagSetting.contents.match(/name=["']google-site-verification["']\s+content=["']([^"']+)["']/i);
+    if (match && match[1]) {
+      googleVerification = match[1];
+    }
+  }
+
   // Base domain for canonical tags
   const baseUrl = 'https://hajjumrapackages.co.uk';
   const canonicalUrl = slug === 'home' || slug === '' ? baseUrl : `${baseUrl}/${slug}`;
@@ -1236,6 +1252,9 @@ export function generatePageMetadata(pageData: any, generalSettings?: any, slug:
     title: meta?.title || title || 'Hajj & Umrah Packages',
     description: meta?.description || '',
     keywords: meta?.keywords || '',
+    verification: googleVerification ? {
+      google: googleVerification,
+    } : undefined,
     icons: {
       icon: favicon ? getImageUrl(favicon) : undefined,
     },
