@@ -14,6 +14,7 @@ import Link from 'next/link';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
+import { isEmptyHtml } from '@/utils/htmlUtils';
 
 interface HajjPackageTemplateProps {
   data: PageData;
@@ -53,10 +54,11 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
                     <h2 className="section-title">{shiftingWidget.heading || "All Hajj Shifting Packages"}</h2>
-                    <p className="section-subtitle">
-                      {shiftingWidget.description || shiftingWidget.subheading ||
-                        "Explore our range of shifting Hajj packages, offering a balance of comfort and convenience during the most important days of your pilgrimage."}
-                    </p>
+                    {(shiftingWidget.description || shiftingWidget.subheading) && !isEmptyHtml(shiftingWidget.description || shiftingWidget.subheading) && (
+                      <p className="section-subtitle">
+                        {shiftingWidget.description || shiftingWidget.subheading}
+                      </p>
+                    )}
                   </div>
                   <div className='rightside'>
                     <div className="swiper-nav-btns">
@@ -113,10 +115,11 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                 <div className='sectionheadings'>
                   <div className='sectionheadingstext'>
                     <h2 className="section-title">{nonShiftingWidget.heading || "All Hajj Non-Shifting Packages"}</h2>
-                    <p className="section-subtitle">
-                      {nonShiftingWidget.description || nonShiftingWidget.subheading ||
-                        "Our non-shifting Hajj packages provide you with fixed hotel accommodation in Makkah close to the Haram throughout your entire stay for maximum convenience."}
-                    </p>
+                    {(nonShiftingWidget.description || nonShiftingWidget.subheading) && !isEmptyHtml(nonShiftingWidget.description || nonShiftingWidget.subheading) && (
+                      <p className="section-subtitle">
+                        {nonShiftingWidget.description || nonShiftingWidget.subheading}
+                      </p>
+                    )}
                   </div>
                   <div className='rightside'>
                     <div className="swiper-nav-btns">
@@ -166,7 +169,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
             </section>
           )}
 
-          {data.content?.scroll_description && (
+          {data.content?.scroll_description && !isEmptyHtml(data.content.scroll_description) && (
             <ScrollDetail
               title={data.title || "Hajj Services Detail"}
               image={data.content.scroll_image_url || "/scrollimg.png"}
@@ -180,9 +183,11 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               <div className='sectionheadings'>
                 <div className='sectionheadingstext'>
                   <h2 className="section-title">{faqsHeading}</h2>
-                  <p className="section-subtitle">
-                    {faqsSubheading}
-                  </p>
+                  {faqsSubheading && !isEmptyHtml(faqsSubheading) && (
+                    <p className="section-subtitle">
+                      {faqsSubheading}
+                    </p>
+                  )}
                 </div>
               </div>
               <FAQ items={faqs} />

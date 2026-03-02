@@ -14,6 +14,7 @@ import Link from 'next/link';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
+import { isEmptyHtml } from '@/utils/htmlUtils';
 
 interface UmrahPackageTemplateProps {
   data: PageData;
@@ -57,9 +58,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget1.heading || 'Umrah Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget1.subheading || widget1.description || ''}
-                </p>
+                {(widget1.subheading || widget1.description) && !isEmptyHtml(widget1.subheading || widget1.description) && (
+                  <p className="section-subtitle">
+                    {widget1.subheading || widget1.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -118,9 +121,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget2.heading || 'Umrah Deals'}</h2>
-                <p className="section-subtitle">
-                  {widget2.subheading || widget2.description || ''}
-                </p>
+                {(widget2.subheading || widget2.description) && !isEmptyHtml(widget2.subheading || widget2.description) && (
+                  <p className="section-subtitle">
+                    {widget2.subheading || widget2.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -179,9 +184,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget3.heading || 'Hajj Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget3.subheading || widget3.description || ''}
-                </p>
+                {(widget3.subheading || widget3.description) && !isEmptyHtml(widget3.subheading || widget3.description) && (
+                  <p className="section-subtitle">
+                    {widget3.subheading || widget3.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -242,9 +249,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{widget4.heading || 'Explore Packages'}</h2>
-                <p className="section-subtitle">
-                  {widget4.subheading || widget4.description || ''}
-                </p>
+                {(widget4.subheading || widget4.description) && !isEmptyHtml(widget4.subheading || widget4.description) && (
+                  <p className="section-subtitle">
+                    {widget4.subheading || widget4.description}
+                  </p>
+                )}
               </div>
               <div className='rightside'>
                 <div className="swiper-nav-btns">
@@ -296,11 +305,13 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
         </section>
       )}
 
-      <ScrollDetail
-        title={data.title}
-        image={content.scroll_image_url}
-        content={content.scroll_description || content.main_content}
-      />
+      {(content.scroll_description || content.main_content) && !isEmptyHtml(content.scroll_description || content.main_content) && (
+        <ScrollDetail
+          title={data.title}
+          image={content.scroll_image_url}
+          content={content.scroll_description || content.main_content}
+        />
+      )}
 
       {faqs.length > 0 && (
         <section className="section faq-section">
@@ -308,9 +319,11 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{faqsHeading}</h2>
-                <p className="section-subtitle">
-                  {faqsSubheading}
-                </p>
+                {faqsSubheading && !isEmptyHtml(faqsSubheading) && (
+                  <p className="section-subtitle">
+                    {faqsSubheading}
+                  </p>
+                )}
               </div>
             </div>
 

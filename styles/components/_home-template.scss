@@ -195,41 +195,7 @@
       pointer-events: none;
     }
 
-    .exploration-swiper-inner {
-      width: 88%;
-      max-width: 1400px;
-      margin: 0 auto;
-      overflow: visible;
-      position: relative;
-    }
-
-    .exploration-packages-swiper {
-      overflow: visible !important;
-      width: 100%;
-    }
-
-    .swiper-slide {
-      width: 260px;
-      flex-shrink: 0;
-      height: auto;
-      box-sizing: border-box;
-
-      @media (min-width: 640px) {
-        width: 300px;
-      }
-
-      @media (min-width: 768px) {
-        width: 320px;
-      }
-
-      @media (min-width: 1024px) {
-        width: 360px;
-      }
-
-      @media (min-width: 1280px) {
-        width: 400px;
-      }
-    }
+  
   }
 }
 

@@ -17,6 +17,7 @@ import UmrahHajjServices from '@/components/sections/UmrahHajjServices';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import BlogSection from '@/components/sections/BlogSection';
 import { getImageUrl } from '@/utils/api';
+import { isEmptyHtml } from '@/utils/htmlUtils';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -101,7 +102,9 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section1Widget.heading || '' }} />
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section1Widget.subheading || '' }} />
+                {section1Widget.subheading && !isEmptyHtml(section1Widget.subheading) && (
+                  <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section1Widget.subheading }} />
+                )}
               </div>
               <div className='rightside'>
                 {section1Widget.slider_enable === '1' && (
@@ -176,7 +179,9 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section2Widget.heading || '' }} />
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section2Widget.subheading || '' }} />
+                {section2Widget.subheading && !isEmptyHtml(section2Widget.subheading) && (
+                  <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section2Widget.subheading }} />
+                )}
               </div>
               <div className='rightside'>
                 {section2Widget.slider_enable === '1' && (
@@ -313,7 +318,9 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section3Widget.heading || '' }} />
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section3Widget.subheading || '' }} />
+                {section3Widget.subheading && !isEmptyHtml(section3Widget.subheading) && (
+                  <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section3Widget.subheading }} />
+                )}
               </div>
               <div className='rightside'>
                 {section3Widget.slider_enable === '1' && (
@@ -388,7 +395,9 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title" dangerouslySetInnerHTML={{ __html: section4Widget.heading || '' }} />
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section4Widget.description || section4Widget.subheading || '' }} />
+                {(section4Widget.description || section4Widget.subheading) && !isEmptyHtml(section4Widget.description || section4Widget.subheading) && (
+                  <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: section4Widget.description || section4Widget.subheading || '' }} />
+                )}
               </div>
               <div className='rightside'>
                 {section4Widget.slider_enable === '1' && (
@@ -415,10 +424,10 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
               <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 onInit={() => setSlidersLoaded(prev => ({ ...prev, exploration: true }))}
-                slidesPerView={1}
-                centeredSlides={true}
+                style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
+                slidesPerView={1.2}
                 spaceBetween={24}
-                loop={section4Packages.length > 1}
+                loop={true}
                 navigation={{
                   prevEl: '.prev-exploration',
                   nextEl: '.next-exploration',
@@ -428,11 +437,17 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   clickable: true
                 }}
                 autoplay={{
-                  delay: 2500,
+                  delay: 1500,
                   disableOnInteraction: false
                 }}
                 breakpoints={{
-                  640: { slidesPerView: 'auto' }
+                  640: { slidesPerView: 1.8 },
+                  768: { slidesPerView: 2.2 },
+                  992: { slidesPerView: 2.8 },
+                  1025: { slidesPerView: 3.2 },
+                  1200: { slidesPerView: 3.8 },
+                  1350: { slidesPerView: 4.2 },
+                  1700: { slidesPerView: 4.8 },
                 }}
                 className="packages-swiper exploration-packages-swiper"
               >
@@ -512,7 +527,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
       </section>
 
       {/* Scroll Detail Section */}
-      {data.content?.scroll_description && (
+      {data.content?.scroll_description && !isEmptyHtml(data.content.scroll_description) && (
         <ScrollDetail
           title="Umrah & Hajj Services Scroll Detail"
           image={scrollImage}
@@ -527,7 +542,9 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
                 <h2 className="section-title">{data.content?.faqs_heading || 'Frequently Asked Questions'}</h2>
-                <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: data.content?.faqs_subheading || '' }} />
+                {data.content?.faqs_subheading && !isEmptyHtml(data.content.faqs_subheading) && (
+                  <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: data.content.faqs_subheading }} />
+                )}
               </div>
             </div>
             <FAQ items={faqs} />

@@ -6,6 +6,7 @@ import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
+import { isEmptyHtml } from '@/utils/htmlUtils';
 
 interface UmrahPackageTemplateProps {
   data: PageData;
@@ -34,7 +35,7 @@ export default function SingleListing({ data }: UmrahPackageTemplateProps) {
                     dangerouslySetInnerHTML={{ __html: section1Widget.heading }}
                   />
                 )}
-                {section1Widget.description && (
+                {section1Widget.description && !isEmptyHtml(section1Widget.description) && (
                   <div
                     className="section-subtitle"
                     dangerouslySetInnerHTML={{ __html: section1Widget.description }}
@@ -49,12 +50,13 @@ export default function SingleListing({ data }: UmrahPackageTemplateProps) {
               <UmrahPackageCard key={pkg.id} package={pkg} />
             ))}
           </div>
-
-          <ScrollDetail
-            title={data.title}
-            image={data.content?.scroll_image_url}
-            content={data.content?.scroll_description}
-          />
+          {data.content?.scroll_description && !isEmptyHtml(data.content.scroll_description) && (
+            <ScrollDetail
+              title={data.title}
+              image={data.content?.scroll_image_url}
+              content={data.content?.scroll_description}
+            />
+          )}
         </div>
         {faqs.length > 0 && (
           <section className="section faq-section">
