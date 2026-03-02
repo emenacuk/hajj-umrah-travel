@@ -104,21 +104,23 @@ export interface PageApiResult {
   };
 }
 
+export interface SettingsContents {
+  main_logo?: string;
+  dark_logo?: string;
+  favicon?: string;
+  footer_logo?: string;
+  header_phone?: string;
+  header_whatsApp?: string;
+  enable_google_can_index?: string;
+  [key: string]: any;
+}
+
 export interface GeneralSettings {
   settings: Array<{
     id: number;
     ref_name: string;
     is_active: boolean;
-    contents: {
-      main_logo?: string;
-      dark_logo?: string;
-      favicon?: string;
-      footer_logo?: string;
-      header_phone?: string;
-      header_whatsApp?: string;
-      enable_google_can_index?: string;
-      [key: string]: any;
-    } | string;
+    contents: SettingsContents | string;
   }>;
   navigation_bar: NavigationBarItem[];
   global_variables: GlobalVariable[];

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import '@/styles/components/_header.scss';
-import { getGeneralSettings, GeneralSettings, getImageUrl, NavigationBarItem } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings, getImageUrl, NavigationBarItem, SettingsContents } from '@/utils/api';
 
 interface NavItem {
     name: string;
@@ -155,12 +155,13 @@ export default function Header() {
         (s.ref_name && s.ref_name.toLowerCase().includes("logo")) ||
         s.id === 3 || String(s.id) === "3"
     );
-    const mainLogo = logoSetting?.contents?.main_logo
-        ? getImageUrl(logoSetting.contents.main_logo)
+    const contents = logoSetting?.contents as SettingsContents | undefined;
+    const mainLogo = contents?.main_logo
+        ? getImageUrl(contents.main_logo)
         : "/logo.png";
 
-    const darkLogo = logoSetting?.contents?.dark_logo
-        ? getImageUrl(logoSetting.contents.dark_logo)
+    const darkLogo = contents?.dark_logo
+        ? getImageUrl(contents.dark_logo)
         : mainLogo;
     const displayLogo = isSticky ? mainLogo : (hasInnerBanner ? darkLogo : mainLogo);
 
@@ -170,9 +171,10 @@ export default function Header() {
     );
 
     // Resolve variable and provide specific fallback if resolution fails or setting is missing
-    const rawPhone = contactSetting?.contents?.header_phone || "";
+    const contactContents = contactSetting?.contents as SettingsContents | undefined;
+    const rawPhone = contactContents?.header_phone || "";
     const headerPhone = resolveVariable(rawPhone);
-    const rawWhatsApp = contactSetting?.contents?.header_whatsApp || "";
+    const rawWhatsApp = contactContents?.header_whatsApp || "";
     const resolvedWhatsApp = resolveVariable(rawWhatsApp);
     const headerWhatsApp = resolvedWhatsApp ? (resolvedWhatsApp.includes('wa.me/')
         ? resolvedWhatsApp.split('wa.me/').pop() || resolvedWhatsApp
