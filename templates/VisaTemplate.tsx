@@ -1,5 +1,3 @@
-'use client';
-
 import { PageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import '@/styles/components/_visa.scss';
@@ -43,7 +41,7 @@ export default function VisaPageTemplate({ data }: VisaPageTemplateProps) {
                     </div>
                 </div>
             </section>
-            
+
             {mainContent && (
                 <div className='visa-scroll-section'>
                     <div className='container'>

@@ -1,24 +1,31 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { PageData, BlogPost } from '@/types';
+import { PageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import BlogCard from '@/components/cards/BlogCard';
-import { CardSkeleton } from '@/components/common/Skeleton';
 import { fetchMakkahBlogs, mapBlogData } from '@/utils/api';
 import '@/styles/components/_blog.scss';
+import BlogListing from '@/components/blog/BlogListing';
 
 interface BlogTemplateProps {
   data: PageData;
 }
 
-export default function BlogTemplate({ data }: BlogTemplateProps) {
-  const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
-  const [latestBlogs, setLatestBlogs] = useState<BlogPost[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMoreLoading, setIsMoreLoading] = useState(false);
+export default async function BlogTemplate({ data }: BlogTemplateProps) {
+  let initialLatestBlogs = [];
+  let initialFeaturedBlogs = [];
+  let initialCurrentPage = 1;
+  let initialTotalPages = 1;
+
+  try {
+    const res = await fetchMakkahBlogs(1);
+    if (res && res.success) {
+      initialFeaturedBlogs = (res.featured_blogs || []).map(mapBlogData);
+      initialLatestBlogs = (res.latest_blogs || []).map(mapBlogData);
+      initialCurrentPage = res.pagination?.current_page || 1;
+      initialTotalPages = res.pagination?.total_pages || 1;
+    }
+  } catch (error) {
+    console.error('Error loading initial blogs on server:', error);
+  }
 
   const bannerData = data.content?.banner || {
     title: data.title || 'Blog',
@@ -33,46 +40,6 @@ export default function BlogTemplate({ data }: BlogTemplateProps) {
   const section2 = data.content?.section_2_widget?.[0] || {
     heading: 'Fresh From Our Blog',
     description: 'Keep up to date with our newest guides and insights.'
-  };
-
-  useEffect(() => {
-    const loadInitialBlogs = async () => {
-      setIsLoading(true);
-      try {
-        const res = await fetchMakkahBlogs(1);
-        if (res && res.success) {
-          setFeaturedBlogs((res.featured_blogs || []).map(mapBlogData));
-          setLatestBlogs((res.latest_blogs || []).map(mapBlogData));
-          setCurrentPage(res.pagination?.current_page || 1);
-          setTotalPages(res.pagination?.total_pages || 1);
-        }
-      } catch (error) {
-        console.error('Error loading initial blogs:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadInitialBlogs();
-  }, []);
-
-  const handleLoadMore = async () => {
-    if (currentPage >= totalPages) return;
-
-    setIsMoreLoading(true);
-    try {
-      const nextPage = currentPage + 1;
-      const res = await fetchMakkahBlogs(nextPage);
-      if (res && res.success) {
-        const newBlogs = (res.latest_blogs || []).map(mapBlogData);
-        setLatestBlogs((prev) => [...prev, ...newBlogs]);
-        setCurrentPage(res.pagination?.current_page || nextPage);
-      }
-    } catch (error) {
-      console.error('Error loading more blogs:', error);
-    } finally {
-      setIsMoreLoading(false);
-    }
   };
 
   return (
@@ -92,12 +59,8 @@ export default function BlogTemplate({ data }: BlogTemplateProps) {
           </div>
 
           <div className="blog-grid trending-grid">
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, index) => (
-                <CardSkeleton key={`skeleton-featured-${index}`} />
-              ))
-            ) : featuredBlogs.length > 0 ? (
-              featuredBlogs.map((post: BlogPost) => (
+            {initialFeaturedBlogs.length > 0 ? (
+              initialFeaturedBlogs.map((post: any) => (
                 <BlogCard key={`featured-${post.id}`} post={post} />
               ))
             ) : (
@@ -119,35 +82,12 @@ export default function BlogTemplate({ data }: BlogTemplateProps) {
             </div>
           </div>
 
-          <div className="blog-grid fresh-grid">
-            {isLoading ? (
-              Array.from({ length: 6 }).map((_, index) => (
-                <CardSkeleton key={`skeleton-latest-${index}`} />
-              ))
-            ) : latestBlogs.length > 0 ? (
-              latestBlogs.map((post: BlogPost) => (
-                <BlogCard key={`fresh-${post.id}`} post={post} />
-              ))
-            ) : (
-              <p className="no-blogs">No recent blog posts available.</p>
-            )}
-
-            {isMoreLoading && Array.from({ length: 3 }).map((_, index) => (
-              <CardSkeleton key={`skeleton-more-${index}`} />
-            ))}
-          </div>
-
-          {!isLoading && currentPage < totalPages && (
-            <div className="load-more-container">
-              <button
-                className="btn-load-more"
-                onClick={handleLoadMore}
-                disabled={isMoreLoading}
-              >
-                {isMoreLoading ? 'Loading...' : 'Load More'}
-              </button>
-            </div>
-          )}
+          <BlogListing
+            initialLatestBlogs={initialLatestBlogs}
+            initialFeaturedBlogs={initialFeaturedBlogs}
+            initialCurrentPage={initialCurrentPage}
+            initialTotalPages={initialTotalPages}
+          />
         </div>
       </section>
     </>

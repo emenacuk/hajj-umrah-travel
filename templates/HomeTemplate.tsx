@@ -1,16 +1,9 @@
-'use client';
-
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { useState, useEffect } from 'react';
-import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData, UmrahPackageData, HajjPackageData, ReviewData } from '@/types';
 import HomeBanner from '@/components/banners/HomeBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
 import HajjPackageCard from '@/components/cards/HajjPackageCard';
 import UmrahExplorationCard from '@/components/cards/UmrahExplorationCard';
 import FAQ from '@/components/common/FAQ';
-import Reviews from '@/components/common/Reviews';
 import CustomizeBanner from '@/components/banners/CustomizeBanner';
 import HomeReviews from '@/components/sections/HomeReviews';
 import UmrahHajjServices from '@/components/sections/UmrahHajjServices';
@@ -18,9 +11,8 @@ import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import BlogSection from '@/components/sections/BlogSection';
 import { getImageUrl } from '@/utils/api';
 import { isEmptyHtml } from '@/utils/htmlUtils';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import PackageSlider from '@/components/sliders/PackageSlider';
+import PartnerSlider from '@/components/sliders/PartnerSlider';
 import '@/styles/components/_home-template.scss';
 import Link from 'next/link';
 
@@ -28,19 +20,8 @@ interface HomeTemplateProps {
   data: PageData;
 }
 let airlinearray = ['air1.webp', 'air2.webp', 'air3.webp', 'air4.webp', 'air5.webp', 'air6.webp', 'air7.webp', 'air8.webp', 'air9.webp', 'air10.webp', 'air11.webp'];
+
 export default function HomeTemplate({ data }: HomeTemplateProps) {
-  const [slidersLoaded, setSlidersLoaded] = useState({
-    bestUmrah: false,
-    decemberDeals: false,
-    bestHajj: false,
-    exploration: false
-  });
-
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Extract data from API response
   const bannerData = data.content?.banner || {};
@@ -88,7 +69,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
   return (
     <>
       {/* Home Banner */}
-      {bannerData && <HomeBanner data={bannerData} loading={!isMounted} />}
+      {bannerData && <HomeBanner data={bannerData} />}
 
       {/* Section 1: Best Umrah Packages */}
       {section1Widget && (
@@ -126,41 +107,23 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
 
             {section1Widget.slider_enable === '1' ? (
-              <>
-                <div className="packages-swiper-wrapper bestUmrah-swiper" style={{ position: 'relative' }}>
-                  {!slidersLoaded.bestUmrah && <SliderSkeleton count={2} />}
-                  <Swiper
-                    modules={[Navigation, Pagination]}
-                    onInit={() => setSlidersLoaded(prev => ({ ...prev, bestUmrah: true }))}
-                    style={{ display: slidersLoaded.bestUmrah ? 'block' : 'none' }}
-                    slidesPerView={1.2}
-                    navigation={{
-                      prevEl: '.prev-bestUmrah',
-                      nextEl: '.next-bestUmrah',
-                    }}
-                    pagination={{
-                      el: '.bestUmrah-pagination',
-                      clickable: true
-                    }}
-                    breakpoints={{
-                      640: { slidesPerView: 1 },
-                      768: { slidesPerView: 1.2 },
-                      992: { slidesPerView: 1.4 },
-                      1025: { slidesPerView: 1.6 },
-                      1200: { slidesPerView: 1.3 },
-                      1600: { slidesPerView: 2 },
-                    }}
-                    className="packages-swiper"
-                  >
-                    {section1Packages.map((pkg: any, index: number) => (
-                      <SwiperSlide key={`bestUmrah-${pkg.id || index}`}>
-                        <UmrahPackageCard package={pkg} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-                <div className="swiper-pagination-custom bestUmrah-pagination"></div>
-              </>
+              <PackageSlider
+                items={section1Packages}
+                cardType="umrah"
+                navigationPrevEl=".prev-bestUmrah"
+                navigationNextEl=".next-bestUmrah"
+                paginationEl=".bestUmrah-pagination"
+                skeletonCount={2}
+                breakpoints={{
+                  640: { slidesPerView: 1 },
+                  768: { slidesPerView: 1.2 },
+                  992: { slidesPerView: 1.4 },
+                  1025: { slidesPerView: 1.6 },
+                  1200: { slidesPerView: 1.3 },
+                  1600: { slidesPerView: 2 },
+                }}
+                slidesPerView={1.2}
+              />
             ) : (
               <div className="packages-grid-two-col">
                 {section1Packages.map((pkg: any, index: number) => (
@@ -205,48 +168,28 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
 
           <div className="packages-swiper-container-full">
             {section2Widget.slider_enable === '1' ? (
-              <>
-                <div className="packages-swiper-wrapper decemberDeals-swiper" style={{ position: 'relative' }}>
-                  {!slidersLoaded.decemberDeals && <SliderSkeleton count={2} />}
-                  <Swiper
-                    modules={[Navigation, Pagination, Autoplay]}
-                    onInit={() => setSlidersLoaded(prev => ({ ...prev, decemberDeals: true }))}
-                    style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
-                    slidesPerView={1.2}
-                    navigation={{
-                      prevEl: '.prev-decemberDeals',
-                      nextEl: '.next-decemberDeals',
-                    }}
-                    pagination={{
-                      el: '.decemberDeals-pagination',
-                      clickable: true
-                    }}
-                    loop={true}
-                    autoplay={{
-                      delay: 2500,
-                      disableOnInteraction: false
-                    }}
-                    breakpoints={{
-                      640: { slidesPerView: 1 },
-                      768: { slidesPerView: 1.2 },
-                      992: { slidesPerView: 1.4 },
-                      1025: { slidesPerView: 1.6 },
-                      1200: { slidesPerView: 2.2 },
-                      1700: { slidesPerView: 2.8 },
-                    }}
-                    className="packages-swiper"
-                  >
-                    {section2Packages.map((pkg: any, index: number) => (
-                      <SwiperSlide key={`decemberDeals-${pkg.id || index}`}>
-                        <UmrahPackageCard package={pkg} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-                <div className="container">
-                  <div className="swiper-pagination-custom decemberDeals-pagination"></div>
-                </div>
-              </>
+              <PackageSlider
+                items={section2Packages}
+                cardType="umrah"
+                navigationPrevEl=".prev-decemberDeals"
+                navigationNextEl=".next-decemberDeals"
+                paginationEl=".decemberDeals-pagination"
+                skeletonCount={2}
+                loop={true}
+                autoplay={{
+                  delay: 2500,
+                  disableOnInteraction: false
+                }}
+                breakpoints={{
+                  640: { slidesPerView: 1 },
+                  768: { slidesPerView: 1.2 },
+                  992: { slidesPerView: 1.4 },
+                  1025: { slidesPerView: 1.6 },
+                  1200: { slidesPerView: 2.2 },
+                  1700: { slidesPerView: 2.8 },
+                }}
+                slidesPerView={1.2}
+              />
             ) : (
               <div className="container">
                 <div className="packages-grid-two-col">
@@ -342,48 +285,30 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
           {section3Widget.slider_enable === '1' ? (
-            <>
-              <div className="packages-swiper-wrapper bestHajj-swiper" style={{ position: 'relative' }}>
-                <div className='sliderhere'>
-                  {!slidersLoaded.bestHajj && <SliderSkeleton count={3} />}
-                  <Swiper
-                    modules={[Navigation, Pagination]}
-                    onInit={() => setSlidersLoaded(prev => ({ ...prev, bestHajj: true }))}
-                    style={{ display: slidersLoaded.bestHajj ? 'block' : 'none' }}
-                    slidesPerView={1}
-                    navigation={{
-                      prevEl: '.prev-bestHajj',
-                      nextEl: '.next-bestHajj',
-                    }}
-                    pagination={{
-                      el: '.bestHajj-pagination',
-                      clickable: true
-                    }}
-                    breakpoints={{
-                      640: { slidesPerView: 2 },
-                      992: { slidesPerView: 2.2 },
-                      1025: { slidesPerView: 2.5 },
-                      1200: { slidesPerView: 2 },
-                      1500: { slidesPerView: 3 },
-                    }}
-                    className="packages-swiper"
-                  >
-                    {section3Packages.map((pkg: any, index: number) => (
-                      <SwiperSlide key={`bestHajj-${pkg.id || index}`}>
-                        <HajjPackageCard package={pkg} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                  <div className="swiper-pagination-custom bestHajj-pagination"></div>
-                </div>
-                <div className='imagearea'>
-                  <img src={section3Image} alt="" />
-                </div>
+            <div className="packages-swiper-wrapper bestHajj-swiper" style={{ position: 'relative' }}>
+              <div className='sliderhere'>
+                <PackageSlider
+                  items={section3Packages}
+                  cardType="hajj"
+                  navigationPrevEl=".prev-bestHajj"
+                  navigationNextEl=".next-bestHajj"
+                  paginationEl=".bestHajj-pagination"
+                  skeletonCount={3}
+                  breakpoints={{
+                    640: { slidesPerView: 2 },
+                    992: { slidesPerView: 2.2 },
+                    1025: { slidesPerView: 2.5 },
+                    1200: { slidesPerView: 2 },
+                    1500: { slidesPerView: 3 },
+                  }}
+                  slidesPerView={1}
+                />
               </div>
-            </>
-          ) : (
-            null
-          )}
+              <div className='imagearea'>
+                <img src={section3Image} alt="" />
+              </div>
+            </div>
+          ) : null}
 
 
         </section>
@@ -419,23 +344,15 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
           <div className="packages-swiper-wrapper exploration-swiper" style={{ position: 'relative' }}>
-            {!slidersLoaded.exploration && <SliderSkeleton count={3} />}
-            <div className="exploration-swiper-inner" style={{ display: slidersLoaded.exploration ? 'block' : 'none' }}>
-              <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                onInit={() => setSlidersLoaded(prev => ({ ...prev, exploration: true }))}
-                style={{ display: slidersLoaded.decemberDeals ? 'block' : 'none' }}
-                slidesPerView={1.2}
-                spaceBetween={24}
+            <div className="exploration-swiper-inner">
+              <PackageSlider
+                items={section4Packages}
+                cardType="exploration"
+                navigationPrevEl=".prev-exploration"
+                navigationNextEl=".next-exploration"
+                paginationEl=".exploration-pagination"
+                skeletonCount={3}
                 loop={true}
-                navigation={{
-                  prevEl: '.prev-exploration',
-                  nextEl: '.next-exploration',
-                }}
-                pagination={{
-                  el: '.exploration-pagination',
-                  clickable: true
-                }}
                 autoplay={{
                   delay: 1500,
                   disableOnInteraction: false
@@ -449,16 +366,10 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   1350: { slidesPerView: 4.2 },
                   1700: { slidesPerView: 4.8 },
                 }}
-                className="packages-swiper exploration-packages-swiper"
-              >
-                {section4Packages.map((pkg: UmrahPackageData) => (
-                  <SwiperSlide key={`explore-${pkg.id}`}>
-                    <UmrahExplorationCard package={pkg} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                slidesPerView={1.2}
+                spaceBetween={24}
+              />
             </div>
-            <div className="swiper-pagination-custom exploration-pagination"></div>
           </div>
         </section>
       )}
@@ -501,29 +412,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
         </div>
-        <div className="partners-logos">
-          <Swiper
-            modules={[Navigation]}
-            slidesPerView={2.2}
-            spaceBetween={24}
-            navigation={{
-              prevEl: '.partner-prev',
-              nextEl: '.partner-next',
-            }}
-            breakpoints={{
-              640: { slidesPerView: 4 },
-              1024: { slidesPerView: 8 },
-            }}
-            className="packages-swiper partner-swiper"
-          >
-            {/* Remove dummy fallback logos */}
-            {airlinearray.map((pkg: string) => (
-              <SwiperSlide key={`partner-${pkg}`}>
-                <img src={pkg} alt="Partners" />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <PartnerSlider logos={airlinearray} />
       </section>
 
       {/* Scroll Detail Section */}

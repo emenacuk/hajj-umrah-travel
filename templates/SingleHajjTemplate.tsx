@@ -1,29 +1,16 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Thumbs, FreeMode } from 'swiper/modules';
-import { Skeleton, SliderSkeleton } from '@/components/common/Skeleton';
-import type { Swiper as SwiperType } from 'swiper';
+import React from 'react';
 import { PageData } from '@/types';
 import HajjPackageCard from '@/components/cards/HajjPackageCard';
 import FAQ from '@/components/common/FAQ';
-import Link from 'next/link';
 import HomeReviews from '@/components/sections/HomeReviews';
 import PackageContactInfo from '@/components/sections/PackageContactInfo';
-
-import { useSearchParams } from 'next/navigation';
 import { getImageUrl } from '@/utils/api';
-
-import EnquiryModal from '@/components/common/EnquiryModal';
-import BookingModal from '@/components/common/BookingModal';
-import CustomizeModal from '@/components/common/CustomizeModal';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/thumbs';
-import 'swiper/css/free-mode';
+import PackageGallery from '@/components/packages/PackageGallery';
+import PackageActions from '@/components/packages/PackageActions';
+import HotelSlider from '@/components/packages/HotelSlider';
+import HotelDescription from '@/components/packages/HotelDescription';
+import PackageSlider from '@/components/sliders/PackageSlider';
+import Link from 'next/link';
 
 import '@/styles/components/_package-detail.scss';
 
@@ -32,30 +19,6 @@ interface HajjPackageTemplateProps {
 }
 
 export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
-    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
-    const [selectedTier, setSelectedTier] = useState<'Standard' | 'Premium'>('Standard');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-    const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
-    const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
-    const [isRelatedLoaded, setIsRelatedLoaded] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
-    const searchParams = useSearchParams();
-    const [pageURL, setPageURL] = useState('');
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-    useEffect(() => {
-        setPageURL(window.location.href);
-    }, []);
-
-    useEffect(() => {
-        if (searchParams.get('enquire') === 'true') {
-            setIsModalOpen(true);
-        }
-    }, [searchParams]);
-
     const packageData = data.content?.package || {};
     const hotels = data.content?.hotels || [];
     const reviews = data.content?.reviews || [];
@@ -96,7 +59,6 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                                     </div>
                                 </div>
                                 <div className="hotel-summary-item">
-
                                     <div className="hotel-info-box">
                                         <div>
                                             <span className="hotel-label">Madinah Hotel Nights</span>
@@ -107,103 +69,18 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                                 </div>
                             </div>
 
-                            <div className="package-price-options">
-                                <div
-                                    className={`price-option-row ${selectedTier === 'Standard' ? 'active' : ''}`}
-                                    onClick={() => setSelectedTier('Standard')}
-                                >
-                                    <div className="option-name">
-                                        <div className="radio-circle">
-                                            {selectedTier === 'Standard' && <div className="inner-dot"></div>}
-                                        </div>
-                                        Standard Package
-                                    </div>
-                                    <div className="option-price">
-                                        <small>starting <br />from</small>
-                                        <span className="currency">£</span>
-                                        <span className="amount">{packageData.price || '2965'}</span>
-                                        <small className="per-person">per<br />person</small>
-                                    </div>
-                                </div>
-                                <div
-                                    className={`price-option-row ${selectedTier === 'Premium' ? 'active' : ''}`}
-                                    onClick={() => setSelectedTier('Premium')}
-                                >
-                                    <div className="option-name">
-                                        <div className="radio-circle">
-                                            {selectedTier === 'Premium' && <div className="inner-dot"></div>}
-                                        </div>
-                                        Premium Package
-                                    </div>
-                                    <div className="option-price">
-                                        <small>starting <br />from</small>
-                                        <span className="currency">£</span>
-                                        <span className="amount">3965</span>
-                                        <small className="per-person">per<br />person</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="header-actions">
-                                <button
-                                    className="btn btn-enquire"
-                                    onClick={() => setIsModalOpen(true)}
-                                >
-                                    Enquire Now
-                                </button>
-                            </div>
+                            <PackageActions
+                                packageData={packageData}
+                                type="hajj"
+                                economyLabel="Standard Package"
+                                premiumLabel="Premium Package"
+                                premiumPrice="3965"
+                                showButtons={false}
+                            />
                         </div>
 
                         <div className="pkg-header-right">
-                            <div className="detail-gallery-wrapper" style={{ position: 'relative' }}>
-                                {!isGalleryLoaded && (
-                                    <Skeleton className="skeleton-gallery" width="100%" height="532px" borderRadius="18px" />
-                                )}
-                                <Swiper
-                                    spaceBetween={10}
-                                    navigation={true}
-                                    thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
-                                    modules={[FreeMode, Navigation, Thumbs]}
-                                    className="main-gallery-swiper"
-                                    onAfterInit={() => setIsGalleryLoaded(true)}
-                                    style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
-                                >
-                                    {images.map((img: string, index: number) => (
-                                        <SwiperSlide key={index}>
-                                            <img src={img} alt={`Gallery ${index}`} />
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                                <div className="thumbs-gallery-container" style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}>
-                                    {!isGalleryLoaded && (
-                                        <div style={{ display: 'flex', gap: '10px' }}>
-                                            <Skeleton width="25%" height="100px" borderRadius="10px" />
-                                            <Skeleton width="25%" height="100px" borderRadius="10px" />
-                                            <Skeleton width="25%" height="100px" borderRadius="10px" />
-                                            <Skeleton width="25%" height="100px" borderRadius="10px" />
-                                        </div>
-                                    )}
-                                    <Swiper
-                                        onSwiper={setThumbsSwiper}
-                                        slidesPerView={3}
-                                        freeMode={true}
-                                        watchSlidesProgress={true}
-                                        modules={[FreeMode, Navigation, Thumbs]}
-                                        breakpoints={{
-                                            992: { slidesPerView: 4 }
-                                        }}
-                                        className="thumbs-gallery-swiper"
-                                    >
-                                        {images.map((img: string, index: number) => (
-                                            <SwiperSlide key={index}>
-                                                <div className="thumb-img-box">
-                                                    <img src={img} alt={`Thumb ${index}`} />
-                                                </div>
-                                            </SwiperSlide>
-                                        ))}
-                                    </Swiper>
-                                </div>
-                            </div>
+                            <PackageGallery images={images} />
                         </div>
                     </div>
                 </div>
@@ -212,10 +89,9 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
             <section className="section package-description-section">
                 <div className="container">
                     <h2 className="section-subtitle-small">HAJJ PACKAGE DETAILS</h2>
-                    <p className="pkg-description-text"
+                    <div className="pkg-description-text"
                         dangerouslySetInnerHTML={{ __html: packageData.package_detail }}
-                    >
-                    </p>
+                    />
 
                     <div className="package-icon-row">
                         {packageData.flight === 1 && (
@@ -254,10 +130,7 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                                 <span>Qurbani</span>
                             </div>
                         )}
-                        <div className="pkg-action-btns">
-                            <button className="btn btn--primary" onClick={() => setIsBookingModalOpen(true)}>Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
-                            <button className="btn btn--dark" onClick={() => setIsCustomizeModalOpen(true)}>Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
-                        </div>
+                        <PackageActions packageData={packageData} type="hajj" showPrices={false} />
                     </div>
 
                     <div className="inclusions-grid">
@@ -283,57 +156,38 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
 
             <section className="section hotel-details-section">
                 <div className="container">
-                    <h2 className="section-subtitle-small">{hotelHeading?.heading}</h2>
+                    <h2 className="section-subtitle-small">{hotelHeading?.heading || 'ACCOMMODATION INFO'}</h2>
                     <p className="pkg-description-text">
-                        {hotelDescription?.description}
+                        {hotelDescription?.description || hotelDescription?.subheading || ''}
                     </p>
-
-
                 </div>
                 <div className="container-fluid">
                     <div className="hotels-detail-grid">
-                        {hotels.map((hotel: any, index: number) => {
-                            // Using a simple local state for the current slide index
-                            const [activeIndex, setActiveIndex] = useState(0);
-                            const totalImages = hotel.images?.length || 0;
-
-                            return (
-                                <div key={hotel.id} className="hotel-card">
-                                    <div className="hotel-img-count">{totalImages > 0 ? `${activeIndex + 1}/${totalImages}` : '0/0'}</div>
-                                    <div className='hotel-detail-card'>
-                                        <div className="hotel-card-img-wrapper">
-                                            <Swiper
-                                                navigation={true}
-                                                modules={[Navigation]}
-                                                className="hotel-card-swiper"
-                                                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-                                            >
-                                                {hotel.images?.map((img: string, idx: number) => (
-                                                    <SwiperSlide key={idx}>
-                                                        <img src={getImageUrl(img)} alt={hotel.name} />
-                                                    </SwiperSlide>
-                                                ))}
-                                            </Swiper>
+                        {hotels.map((hotel: any) => (
+                            <div key={hotel.id} className="hotel-card">
+                                <div className='hotel-detail-card'>
+                                    <HotelSlider
+                                        images={hotel.images?.map((img: string) => getImageUrl(img)) || []}
+                                        hotelName={hotel.name}
+                                    />
+                                    <div className="hotel-card-info">
+                                        <div className="star-rating">
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <span key={i} className={i < (hotel.rating || 5) ? 'star-filled' : 'star'}>
+                                                    <img src="/star.svg" alt="" />
+                                                </span>
+                                            ))}
                                         </div>
-                                        <div className="hotel-card-info">
-                                            <div className="star-rating">
-                                                {Array.from({ length: 5 }).map((_, i) => (
-                                                    <span key={i} className={i < (hotel.rating || 5) ? 'star-filled' : 'star'}>
-                                                        <img src="/star.svg" alt="" />
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            <h3 className="hotel-card-name">{hotel.name}</h3>
-                                            <p className="hotel-card-location">Hotel In {hotel.location}</p>
-                                            <p className="hotel-card-desc">
-                                                {hotel.description || 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.'}
-                                            </p>
-                                            <Link href="#" className="see-more-link">See More <span><img src="/rightarrow.svg" alt="" /></span></Link>
-                                        </div>
+                                        <h3 className="hotel-card-name">{hotel.name}</h3>
+                                        <p className="hotel-card-location">Hotel In {hotel.location}</p>
+                                        <HotelDescription
+                                            hotelName={hotel.name}
+                                            description={hotel.description || 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.'}
+                                        />
                                     </div>
                                 </div>
-                            );
-                        })}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -371,21 +225,13 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                         </div>
                     </div>
                     <div className="related-pkgs-grid" style={{ position: 'relative' }}>
-                        {!isRelatedLoaded && <SliderSkeleton count={2} />}
-                        <Swiper
-                            modules={[Navigation, Pagination]}
-                            onInit={() => setIsRelatedLoaded(true)}
-                            style={{ display: isRelatedLoaded ? 'block' : 'none' }}
-                            spaceBetween={30}
-                            slidesPerView={1}
-                            navigation={{
-                                prevEl: '.prev-related',
-                                nextEl: '.next-related',
-                            }}
-                            pagination={{
-                                el: '.related-pagination-custom',
-                                clickable: true
-                            }}
+                        <PackageSlider
+                            items={relatedPackages}
+                            cardType="hajj"
+                            navigationPrevEl=".prev-related"
+                            navigationNextEl=".next-related"
+                            paginationEl=".related-pagination-custom"
+                            skeletonCount={2}
                             breakpoints={{
                                 640: { slidesPerView: 1 },
                                 768: { slidesPerView: 1.2 },
@@ -394,43 +240,13 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                                 1200: { slidesPerView: 2.2 },
                                 1700: { slidesPerView: 2.8 },
                             }}
-                            className="related-packages-swiper"
-                        >
-                            {relatedPackages.map((pkg: any) => (
-                                <SwiperSlide key={pkg.id}>
-                                    <HajjPackageCard package={pkg} />
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                            slidesPerView={1}
+                            spaceBetween={30}
+                        />
                         <div className="swiper-pagination-custom related-pagination-custom"></div>
                     </div>
                 </section>
             )}
-            <EnquiryModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                selectedPackage={selectedTier}
-                packageTitle={packageData.title}
-                pageURL={pageURL}
-            />
-
-            <BookingModal
-                isOpen={isBookingModalOpen}
-                onClose={() => setIsBookingModalOpen(false)}
-                packageTitle={packageData.title}
-                selectedPackage={selectedTier}
-                pageURL={pageURL}
-            />
-
-            <CustomizeModal
-                isOpen={isCustomizeModalOpen}
-                onClose={() => setIsCustomizeModalOpen(false)}
-                type="hajj"
-                packageTitle={packageData.title}
-                selectedPackage={selectedTier}
-                pageURL={pageURL}
-            />
-
         </div>
     );
 }

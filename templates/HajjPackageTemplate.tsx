@@ -1,30 +1,18 @@
-'use client';
-
-import { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { SliderSkeleton } from '@/components/common/Skeleton';
 import { PageData, HajjPackageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import HajjPackageCard from '@/components/cards/HajjPackageCard';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import Link from 'next/link';
 import '@/styles/components/_package-detail.scss';
 import { ScrollDetail } from '@/components/sections/ScrollDetail';
 import FAQ from '@/components/common/FAQ';
 import { isEmptyHtml } from '@/utils/htmlUtils';
+import PackageSlider from '@/components/sliders/PackageSlider';
 
 interface HajjPackageTemplateProps {
   data: PageData;
 }
 
 export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) {
-  const [slidersLoaded, setSlidersLoaded] = useState({
-    shifting: false,
-    nonShifting: false
-  });
   const bannerData = data.content?.banner || {};
   const faqs = data.content?.faqs || [];
   const faqsHeading = data.content?.faqs_heading || "Frequently Asked Questions";
@@ -79,31 +67,20 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               </div>
 
               <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
-                {!slidersLoaded.shifting && <SliderSkeleton count={3} />}
-                <Swiper
-                  key="shifting-hajj-swiper"
-                  modules={[Navigation, Pagination]}
-                  onInit={() => setSlidersLoaded(prev => ({ ...prev, shifting: true }))}
-                  style={{ opacity: slidersLoaded.shifting ? 1 : 0 }}
-                  slidesPerView={1}
-                  spaceBetween={24}
-                  navigation={{
-                    prevEl: '#prev-shifting',
-                    nextEl: '#next-shifting',
-                  }}
-                  className="packages-swiper"
+                <PackageSlider
+                  items={shiftingPackages}
+                  cardType="hajj"
+                  navigationPrevEl="#prev-shifting"
+                  navigationNextEl="#next-shifting"
+                  skeletonCount={3}
                   breakpoints={{
                     640: { slidesPerView: 1 },
                     1024: { slidesPerView: 2 },
                     1280: { slidesPerView: 3 },
                   }}
-                >
-                  {shiftingPackages.map((pkg: any) => (
-                    <SwiperSlide key={pkg.id}>
-                      <HajjPackageCard package={pkg} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                  slidesPerView={1}
+                  spaceBetween={24}
+                />
               </div>
             </section>
           )}
@@ -140,31 +117,20 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
               </div>
 
               <div className="packages-swiper-wrapper" style={{ position: 'relative', minHeight: '400px' }}>
-                {!slidersLoaded.nonShifting && <SliderSkeleton count={3} />}
-                <Swiper
-                  key="non-shifting-hajj-swiper"
-                  modules={[Navigation, Pagination]}
-                  onInit={() => setSlidersLoaded(prev => ({ ...prev, nonShifting: true }))}
-                  style={{ opacity: slidersLoaded.nonShifting ? 1 : 0 }}
-                  slidesPerView={1}
-                  spaceBetween={24}
-                  navigation={{
-                    prevEl: '#prev-nonshifting',
-                    nextEl: '#next-nonshifting',
-                  }}
-                  className="packages-swiper"
+                <PackageSlider
+                  items={nonShiftingPackages}
+                  cardType="hajj"
+                  navigationPrevEl="#prev-nonshifting"
+                  navigationNextEl="#next-nonshifting"
+                  skeletonCount={3}
                   breakpoints={{
                     640: { slidesPerView: 1 },
                     1024: { slidesPerView: 2 },
                     1280: { slidesPerView: 3 },
                   }}
-                >
-                  {nonShiftingPackages.map((pkg: any) => (
-                    <SwiperSlide key={pkg.id}>
-                      <HajjPackageCard package={pkg} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                  slidesPerView={1}
+                  spaceBetween={24}
+                />
               </div>
             </section>
           )}

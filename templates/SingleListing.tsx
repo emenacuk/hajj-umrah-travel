@@ -1,5 +1,3 @@
-'use client';
-
 import { PageData } from '@/types';
 import InnerBanner from '@/components/banners/InnerBanner';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';

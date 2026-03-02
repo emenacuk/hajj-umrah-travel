@@ -1,31 +1,16 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Thumbs, FreeMode } from 'swiper/modules';
-import { Skeleton, SliderSkeleton } from '@/components/common/Skeleton';
-import type { Swiper as SwiperType } from 'swiper';
+import React from 'react';
 import { PageData } from '@/types';
 import UmrahPackageCard from '@/components/cards/UmrahPackageCard';
-import Reviews from '@/components/common/Reviews';
 import FAQ from '@/components/common/FAQ';
-import Link from 'next/link';
 import HomeReviews from '@/components/sections/HomeReviews';
 import PackageContactInfo from '@/components/sections/PackageContactInfo';
-
-import { useSearchParams } from 'next/navigation';
 import { getImageUrl } from '@/utils/api';
-
-import EnquiryModal from '@/components/common/EnquiryModal';
-import BookingModal from '@/components/common/BookingModal';
-import CustomizeModal from '@/components/common/CustomizeModal';
-import DescriptionModal from '@/components/common/DescriptionModal';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/thumbs';
-import 'swiper/css/free-mode';
+import PackageGallery from '@/components/packages/PackageGallery';
+import PackageActions from '@/components/packages/PackageActions';
+import HotelSlider from '@/components/packages/HotelSlider';
+import HotelDescription from '@/components/packages/HotelDescription';
+import PackageSlider from '@/components/sliders/PackageSlider';
+import Link from 'next/link';
 
 import '@/styles/components/_package-detail.scss';
 
@@ -34,33 +19,10 @@ interface UmrahPackageTemplateProps {
 }
 
 export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps) {
-  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
-  const [selectedTier, setSelectedTier] = useState<'Economy' | 'Premium'>('Economy');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
-  const [isGalleryLoaded, setIsGalleryLoaded] = useState(false);
-  const [isRelatedLoaded, setIsRelatedLoaded] = useState(false);
-  const [isDescModalOpen, setIsDescModalOpen] = useState(false);
-  const [activeDesc, setActiveDesc] = useState({ title: '', content: '' });
-  const searchParams = useSearchParams();
-  const [pageURL, setPageURL] = useState('');
-
-  useEffect(() => {
-    setPageURL(window.location.href);
-  }, []);
-  useEffect(() => {
-    if (searchParams.get('enquire') === 'true') {
-      setIsModalOpen(true);
-    }
-  }, [searchParams]);
-
   const packageData = data.content?.package || {};
-  console.log(packageData, "packageData");
   const hotels = packageData.hotels || data.content?.hotels || [];
   const reviews = data.content?.reviews || [];
   const relatedPackages = data.content?.relatedPackages || [];
-  const inclusions = packageData.inclusions || data.content?.inclusions || [];
   const faqs = data.content?.faqs || [];
   const contact = data.content?.contact || {};
   const reviewsWidget = data.content?.ourclientsays_widget;
@@ -98,7 +60,6 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                   </div>
                 </div>
                 <div className="hotel-summary-item">
-
                   <div className="hotel-info-box">
                     <div>
                       <span className="hotel-label">Madinah Hotel Nights</span>
@@ -109,103 +70,17 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                 </div>
               </div>
 
-              <div className="package-price-options">
-                <div
-                  className={`price-option-row ${selectedTier === 'Economy' ? 'active' : ''}`}
-                  onClick={() => setSelectedTier('Economy')}
-                >
-                  <div className="option-name">
-                    <div className="radio-circle">
-                      {selectedTier === 'Economy' && <div className="inner-dot"></div>}
-                    </div>
-                    Economy Package
-                  </div>
-                  <div className="option-price">
-                    <small>starting <br />from</small>
-                    <span className="currency">£</span>
-                    <span className="amount">{packageData.price || '965'}</span>
-                    <small className="per-person">per<br />person</small>
-                  </div>
-                </div>
-                <div
-                  className={`price-option-row ${selectedTier === 'Premium' ? 'active' : ''}`}
-                  onClick={() => setSelectedTier('Premium')}
-                >
-                  <div className="option-name">
-                    <div className="radio-circle">
-                      {selectedTier === 'Premium' && <div className="inner-dot"></div>}
-                    </div>
-                    Premium Package
-                  </div>
-                  <div className="option-price">
-                    <small>starting <br />from</small>
-                    <span className="currency">£</span>
-                    <span className="amount">{(parseFloat(String(packageData.price || '0')) + 1000) || '2952'}</span>
-                    <small className="per-person">per<br />person</small>
-                  </div>
-                </div>
-              </div>
-
-              <div className="header-actions">
-                <button
-                  className="btn btn-enquire"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  Enquire Now
-                </button>
-              </div>
+              <PackageActions
+                packageData={packageData}
+                type="umrah"
+                economyLabel="Economy Package"
+                premiumLabel="Premium Package"
+                showButtons={false}
+              />
             </div>
 
             <div className="pkg-header-right">
-              <div className="detail-gallery-wrapper" style={{ position: 'relative' }}>
-                {!isGalleryLoaded && (
-                  <Skeleton className="skeleton-gallery" width="100%" height="532px" borderRadius="18px" />
-                )}
-                <Swiper
-                  spaceBetween={10}
-                  navigation={true}
-                  thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="main-gallery-swiper"
-                  onAfterInit={() => setIsGalleryLoaded(true)}
-                  style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
-                >
-                  {images.map((img: string, index: number) => (
-                    <SwiperSlide key={index}>
-                      <img src={img} alt={`Gallery ${index}`} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-                <div className="thumbs-gallery-container" style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}>
-                  {!isGalleryLoaded && (
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <Skeleton width="25%" height="100px" borderRadius="10px" />
-                      <Skeleton width="25%" height="100px" borderRadius="10px" />
-                      <Skeleton width="25%" height="100px" borderRadius="10px" />
-                      <Skeleton width="25%" height="100px" borderRadius="10px" />
-                    </div>
-                  )}
-                  <Swiper
-                    onSwiper={setThumbsSwiper}
-                    slidesPerView={3}
-                    freeMode={true}
-                    watchSlidesProgress={true}
-                    modules={[FreeMode, Navigation, Thumbs]}
-                    breakpoints={{
-                      992: { slidesPerView: 4 }
-                    }}
-                    className="thumbs-gallery-swiper"
-                  >
-                    {images.map((img: string, index: number) => (
-                      <SwiperSlide key={index}>
-                        <div className="thumb-img-box">
-                          <img src={img} alt={`Thumb ${index}`} />
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              </div>
+              <PackageGallery images={images} />
             </div>
           </div>
         </div>
@@ -214,10 +89,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
       <section className="section package-description-section">
         <div className="container">
           <h2 className="section-subtitle-small">PACKAGE DETAILS</h2>
-          <p className="pkg-description-text"
+          <div className="pkg-description-text"
             dangerouslySetInnerHTML={{ __html: packageData.package_detail }}
-          >
-          </p>
+          />
 
           <div className="package-icon-row">
             {packageData.flight === 1 && (
@@ -250,88 +124,66 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                 <span>Half Board</span>
               </div>
             )}
-            <div className="pkg-action-btns">
-              <button className="btn btn--primary" onClick={() => setIsBookingModalOpen(true)}>Book This Package <span><img src="/btnarrow.svg" alt="" /></span></button>
-              <button className="btn btn--dark" onClick={() => setIsCustomizeModalOpen(true)}>Customize Package <span><img src="/btnarrow.svg" alt="" /></span></button>
-            </div>
+            <PackageActions packageData={packageData} type="umrah" showPrices={false} />
           </div>
-          <div
-            className="inclusions-grid"
-            dangerouslySetInnerHTML={{
-              __html: packageData?.packageDescription || "",
-            }}
-          />
+          <div className="inclusions-grid">
+            <ul className="inclusions-list">
+              {packageData?.inclusions && packageData.inclusions.length > 0 ? (
+                packageData.inclusions.map((item: string, index: number) => (
+                  <li key={index} className="inclusion-item">{item}</li>
+                ))
+              ) : (
+                <>
+                  <li className="inclusion-item">Return Flights</li>
+                  <li className="inclusion-item">Premium Accommodations</li>
+                  <li className="inclusion-item">Umrah Visa</li>
+                  <li className="inclusion-item">Ground Transfers</li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
       </section>
 
       <section className="section hotel-details-section">
         <div className="container">
-          <h2 className="section-subtitle-small">{hotelHeading?.heading}</h2>
+          <h2 className="section-subtitle-small">{hotelHeading?.heading || 'ACCOMMODATION INFO'}</h2>
           <p className="pkg-description-text">
-            {hotelDescription?.description}
+            {hotelDescription?.description || hotelDescription?.subheading || ''}
           </p>
-
-
         </div>
         <div className="container-fluid">
           <div className="hotels-detail-grid">
-            {hotels.map((hotel: any, index: number) => {
-              // Using a simple local state for the current slide index
-              const [activeIndex, setActiveIndex] = useState(0);
-              const totalImages = hotel.images?.length || 0;
-
-              return (
-                <div key={hotel.id} className="hotel-card">
-                  <div className="hotel-img-count">{totalImages > 0 ? `${activeIndex + 1}/${totalImages}` : '0/0'}</div>
-                  <div className='hotel-detail-card'>
-                    <div className="hotel-card-img-wrapper">
-                      <Swiper
-                        navigation={true}
-                        modules={[Navigation]}
-                        className="hotel-card-swiper"
-                        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-                      >
-                        {hotel.images?.map((img: string, idx: number) => (
-                          <SwiperSlide key={idx}>
-                            <img src={getImageUrl(img)} alt={hotel.name} />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
+            {hotels.map((hotel: any) => (
+              <div key={hotel.id} className="hotel-card">
+                <div className='hotel-detail-card'>
+                  <HotelSlider
+                    images={hotel.images?.map((img: string) => getImageUrl(img)) || []}
+                    hotelName={hotel.name}
+                  />
+                  <div className="hotel-card-info">
+                    <div className="star-rating">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className={i < (hotel.rating || 5) ? 'star-filled' : 'star'}>
+                          <img src="/star.svg" alt="" />
+                        </span>
+                      ))}
                     </div>
-                    <div className="hotel-card-info">
-                      <div className="star-rating">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} className={i < (hotel.rating || 5) ? 'star-filled' : 'star'}>
-                            <img src="/star.svg" alt="" />
-                          </span>
-                        ))}
-                      </div>
-                      <h3 className="hotel-card-name">{hotel.name}</h3>
-                      <p className="hotel-card-location">Hotel In {hotel.location}</p>
+                    <h3 className="hotel-card-name">{hotel.name}</h3>
+                    <p className="hotel-card-location">Hotel In {hotel.location}</p>
 
-                      <DescriptionItem
-                        hotelName={hotel.name}
-                        description={hotel.description || ""}
-                        onSeeMore={(title, content) => {
-                          setActiveDesc({ title, content });
-                          setIsDescModalOpen(true);
-                        }}
-                      />
-                    </div>
+                    <HotelDescription
+                      hotelName={hotel.name}
+                      description={hotel.description || ""}
+                    />
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <DescriptionModal
-        isOpen={isDescModalOpen}
-        onClose={() => setIsDescModalOpen(false)}
-        title={activeDesc.title}
-        content={activeDesc.content}
-      />
       <PackageContactInfo contact={contact} />
       {reviews.length > 0 && (
         <HomeReviews
@@ -346,9 +198,9 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
           <div className="container">
             <div className='sectionheadings'>
               <div className='sectionheadingstext'>
-                <h2 className='section-title'>{relatedWidget?.heading || 'More Relevant Packagesdd'}</h2>
+                <h2 className='section-title'>{relatedWidget?.heading || 'More Relevant Packages'}</h2>
                 <p className='section-subtitle'>
-                  {relatedWidget?.subheading || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip'}
+                  {relatedWidget?.subheading || ''}
                 </p>
               </div>
               <div className='rightside'>
@@ -365,21 +217,13 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
             </div>
           </div>
           <div className="related-pkgs-grid" style={{ position: 'relative' }}>
-            {!isRelatedLoaded && <SliderSkeleton count={2} />}
-            <Swiper
-              modules={[Navigation, Pagination]}
-              onInit={() => setIsRelatedLoaded(true)}
-              style={{ display: isRelatedLoaded ? 'block' : 'none' }}
-              spaceBetween={30}
-              slidesPerView={1}
-              navigation={{
-                prevEl: '.prev-related',
-                nextEl: '.next-related',
-              }}
-              pagination={{
-                el: '.related-pagination-custom',
-                clickable: true
-              }}
+            <PackageSlider
+              items={relatedPackages}
+              cardType="umrah"
+              navigationPrevEl=".prev-related"
+              navigationNextEl=".next-related"
+              paginationEl=".related-pagination-custom"
+              skeletonCount={2}
               breakpoints={{
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 1.2 },
@@ -388,91 +232,13 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
                 1200: { slidesPerView: 2.2 },
                 1700: { slidesPerView: 2.8 },
               }}
-              className="related-packages-swiper"
-            >
-              {relatedPackages.map((pkg: any) => (
-                <SwiperSlide key={pkg.id}>
-                  <UmrahPackageCard package={pkg} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              slidesPerView={1}
+              spaceBetween={30}
+            />
             <div className="swiper-pagination-custom related-pagination-custom"></div>
           </div>
         </section>
       )}
-      <EnquiryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        pageURL={pageURL}
-        selectedPackage={selectedTier}
-        packageTitle={packageData.title}
-      />
-
-      <BookingModal
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        packageTitle={packageData.title}
-        pageURL={pageURL}
-        selectedPackage={selectedTier}
-      />
-
-      <CustomizeModal
-        isOpen={isCustomizeModalOpen}
-        onClose={() => setIsCustomizeModalOpen(false)}
-        type="umrah"
-        pageURL={pageURL}
-        selectedPackage={selectedTier}
-        packageTitle={packageData.title}
-      />
-
     </div>
-  );
-}
-
-interface DescriptionItemProps {
-  hotelName: string;
-  description: string;
-  onSeeMore: (title: string, content: string) => void;
-}
-
-function DescriptionItem({ hotelName, description, onSeeMore }: DescriptionItemProps) {
-  const [showSeeMore, setShowSeeMore] = useState(false);
-  const descriptionRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkOverflow = () => {
-      if (descriptionRef.current) {
-        const isOverflowing = descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight;
-        setShowSeeMore(isOverflowing);
-      }
-    };
-
-    // Use a small delay to ensure CSS line-clamp is applied
-    const timer = setTimeout(checkOverflow, 100);
-    window.addEventListener('resize', checkOverflow);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', checkOverflow);
-    };
-  }, [description]);
-
-  return (
-    <>
-      <div
-        ref={descriptionRef}
-        className="hotel-card-desc"
-        dangerouslySetInnerHTML={{
-          __html: description,
-        }}
-      />
-      {showSeeMore && (
-        <button
-          className="see-more-link btn-unstyled"
-          onClick={() => onSeeMore(hotelName, description)}
-        >
-          See More <span><img src="/rightarrow.svg" alt="" /></span>
-        </button>
-      )}
-    </>
   );
 }
