@@ -119,5 +119,5 @@ Create `.env.local` file:
 NEXT_PUBLIC_API_URL=https://your-api-url.com/api
 
 # Force mock data (optional)
-NEXT_PUBLIC_USE_MOCK_DATA=false.
+NEXT_PUBLIC_USE_MOCK_DATA=false..
 ```
