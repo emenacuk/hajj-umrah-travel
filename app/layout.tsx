@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import PageScript from '@/components/common/PageScript';
 import { Toaster } from 'sonner';
 import { getGeneralSettings, fetchPageData, generatePageMetadata } from '@/utils/api';
+import SkeletonLoaderShell from '@/components/common/SkeletonLoaderShell';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -45,7 +46,9 @@ export default async function RootLayout({
       </head>
       <body>
         <Header />
-        {children}
+        <SkeletonLoaderShell>
+          {children}
+        </SkeletonLoaderShell>
         <Footer />
         <Toaster richColors position="bottom-right" />
       </body>
