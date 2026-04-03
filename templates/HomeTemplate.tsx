@@ -120,7 +120,8 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   992: { slidesPerView: 1.4 },
                   1025: { slidesPerView: 1.6 },
                   1200: { slidesPerView: 1.3 },
-                  1600: { slidesPerView: 2 },
+                  1580: { slidesPerView: 1.8 },
+                  1700: { slidesPerView: 2 },
                 }}
                 slidesPerView={1.2}
               />

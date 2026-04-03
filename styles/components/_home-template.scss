@@ -497,8 +497,16 @@
     display: none;
   }
 }
-
-@media screen and (max-width:1600px) and (min-width:1200px) {
+@media screen and (max-width:1650px) {
+  .hajjsection {
+    .packages-swiper-wrapper {
+      grid-template-columns: 1fr 355px;
+      gap: 24px;
+      align-items: center;
+    }
+  }
+}
+@media screen and (max-width:1580px) and (min-width:1200px) {
   .bestpackages {
     grid-template-columns: 300px 1fr;
   }
@@ -523,7 +531,7 @@
   }
 }
 
-@media screen and (max-width:1600px) {
+@media screen and (max-width:1580px) {
   .why-us-section {
     .features-grid {
       grid-template-columns: 1fr 236px 1fr;

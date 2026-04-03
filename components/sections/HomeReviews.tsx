@@ -62,7 +62,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, h
                             850: { slidesPerView: 2 },
                             992: { slidesPerView: 2.2 },
                             1200: { slidesPerView: 2.5 },
-                            1600: { slidesPerView: 3 }
+                            1580: { slidesPerView: 3 }
                         }}
                     >
                         {displayReviews.map((review) => (
