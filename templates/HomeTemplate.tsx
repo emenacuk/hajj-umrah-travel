@@ -15,7 +15,7 @@ import PackageSlider from '@/components/sliders/PackageSlider';
 import PartnerSlider from '@/components/sliders/PartnerSlider';
 import '@/styles/components/_home-template.scss';
 import Link from 'next/link';
-
+import WhyChoose from '@/components/common/WhyChoose';
 interface HomeTemplateProps {
   data: PageData;
 }
@@ -205,7 +205,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
       )}
 
       {/* Why Choose Us Section - Static for now */}
-      <section className="section why-us-section">
+      {/* <section className="section why-us-section">
         <div className="container container-sm">
           <div className="features-grid">
             <div className='leftside features-card-wrapper'>
@@ -253,7 +253,8 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+      <WhyChoose />
 
       {/* Section 3: Best Hajj Packages */}
       {section3Widget && (
