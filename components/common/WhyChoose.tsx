@@ -1,58 +1,71 @@
-import React from 'react'
+'use client'
+import React, { useState, useEffect } from 'react'
+import { getGeneralSettings, GeneralSettings, getImageUrl } from '@/utils/api';
 
 export default function WhyChoose() {
+  const [settings, setSettings] = useState<GeneralSettings | null>(null);
+  useEffect(() => {
+    const loadSettings = async () => {
+      const data = await getGeneralSettings();
+      if (data) {
+        setSettings(data);
+      }
+    };
+    loadSettings();
+  }, []);
+  const homePageWidgets = settings?.settings?.find(s => s.ref_name === "Home Page Widgets");
+  const widgets = homePageWidgets?.contents as any;
+
+  if (!widgets || widgets.business_slogans_enable !== "1") {
+    return null;
+  }
+
   return (
-          <section className="section why-us-section">
-        <div className="container container-sm">
+    <section className="section why-us-section">
+      <div className="container container-sm">
 
-          <div className="features-grid">
-            <div className='leftside features-card-wrapper'>
-              <div className="feature-card">
-                <span className="feature-icon">
-                  <img src="/01.png" alt="" />
-                </span>
-                <div className='content'>
-                  <h3>Free Cancellations</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
-                </div>
-              </div>
-              <div className="feature-card">
-                <span className="feature-icon">
-                  <img src="/02.png" alt="" />
-                </span>
-                <div className='content'>
-                  <h3>Cheap To Luxury Umrah Deals</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
-                </div>
-              </div>
+        <div className="features-grid">
+          <div className='leftside features-card-wrapper'>
+            {/* Slogan 1 */}
+            <div className="feature-card">
+              <span className="feature-icon">
+                <img src={getImageUrl(widgets.business_slogan_icon_1)} alt="" />
+              </span>
+              <div className='content' dangerouslySetInnerHTML={{ __html: widgets.business_slogan_input_1 }} />
             </div>
-            <div className='centeredchooose'>
-              <img src="/chooseus.png" alt="" />
+
+            {/* Slogan 2 */}
+            <div className="feature-card">
+              <span className="feature-icon">
+                <img src={getImageUrl(widgets.business_slogan_icon_2)} alt="" />
+              </span>
+              <div className='content' dangerouslySetInnerHTML={{ __html: widgets.business_slogan_input_2 }} />
             </div>
-            <div className='rightside features-card-wrapper'>
-              <div className="feature-card">
+          </div>
 
-                <div className='content'>
-                  <h3>Guidance At Every Step</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
-                </div>
-                <span className="feature-icon">
-                  <img src="/03.png" alt="" />
-                </span>
-              </div>
-              <div className="feature-card">
+          <div className='centeredchooose'>
+            <img src="/chooseus.png" alt="" />
+          </div>
 
-                <div className='content'>
-                  <h3>10,000 + Satisfied Customers</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor </p>
-                </div>
-                <span className="feature-icon">
-                  <img src="/04.png" alt="" />
-                </span>
-              </div>
+          <div className='rightside features-card-wrapper'>
+            {/* Slogan 3 */}
+            <div className="feature-card">
+              <div className='content' dangerouslySetInnerHTML={{ __html: widgets.business_slogan_input_3 }} />
+              <span className="feature-icon">
+                <img src={getImageUrl(widgets.business_slogan_icon_3)} alt="" />
+              </span>
+            </div>
+
+            {/* Slogan 4 */}
+            <div className="feature-card">
+              <div className='content' dangerouslySetInnerHTML={{ __html: widgets.business_slogan_input_4 }} />
+              <span className="feature-icon">
+                <img src={getImageUrl(widgets.business_slogan_icon_4)} alt="" />
+              </span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   )
 }
