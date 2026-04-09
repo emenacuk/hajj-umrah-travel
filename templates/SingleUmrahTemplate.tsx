@@ -225,7 +225,7 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
               paginationEl=".related-pagination-custom"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
+                640: { slidesPerView: 1.6 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },
@@ -235,7 +235,6 @@ export default function SingleUmrahTemplate({ data }: UmrahPackageTemplateProps)
               slidesPerView={1}
               spaceBetween={30}
             />
-            <div className="swiper-pagination-custom related-pagination-custom"></div>
           </div>
         </section>
       )}

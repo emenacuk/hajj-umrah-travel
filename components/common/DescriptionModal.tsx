@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import '@/styles/components/_enquiry-modal.scss';
 
 interface DescriptionModalProps {
@@ -11,9 +12,15 @@ interface DescriptionModalProps {
 }
 
 export default function DescriptionModal({ isOpen, onClose, title, content }: DescriptionModalProps) {
-    if (!isOpen) return null;
+    const [mounted, setMounted] = useState(false);
 
-    return (
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!isOpen || !mounted) return null;
+
+    return createPortal(
         <div className="enquiry-modal-overlay" onClick={onClose}>
             <div className="enquiry-modal-content description-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-modal-btn" onClick={onClose}>
@@ -27,6 +34,7 @@ export default function DescriptionModal({ isOpen, onClose, title, content }: De
                     />
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

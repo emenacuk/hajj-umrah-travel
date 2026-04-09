@@ -115,7 +115,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 paginationEl=".bestUmrah-pagination"
                 skeletonCount={2}
                 breakpoints={{
-                  640: { slidesPerView: 1 },
+                  640: { slidesPerView: 1.6 },
                   768: { slidesPerView: 1.2 },
                   992: { slidesPerView: 1.4 },
                   1025: { slidesPerView: 1.6 },
@@ -177,12 +177,12 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 paginationEl=".decemberDeals-pagination"
                 skeletonCount={2}
                 loop={true}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false
-                }}
+                // autoplay={{
+                //   delay: 2500,
+                //   disableOnInteraction: false
+                // }}
                 breakpoints={{
-                  640: { slidesPerView: 1 },
+                  640: { slidesPerView: 1.6 },
                   768: { slidesPerView: 1.2 },
                   992: { slidesPerView: 1.4 },
                   1025: { slidesPerView: 1.6 },
@@ -304,6 +304,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                     1500: { slidesPerView: 3 },
                   }}
                   slidesPerView={1}
+                  spaceBetween={0}
                 />
               </div>
               <div className='imagearea'>

@@ -40,7 +40,7 @@ export default function BlogSection({ title, description, image, blogs, button_l
                             <Link href={button_link} className="btn btn--primary">
                                 {button_text}
                             </Link>
-                            <span className="featured-date">{featuredPost?.date || ''}</span>
+                            {/* <span className="featured-date">{featuredPost?.date || ''}</span> */}
                         </div>
                     </div>
                     <div className="featured-image-wrapper">

@@ -479,7 +479,7 @@ export default function CustomizeForm({ packageType, data }: CustomizeFormProps)
                     </div>
                 </div>
 
-                <div className={`form-row ${packageType === 'umrah' ? 'two-thirds-one-third' : 'two-cols'}`}>
+                <div className={`form-row ${packageType === 'umrah' ? 'two-cols' : 'two-cols'}`}>
                     <div className="input-field">
                         <input
                             type="tel"

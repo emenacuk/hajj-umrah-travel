@@ -58,9 +58,10 @@
     .hotel-label {
       display: block;
       font-size: 22px;
+      line-height: 1.1;
       font-weight: 500;
       color: var(--color-primary);
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .hotel-info-box {
@@ -395,7 +396,7 @@
   ul {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 0;
 
     .inclusion-item,
     li {
@@ -843,7 +844,6 @@
 
     .inclusions-list,
     ul {
-      gap: 10px;
 
       .inclusion-item,
       li {
@@ -1122,6 +1122,9 @@
     left: -14px;
     width: 80px;
     height: 80px;
+  }
+  .related-packages-detail{
+    padding-top: 25px;
   }
 }
 

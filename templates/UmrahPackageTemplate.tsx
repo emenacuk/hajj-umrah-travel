@@ -75,7 +75,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s1"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
+                640: { slidesPerView: 1.6 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },
@@ -127,7 +127,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s2"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
+                640: { slidesPerView: 1.6 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },
@@ -179,7 +179,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s3"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
+                640: { slidesPerView: 1.6 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },
@@ -233,7 +233,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s4"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
+                640: { slidesPerView: 1.6 },
                 768: { slidesPerView: 1.2 },
                 992: { slidesPerView: 1.4 },
                 1025: { slidesPerView: 1.6 },

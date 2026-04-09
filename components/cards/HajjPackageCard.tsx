@@ -36,9 +36,9 @@ export default function HajjPackageCard({ package: pkg, loading }: HajjPackageCa
             ))}
           </div>
         )}
-        <Link href={`/hajj-packages/${pkg.pageUrl}`}>
-          <h2>{pkg.title}</h2>
-        </Link>
+       
+          <span className='headingoncard'>{pkg.title}</span>
+        
         <div className="package-price">
           <span className="price-label">starting <br /> from</span>
           <span className="price-amount">£ {pkg.price}</span>

@@ -74,7 +74,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                   navigationNextEl="#next-shifting"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 1 },
+                    640: { slidesPerView: 1.6 },
                     1024: { slidesPerView: 2 },
                     1280: { slidesPerView: 3 },
                   }}
@@ -124,7 +124,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                   navigationNextEl="#next-nonshifting"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 1 },
+                    640: { slidesPerView: 1.6 },
                     1024: { slidesPerView: 2 },
                     1280: { slidesPerView: 3 },
                   }}

@@ -35,13 +35,18 @@
 
         }
         .review-content{
-            p{
-                font-size: 16px;
-                line-height: 24px;
-                color: var(--color-text);
-                font-weight: 400;
-                margin-bottom: 15px;
-            }                
+            .review-text {
+                p{
+                    font-size: 16px;
+                    line-height: 24px;
+                    color: var(--color-text);
+                    font-weight: 400;
+                    margin-bottom: 15px;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }          
             .reviewer-details{
                 display: grid;
                 grid-template-columns: 1fr 90px;
@@ -77,12 +82,18 @@
     }
 }
 @media (max-width:768px) {
-   .review-card .reviewcardinner .review-content p {
+   .review-card .reviewcardinner .review-content .review-text p {
         font-size: 14px;
         line-height: 20px;
         margin-bottom: 10px;
     }
     .reviews-carousel .swiper-slide {
         padding-left: 12px;
+    }
+    .review-card .reviewcardinner{
+        padding: 22px 15px;
+    }
+    .review-card .reviewcardinner .review-content .reviewer-details{
+        grid-template-columns: 1fr;
     }
 }

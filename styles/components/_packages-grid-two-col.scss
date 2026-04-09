@@ -12,36 +12,3 @@
         }
     }
 }
-@media (max-width: 767.5px) {
-    .package-card{
-        grid-template-columns: 1fr;
-        .package-content {
-            h2{
-                font-size: 20px;
-                line-height: 26px;
-            }
-            .package-price{
-                .price-amount{
-                    font-size: 35px;
-                    line-height: 39px;
-                }
-            }
-            .hotels{
-                gap: 10px;
-                .package-hotel{
-                    font-size: 14px;
-                    line-height: 20px;
-                }
-            }
-            .package-actions{
-                flex-wrap: wrap;
-            }
-        }
-    }
-}
-@media (max-width: 576.5px) {
-    .packages-grid-two-col{
-        gap: 15px;
-        grid-template-columns: 1fr;
-    }
-}
