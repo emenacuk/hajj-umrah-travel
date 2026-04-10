@@ -28,7 +28,7 @@ const UmrahHajjServices: React.FC<UmrahHajjServicesProps> = ({ data }) => {
                                     <img src={getImageUrl(item.icon)} alt={item.title} />
                                 </div>
                                 <div className="service-info">
-                                    <h3>{item.title}</h3>
+                                    <span className='service-title'>{item.title}</span>
                                     <p>{item.description}</p>
                                 </div>
                             </div>

@@ -19,7 +19,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
 
                     <div className="reviewer-details">
                         <div className='reviewerinfo'>
-                            <h4 className="reviewer-name">{review.name}</h4>
+                            <span className="reviewer-name">{review.name}</span>
                             <p className="reviewer-location">{review.location}</p>
                         </div>
                         <div className="reviewer-rating">

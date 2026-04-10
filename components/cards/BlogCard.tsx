@@ -18,10 +18,10 @@ export default function BlogCard({ post }: BlogCardProps) {
           <h3 className="blog-title">{post.title}</h3>
           <div className="blog-meta">
             <span className="author">{post.author || 'Admin'}</span>
-            <div className="date-wrapper">
+            {/* <div className="date-wrapper">
               <img src="/blogtime.svg" alt="clock" className="meta-icon" />
               <span className="date">{post.date}</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

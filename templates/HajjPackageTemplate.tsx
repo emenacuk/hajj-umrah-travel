@@ -74,12 +74,12 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                   navigationNextEl="#next-shifting"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 1 },
-                    1024: { slidesPerView: 2 },
-                    1280: { slidesPerView: 3 },
+                    640: { slidesPerView: 1.6, spaceBetween: 15 },
+                    1024: { slidesPerView: 2, spaceBetween: 15 },
+                    1280: { slidesPerView: 3, spaceBetween: 24 },
                   }}
                   slidesPerView={1}
-                  spaceBetween={24}
+                  spaceBetween={15}
                 />
               </div>
             </section>
@@ -124,7 +124,7 @@ export default function HajjPackageTemplate({ data }: HajjPackageTemplateProps) 
                   navigationNextEl="#next-nonshifting"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 1 },
+                    640: { slidesPerView: 1.6 },
                     1024: { slidesPerView: 2 },
                     1280: { slidesPerView: 3 },
                   }}

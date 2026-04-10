@@ -79,6 +79,7 @@
           background-color: var(--color-primary);
           border-color: var(--color-primary);
           color: var(--color-white);
+          transform: scale(1.2);
         }
 
         &.swiper-button-disabled {
@@ -121,7 +122,11 @@
 
 
   }
-
+.packages-swiper-wrapper{
+  .swiper-slide{
+    height: auto;
+  }
+}
   .bestpackagesswiper,
   .bestUmrah-swiper {
     .swiper-slide {
@@ -138,11 +143,7 @@
   padding-top: 60px;
 
   .swiper-slide {
-    padding-left: 24px;
-
-    &:first-child {
-      padding-left: 0;
-    }
+    height: auto;
   }
 }
 
@@ -160,10 +161,9 @@
       overflow: hidden;
 
       .swiper-slide {
-        padding-left: 24px;
-
-        &:first-child {
-          padding-left: 0;
+        height: stretch;
+        .hajj-card {
+          height: 100%;
         }
       }
     }
@@ -331,8 +331,8 @@
 // Why Choose Us
 .why-us-section {
   background-color: #FAFAFA;
-  padding: 60px 0 0;
-
+  padding: 60px 0;
+  margin-top: 60px;
   .why-us-header {
     margin-bottom: 3rem;
   }
@@ -625,6 +625,9 @@
 
       .sliderhere {
         order: 1;
+        .packages-swiper-wrapper{
+          padding: 0;
+        }
       }
     }
   }
@@ -728,11 +731,6 @@
     }
   }
 
-  .dealssection {
-    .swiper-slide {
-      padding-left: 15px;
-    }
-  }
 
   .why-us-section {
     .features-grid {
@@ -749,5 +747,37 @@
         width: 300px;
       }
     }
+  }
+}
+@media (max-width: 576.5px) {
+  .bestpackages .sideimage {
+    padding-bottom: 0;
+  }
+  .dealssection, .hajjsection, .partners-section{
+    padding-top: 25px;
+  }
+  .why-us-section{
+    padding: 25px 0;
+    margin-top: 25px;
+  }
+  .exploration-section,
+  .home-reviews-section,
+  .umrah-hajj-services,
+  .scroll-detail-section{
+    padding-top: 25px;
+  }
+  .customize-banner,
+  .faq-section{
+    padding: 25px 0 0;
+  }
+  .sectionheadings{
+    padding-bottom: 25px;
+  }
+  .umrah-hajj-services .services-grid .service-card .service-icon {
+    width: 80px;
+    height: 80px;
+  }
+  .umrah-hajj-services .services-list{
+    gap: 10px;
   }
 }

@@ -115,15 +115,16 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 paginationEl=".bestUmrah-pagination"
                 skeletonCount={2}
                 breakpoints={{
-                  640: { slidesPerView: 1 },
-                  768: { slidesPerView: 1.2 },
-                  992: { slidesPerView: 1.4 },
-                  1025: { slidesPerView: 1.6 },
-                  1200: { slidesPerView: 1.3 },
-                  1580: { slidesPerView: 1.8 },
-                  1700: { slidesPerView: 2 },
+                  640: { slidesPerView: 1.6, spaceBetween: 15 },
+                  768: { slidesPerView: 1.2, spaceBetween: 15 },
+                  992: { slidesPerView: 1.4, spaceBetween: 15 },
+                  1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                  1200: { slidesPerView: 1.3, spaceBetween: 24 },
+                  1580: { slidesPerView: 1.8, spaceBetween: 24 },
+                  1700: { slidesPerView: 2, spaceBetween: 24 },
                 }}
                 slidesPerView={1.2}
+                spaceBetween={15}
               />
             ) : (
               <div className="packages-grid-two-col">
@@ -177,19 +178,20 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                 paginationEl=".decemberDeals-pagination"
                 skeletonCount={2}
                 loop={true}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false
-                }}
+                // autoplay={{
+                //   delay: 2500,
+                //   disableOnInteraction: false
+                // }}
                 breakpoints={{
-                  640: { slidesPerView: 1 },
-                  768: { slidesPerView: 1.2 },
-                  992: { slidesPerView: 1.4 },
-                  1025: { slidesPerView: 1.6 },
-                  1200: { slidesPerView: 2.2 },
-                  1700: { slidesPerView: 2.8 },
+                  640: { slidesPerView: 1.6, spaceBetween: 15 },
+                  768: { slidesPerView: 1.2, spaceBetween: 15 },
+                  992: { slidesPerView: 1.4, spaceBetween: 15 },
+                  1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                  1200: { slidesPerView: 2.2, spaceBetween: 24 },
+                  1700: { slidesPerView: 2.8, spaceBetween: 24 },
                 }}
                 slidesPerView={1.2}
+                spaceBetween={15}
               />
             ) : (
               <div className="container">
@@ -297,13 +299,14 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   paginationEl=".bestHajj-pagination"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 2 },
-                    992: { slidesPerView: 2.2 },
-                    1025: { slidesPerView: 2.5 },
-                    1200: { slidesPerView: 2 },
-                    1500: { slidesPerView: 3 },
+                    640: { slidesPerView: 2, spaceBetween: 15 },
+                    992: { slidesPerView: 2.2, spaceBetween: 15 },
+                    1025: { slidesPerView: 2.5, spaceBetween: 24 },
+                    1200: { slidesPerView: 2, spaceBetween: 24 },
+                    1500: { slidesPerView: 3, spaceBetween: 24 },
                   }}
                   slidesPerView={1}
+                  spaceBetween={15}
                 />
               </div>
               <div className='imagearea'>
@@ -360,16 +363,16 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   disableOnInteraction: false
                 }}
                 breakpoints={{
-                  640: { slidesPerView: 1.8 },
-                  768: { slidesPerView: 2.2 },
-                  992: { slidesPerView: 2.8 },
-                  1025: { slidesPerView: 3.2 },
-                  1200: { slidesPerView: 3.8 },
-                  1350: { slidesPerView: 4.2 },
-                  1700: { slidesPerView: 4.8 },
+                  640: { slidesPerView: 1.8, spaceBetween: 15 },
+                  768: { slidesPerView: 2.2, spaceBetween: 15 },
+                  992: { slidesPerView: 2.8, spaceBetween: 15 },
+                  1025: { slidesPerView: 3.2, spaceBetween: 24 },
+                  1200: { slidesPerView: 3.8, spaceBetween: 24 },
+                  1350: { slidesPerView: 4.2, spaceBetween: 24 },
+                  1700: { slidesPerView: 4.8, spaceBetween: 24 },
                 }}
                 slidesPerView={1.2}
-                spaceBetween={24}
+                spaceBetween={15}
               />
             </div>
           </div>

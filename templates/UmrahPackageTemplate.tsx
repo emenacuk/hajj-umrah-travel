@@ -75,15 +75,15 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s1"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1.2 },
-                992: { slidesPerView: 1.4 },
-                1025: { slidesPerView: 1.6 },
-                1200: { slidesPerView: 2.2 },
-                1700: { slidesPerView: 2.8 },
+                640: { slidesPerView: 1.6, spaceBetween: 15 },
+                768: { slidesPerView: 1.2, spaceBetween: 15 },
+                992: { slidesPerView: 1.4, spaceBetween: 15 },
+                1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                1200: { slidesPerView: 2.2, spaceBetween: 24 },
+                1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
               slidesPerView={1}
-              spaceBetween={24}
+              spaceBetween={15}
             />
           </div>
         </section>
@@ -127,15 +127,15 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s2"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1.2 },
-                992: { slidesPerView: 1.4 },
-                1025: { slidesPerView: 1.6 },
-                1200: { slidesPerView: 2.2 },
-                1700: { slidesPerView: 2.8 },
+                640: { slidesPerView: 1.6, spaceBetween: 15 },
+                768: { slidesPerView: 1.2, spaceBetween: 15 },
+                992: { slidesPerView: 1.4, spaceBetween: 15 },
+                1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                1200: { slidesPerView: 2.2, spaceBetween: 24 },
+                1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
               slidesPerView={1}
-              spaceBetween={24}
+              spaceBetween={15}
             />
           </div>
         </section>
@@ -179,15 +179,15 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s3"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1.2 },
-                992: { slidesPerView: 1.4 },
-                1025: { slidesPerView: 1.6 },
-                1200: { slidesPerView: 2.2 },
-                1700: { slidesPerView: 2.8 },
+                640: { slidesPerView: 1.6, spaceBetween: 15 },
+                768: { slidesPerView: 1.2, spaceBetween: 15 },
+                992: { slidesPerView: 1.4, spaceBetween: 15 },
+                1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                1200: { slidesPerView: 2.2, spaceBetween: 24 },
+                1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
               slidesPerView={1}
-              spaceBetween={24}
+              spaceBetween={15}
             />
           </div>
         </section>
@@ -233,15 +233,15 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               navigationNextEl="#next-s4"
               skeletonCount={2}
               breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 1.2 },
-                992: { slidesPerView: 1.4 },
-                1025: { slidesPerView: 1.6 },
-                1200: { slidesPerView: 2.2 },
-                1700: { slidesPerView: 2.8 },
+                640: { slidesPerView: 1.6, spaceBetween: 15 },
+                768: { slidesPerView: 1.2, spaceBetween: 15 },
+                992: { slidesPerView: 1.4, spaceBetween: 15 },
+                1025: { slidesPerView: 1.6, spaceBetween: 24 },
+                1200: { slidesPerView: 2.2, spaceBetween: 24 },
+                1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
               slidesPerView={1}
-              spaceBetween={24}
+              spaceBetween={15}
             />
           </div>
         </section>

@@ -40,7 +40,7 @@ export default function BlogSection({ title, description, image, blogs, button_l
                             <Link href={button_link} className="btn btn--primary">
                                 {button_text}
                             </Link>
-                            <span className="featured-date">{featuredPost?.date || ''}</span>
+                            {/* <span className="featured-date">{featuredPost?.date || ''}</span> */}
                         </div>
                     </div>
                     <div className="featured-image-wrapper">
@@ -53,13 +53,14 @@ export default function BlogSection({ title, description, image, blogs, button_l
                     <Swiper
                         modules={[Navigation, Pagination]}
                         slidesPerView={1}
+                        spaceBetween={15}
                         pagination={{
                             el: '.blog-pagination-custom',
                             clickable: true
                         }}
                         breakpoints={{
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
+                            640: { slidesPerView: 2, spaceBetween: 15 },
+                            1024: { slidesPerView: 3, spaceBetween: 24 },
                         }}
                         className="blog-swiper"
                     >

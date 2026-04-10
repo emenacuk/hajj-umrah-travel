@@ -71,7 +71,7 @@ export default async function ContactTemplate({ data }: ContactTemplateProps) {
               </div>
               <div className="card-content">
                 <div className="label-group">
-                  <h3>Talk To UK<br />Travel Experts</h3>
+                  <span className='contacttitle'>Talk To UK<br />Travel Experts</span>
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">
@@ -98,7 +98,7 @@ export default async function ContactTemplate({ data }: ContactTemplateProps) {
               </div>
               <div className="card-content">
                 <div className="label-group">
-                  <h3>Email<br />Address</h3>
+                  <span className='contacttitle'>Email<br />Address</span>
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">
@@ -118,7 +118,7 @@ export default async function ContactTemplate({ data }: ContactTemplateProps) {
               </div>
               <div className="card-content">
                 <div className="label-group">
-                  <h3>Office<br />Address</h3>
+                  <span className='contacttitle'>Office<br />Address</span>
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">
@@ -134,7 +134,7 @@ export default async function ContactTemplate({ data }: ContactTemplateProps) {
               </div>
               <div className="card-content">
                 <div className="label-group">
-                  <h3>Our Social<br />Media</h3>
+                  <span className='contacttitle'>Our Social<br />Media</span>
                 </div>
                 <div className="divider"></div>
                 <div className="info-group">

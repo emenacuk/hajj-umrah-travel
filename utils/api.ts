@@ -1183,7 +1183,7 @@ function mapPackageData(pkg: any, type: 'umrah' | 'hajj'): any {
     rating: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
     stars: parseInt(pkg.package_star || pkg.rating || pkg.stars || "0"),
     nights: parseInt(pkg.package_night || pkg.nights || "0"),
-    pageUrl: pkg.page_url || pkg.slug,
+    pageUrl: pkg.page_url || pkg.slug || pkg.url_slug || pkg.package_slug || pkg.package_url || (pkg.title || pkg.package_title || "").toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, ""),
     makkahHotel: pkg.makkah_hotel?.name || pkg.makkah_hotel_name || pkg.makkah_hotel,
     madinahHotel: pkg.madinah_hotel?.name || pkg.madinah_hotel_name || pkg.madinah_hotel,
     makkahNights: parseInt(pkg.makkah_night || "5"),

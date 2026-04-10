@@ -18,14 +18,14 @@ export default function PartnerSlider({ logos }: PartnerSliderProps) {
             <Swiper
                 modules={[Navigation]}
                 slidesPerView={2.2}
-                spaceBetween={24}
+                spaceBetween={15}
                 navigation={{
                     prevEl: '.partner-prev',
                     nextEl: '.partner-next',
                 }}
                 breakpoints={{
-                    640: { slidesPerView: 4 },
-                    1024: { slidesPerView: 8 },
+                    640: { slidesPerView: 4, spaceBetween: 24 },
+                    1024: { slidesPerView: 8, spaceBetween: 24 },
                 }}
                 className="packages-swiper partner-swiper"
             >

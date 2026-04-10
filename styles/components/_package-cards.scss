@@ -72,7 +72,7 @@
         }
       }
     }
-    h2 {
+    h2,.headingoncard{
       font-size: 24px;
       line-height: 30px;
       font-weight: 700;
@@ -83,6 +83,7 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      font-family: var(--font-heading);
     }
 
     .package-price {
@@ -154,13 +155,15 @@
         text-align: center;
         white-space: nowrap;
         border-radius: 11px;
+        width: 100%;
+        padding: 7px 20px;
       }
     }
   }
 }
 .hajj-card{
   border-radius: 28px;
-  background-color: var(--color-bg);
+  background-color: #FAF4EE;
   .package-image-wrapper{
     width: 100%;
     height: 272px;
@@ -201,13 +204,14 @@
         }
       }
     }
-    h2 {
+    h2,.headingoncard{
       font-size: 24px;
       line-height: 30px;
       font-weight: 700;
       color: var(--color-black);
       margin-bottom: 8px;
       text-align: center;
+      font-family: var(--font-heading);
     }
 
     .package-price {
@@ -378,6 +382,38 @@
       }
     }
   }
+}
+@media (max-width: 767.5px) {
+    .package-card{
+        grid-template-columns: 1fr;
+        .package-content {
+          padding: 16px;
+            h2{
+                font-size: 20px;
+                line-height: 26px;
+            }
+            .package-price{
+                .price-amount{
+                    font-size: 35px;
+                    line-height: 39px;
+                }
+            }
+            .hotels{
+                gap: 10px;
+                .package-hotel{
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+           
+        }
+    }
+}
+@media (max-width: 576.5px) {
+    .packages-grid-two-col{
+        gap: 15px;
+        grid-template-columns: 1fr;
+    }
 }
 @media screen and (max-width:576.5px){
   .package-card{

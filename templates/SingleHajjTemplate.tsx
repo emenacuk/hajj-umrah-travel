@@ -225,6 +225,7 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                         </div>
                     </div>
                     <div className="related-pkgs-grid" style={{ position: 'relative' }}>
+                        <div className='container'>
                         <PackageSlider
                             items={relatedPackages}
                             cardType="hajj"
@@ -233,17 +234,17 @@ export default function SingleHajjTemplate({ data }: HajjPackageTemplateProps) {
                             paginationEl=".related-pagination-custom"
                             skeletonCount={2}
                             breakpoints={{
-                                640: { slidesPerView: 1 },
-                                768: { slidesPerView: 1.2 },
-                                992: { slidesPerView: 1.4 },
-                                1025: { slidesPerView: 1.6 },
-                                1200: { slidesPerView: 2.2 },
-                                1700: { slidesPerView: 2.8 },
+                                600: { slidesPerView: 1.6, spaceBetween: 15 },
+                                768: { slidesPerView: 2, spaceBetween: 15 },
+                                992: { slidesPerView: 2.5, spaceBetween: 15 },
+                                1025: { slidesPerView: 2.5, spaceBetween: 24 },
+                                1200: { slidesPerView: 3, spaceBetween: 24 },
+                                1700: { slidesPerView: 3, spaceBetween: 24 },
                             }}
                             slidesPerView={1}
-                            spaceBetween={30}
+                            spaceBetween={15}
                         />
-                        <div className="swiper-pagination-custom related-pagination-custom"></div>
+                        </div>
                     </div>
                 </section>
             )}

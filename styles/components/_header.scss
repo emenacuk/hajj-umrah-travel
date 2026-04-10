@@ -94,23 +94,18 @@
         text-decoration: none;
         transition: all 0.3s ease;
         background-color: var(--color-secondary);
-        color: var(--color-text);
+        color: var(--color-white);
 
         &:hover {
-            background-color: var(--color-secondary-dark);
+            background-color: var(--color-primary);
         }
 
-        &.active,
-        &:nth-child(2) {
+        &.active {
             background-color: var(--color-primary);
             color: var(--color-white);
         }
 
-        &:nth-child(1),
-        &:nth-child(3) {
-            background-color: var(--color-secondary);
-            color: var(--color-white);
-        }
+
     }
 }
 
@@ -299,7 +294,7 @@
                 position: relative;
 
                 .menu-item-wrapper {
-                    padding-left: 25px;
+                    padding-left: 0;
                     position: relative;
 
                     &::after {
@@ -321,12 +316,12 @@
 
                 .arrow {
                     position: absolute;
-                    left: 0;
+                    left: -15px;
                     top: 50%;
                     transform: translateY(-50%);
                     cursor: pointer;
-                    width: 15px;
-                    height: 15px;
+                    width: 10px;
+                    height: 10px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
