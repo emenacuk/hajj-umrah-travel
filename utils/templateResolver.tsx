@@ -14,6 +14,8 @@ import SingleListing from '@/templates/SingleListing';
 import AboutUSTemplate from '@/templates/AboutUSTemplate';
 import ReviewsTemplate from '@/templates/ReviewsTemplate';
 import NotFound from '@/app/not-found';
+import HotelPageTemplate from '@/templates/HotelPageTemplate';
+import HotelDetailTemplate from '@/templates/HotelDetailTemplate';
 
 // Template resolver - maps template name to component
 export function resolveTemplate(templateIdentifier: string, pageData: PageData) {
@@ -107,7 +109,23 @@ export function resolveTemplate(templateIdentifier: string, pageData: PageData) 
     case 'single-hajj':
     case 'singlehajjtemplate':
       return <SingleHajjTemplate data={pageData} />;
+    case 'hotel without banner':
+    case 'hotel-without-banner':
+    case 'hotel_without_banner':
+    case 'hotel with banner':
+    case 'hotel-with-banner':
+    case 'hotel_with_banner':
+      return <HotelPageTemplate data={pageData} />;
 
+    case 'single hotel template':
+    case 'single_hotel':
+    case 'single-hotel':
+    case 'singlehotel':
+    case 'hotel detail':
+    case 'hotel_detail':
+    case 'hotel-detail':
+    case 'hoteldetail':
+      return <HotelDetailTemplate data={pageData} />;
     default:
       return <NotFound />;
   }

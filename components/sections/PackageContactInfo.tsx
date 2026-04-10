@@ -68,7 +68,7 @@ export default function PackageContactInfo({ contact: propContact }: PackageCont
                     <Link href={`tel:${headerPhone.replace(/\s+/g, '')}`}>
                         <div className="contact-info-pill">
                             <div className="contact-icon">
-                                <img src="/telephone.svg" alt="Call Now" />
+                                <img src="/callnow.png" alt="Call Now" />
                             </div>
                             <div className="contact-text">
                                 <span className="contact-label">Call Now!</span>

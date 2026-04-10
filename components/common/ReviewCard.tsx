@@ -13,9 +13,10 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                     <img src={review.avatar || '/placeholder-user.png'} alt={review.name} />
                 </div>
                 <div className='review-content'>
-                    <p>
-                        {review.comment}
-                    </p>
+                    <p
+                        dangerouslySetInnerHTML={{ __html: review.comment }}
+                    />
+
                     <div className="reviewer-details">
                         <div className='reviewerinfo'>
                             <h4 className="reviewer-name">{review.name}</h4>

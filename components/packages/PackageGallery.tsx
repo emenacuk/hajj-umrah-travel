@@ -42,21 +42,23 @@ export default function PackageGallery({ images }: PackageGalleryProps) {
             </Swiper>
             <div className="thumbs-gallery-container" style={{ opacity: isGalleryLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                 {!isGalleryLoaded && (
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <Skeleton width="25%" height="100px" borderRadius="10px" />
-                        <Skeleton width="25%" height="100px" borderRadius="10px" />
-                        <Skeleton width="25%" height="100px" borderRadius="10px" />
-                        <Skeleton width="25%" height="100px" borderRadius="10px" />
+                    <div style={{ display: 'flex', gap: '15px', overflow: 'hidden' }}>
+                        {Array.from({ length: 7 }).map((_, i) => (
+                            <div key={i} style={{ flexShrink: 0, width: '15%' }}>
+                                <Skeleton width="100%" height="100px" borderRadius="10px" />
+                            </div>
+                        ))}
                     </div>
                 )}
                 <Swiper
                     onSwiper={setThumbsSwiper}
-                    slidesPerView={3}
+                    slidesPerView={3.5}
                     freeMode={true}
                     watchSlidesProgress={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     breakpoints={{
-                        992: { slidesPerView: 4 }
+                        768: { slidesPerView: 4 },
+                        992: { slidesPerView: 6 }
                     }}
                     className="thumbs-gallery-swiper"
                 >

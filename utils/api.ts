@@ -1046,17 +1046,106 @@ export function mapReviewData(review: any): any {
 }
 
 // Map raw API hotel data to standardized format
-function mapHotelData(hotel: any): any {
+export function mapHotelData(hotel: any): any {
   if (!hotel) return null;
   return {
     id: hotel.id,
-    name: hotel.name,
-    location: hotel.hotel_address || hotel.location || (hotel.city_id === 1 ? 'Makkah' : 'Madinah'),
-    rating: parseInt(hotel.hotel_star || hotel.rating || "5"),
-    images: Array.isArray(hotel.images) ? hotel.images.map((img: any) => img.url || img) : [],
-    description: hotel.description || '',
-    amenities: typeof hotel.amenity === 'string' ? JSON.parse(hotel.amenity || '[]') : hotel.amenity || []
+    name: hotel.name || hotel.hotel_name || hotel.title || '',
+    city: hotel.city || (String(hotel.city_id) === '1' ? 'Makkah' : String(hotel.city_id) === '2' ? 'Madinah' : ''),
+    distance_from_masjid: hotel.distance_from_masjid || hotel.distance_from_masjid || '',
+    rating: parseInt(hotel.hotel_star || hotel.rating || hotel.stars || '5'),
+    images: Array.isArray(hotel.images)
+      ? hotel.images.map((img: any) => img.url || img.image_url || img)
+      : (hotel.image_url || hotel.thumbnail_image) ? [hotel.image_url || hotel.thumbnail_image] : [],
+    description: hotel.description || hotel.hotel_description || '',
+    amenities: (() => {
+      try {
+        const raw = hotel.amenity || hotel.amenities || [];
+        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return Object.entries(parsed)
+            .filter(([_, val]) => val === 1 || val === "1" || val === true)
+            .map(([key]) => key);
+        }
+        return Array.isArray(parsed) ? parsed : [];
+      } catch { return []; }
+    })(),
+    location: hotel.hotel_address || hotel.location || '',
+    address: hotel.hotel_address || '',
+    map: hotel.hotel_map || '',
+    page_url: hotel.page_url || hotel.slug || null,
+    meta: {
+      title: hotel.browser_title || hotel.name || hotel.hotel_name || '',
+      description: hotel.meta_description || '',
+      keywords: hotel.meta_keywords || '',
+    },
+    script: extractPageScript(hotel),
+    _raw: hotel,
   };
+}
+
+/**
+ * Fetch a single hotel by its page_url slug.
+ * Stage 1: GET /hotels?slug={slug}
+ * Stage 2: GET /hotels/{slug}
+ * Stage 3: CMS page fallback via fetchPageData
+ */
+export async function fetchHotelBySlug(slug: string): Promise<any> {
+  // Stage 1: query param
+  try {
+    const isNumeric = /^\d+$/.test(slug);
+    const param = isNumeric ? 'hotel_id' : 'slug';
+    const res = await fetch(`${API_BASE_URL}/hotels?${param}=${encodeURIComponent(slug)}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if ((json.status === 1 || json.success === true) && (json.result || json.data)) {
+        let hotel = json.data || json.result.data || json.result;
+        if (Array.isArray(hotel)) hotel = hotel[0];
+        if (hotel) {
+          console.log(`[API] fetchHotelBySlug (Stage 1) found hotel: ${hotel.name}, relevant_pkgs: ${hotel.relevant_packages?.length}`);
+          const mapped = mapHotelData(hotel);
+          if (hotel.relevant_packages) {
+            mapped.relevantPackages = hotel.relevant_packages.map((p: any) => mapPackageData(p, 'umrah'));
+          }
+          return mapped;
+        }
+      }
+    }
+  } catch { /* fall through */ }
+
+  // Stage 2: path segment
+  try {
+    const res = await fetch(`${API_BASE_URL}/hotels/${encodeURIComponent(slug)}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if ((json.status === 1 || json.success === true) && (json.result || json.data)) {
+        let hotel = json.data || json.result.data || json.result;
+        if (Array.isArray(hotel)) hotel = hotel[0];
+        if (hotel) {
+          console.log(`[API] fetchHotelBySlug (Stage 2) found hotel: ${hotel.name}, relevant_pkgs: ${hotel.relevant_packages?.length}`);
+          const mapped = mapHotelData(hotel);
+          if (hotel.relevant_packages) {
+            mapped.relevantPackages = hotel.relevant_packages.map((p: any) => mapPackageData(p, 'umrah'));
+          }
+          return mapped;
+        }
+      }
+    }
+  } catch { /* fall through */ }
+
+  // Stage 3: CMS page data fallback
+  try {
+    const pageData = await fetchPageData(slug);
+    if (pageData) return pageData;
+  } catch { /* fall through */ }
+
+  return null;
 }
 
 // Map raw API package data to standardized camelCase format
@@ -1421,3 +1510,132 @@ export function mapBlogData(blog: any): any {
     bannerDescription: blog.banner_description,
   };
 }
+
+
+export async function getHotelDetail(slug: string): Promise<any> {
+  const url = `${API_BASE_URL}/hotels/${slug}`;
+  console.log('[API] Fetching hotel detail:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    const hotelData = apiResponse.data || apiResponse.hotel;
+
+    if (apiResponse.success && hotelData) {
+      const hotel = mapHotelData(hotelData);
+
+      // Check if banner_description is truly empty (e.g., "<p>&nbsp;</p>" or just whitespace)
+      const isBannerHeadingEmpty = !hotelData.banner_heading && (!hotelData.banner_description || hotelData.banner_description.replace(/<[^>]*>/g, '').trim() === '');
+      const bannerTitle = isBannerHeadingEmpty ? hotel.name : (hotelData.banner_heading || hotelData.banner_description);
+
+      return {
+        id: hotel.id,
+        page_template: 'hotel_detail',
+        title: hotel.name,
+        banner_description: hotelData.banner_description || hotel.description,
+        short_description: hotelData.short_description || "",
+        content: {
+          banner: {
+            title: bannerTitle,
+            description: hotelData.short_description || "",
+            image: getImageUrl(hotelData.banner_image_url || hotelData.thumbnail_image || hotelData.image_url),
+          },
+          body: hotel.description,
+          amenities: hotel.amenities,
+          nearby: (() => {
+            try {
+              const raw = hotelData.nearby || [];
+              return typeof raw === 'string' ? JSON.parse(raw) : raw;
+            } catch { return []; }
+          })(),
+          resturant: (() => {
+            try {
+              const raw = hotelData.resturant || hotelData.restaurant || [];
+              return typeof raw === 'string' ? JSON.parse(raw) : raw;
+            } catch { return []; }
+          })(),
+          gallery: (hotelData.images || []).map((img: any) => ({
+            url: getImageUrl(img.url || img.image_url || img),
+            alt: img.alt || img.title || hotel.name,
+            title: img.title || ""
+          })),
+          relevantPackages: (hotelData.relevant_packages || []).map((p: any) => mapPackageData(p, 'umrah')),
+          latestPosts: (apiResponse.latest_hotels || []).map(mapHotelData),
+        },
+        meta: {
+          title: hotelData.browser_title || hotel.name,
+          description: hotelData.meta_description || "",
+          keywords: hotelData.meta_keywords || "",
+        },
+        script: hotelData.script || null,
+        _raw: hotelData
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('[API] Error fetching hotel detail:', error);
+    return null;
+  }
+}
+
+
+export async function getMakkahHotels(page: number = 1, search: string = ''): Promise<any> {
+  let url = `${API_BASE_URL}/hotels?city_id=1&page=${page}`;
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
+  }
+  console.log('[API] Fetching Makkah hotels:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error('[API] Error fetching Makkah hotels:', error);
+    return null;
+  }
+}
+export async function getMadinahHotels(page: number = 1, search: string = ''): Promise<any> {
+  let url = `${API_BASE_URL}/hotels?city_id=2&page=${page}`;
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
+  }
+  console.log('[API] Fetching Madinah hotels:', url);
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}: ${response.statusText}`);
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error('[API] Error fetching Madinah hotels:', error);
+    return null;
+  }
+}
+
