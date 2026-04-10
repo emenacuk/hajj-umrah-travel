@@ -772,13 +772,15 @@ body {
 }
 
 .contact-info-cards-section {
-  padding: 80px 0 100px;
+  padding: 80px 0 50px;
   background-color: var(--color-white);
 
   @media (max-width: 768px) {
      padding: 40px 0 60px;
   }
-
+  @media (max-width: 576px) {
+     padding: 25px 0 0px;
+  }
   .contact-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -857,7 +859,7 @@ body {
           margin-bottom: 10px;
         }
 
-        h3 {
+        h3,.contacttitle {
           font-family: var(--font-heading);
           font-size: 18px;
           font-weight: 700;

@@ -122,13 +122,14 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, h
                             nextEl: '.next-review',
                         }}
                         breakpoints={{
-                            576: { slidesPerView: 1.2 },
-                            768: { slidesPerView: 1.8 },
-                            850: { slidesPerView: 2 },
-                            992: { slidesPerView: 2.2 },
-                            1200: { slidesPerView: 2.5 },
-                            1580: { slidesPerView: 3 }
+                            576: { slidesPerView: 1.2, spaceBetween: 15 },
+                            768: { slidesPerView: 1.8, spaceBetween: 15 },
+                            850: { slidesPerView: 2, spaceBetween: 15 },
+                            992: { slidesPerView: 2.2, spaceBetween: 15 },
+                            1200: { slidesPerView: 2.5, spaceBetween: 24 },
+                            1580: { slidesPerView: 3, spaceBetween: 24 }
                         }}
+                        spaceBetween={15}
                     >
                         {displayReviews.map((review) => (
                             <SwiperSlide key={review.id}>
@@ -141,7 +142,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, h
                                             <ReviewTextNode content={review.comment} isLoaded={isLoaded} />
                                             <div className="reviewer-details">
                                                 <div className='reviewerinfo'>
-                                                    <h4 className="reviewer-name">{review.name}</h4>
+                                                    <span className="reviewer-name">{review.name}</span>
                                                     <p className="reviewer-location">{review.location}</p>
                                                 </div>
                                                 <div className="reviewer-rating">

@@ -381,6 +381,10 @@ img {
   @media screen and (max-width: 992.5px) {
     margin: 100px 0 0;
   }
+  h1{
+    color: var(--color-primary);
+    margin-bottom: 10px;
+  }
 }
 
 @media screen and (max-width: 992.5px) {

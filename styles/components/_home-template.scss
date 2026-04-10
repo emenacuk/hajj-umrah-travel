@@ -143,11 +143,7 @@
   padding-top: 60px;
 
   .swiper-slide {
-    padding-left: 24px;
     height: auto;
-    &:first-child {
-      padding-left: 0;
-    }
   }
 }
 
@@ -165,13 +161,9 @@
       overflow: hidden;
 
       .swiper-slide {
-        padding-left: 24px;
         height: stretch;
         .hajj-card {
           height: 100%;
-        }
-        &:first-child {
-          padding-left: 0;
         }
       }
     }
@@ -633,6 +625,9 @@
 
       .sliderhere {
         order: 1;
+        .packages-swiper-wrapper{
+          padding: 0;
+        }
       }
     }
   }
@@ -736,11 +731,6 @@
     }
   }
 
-  .dealssection {
-    .swiper-slide {
-      padding-left: 15px;
-    }
-  }
 
   .why-us-section {
     .features-grid {

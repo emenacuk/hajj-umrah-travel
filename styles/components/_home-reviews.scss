@@ -73,23 +73,14 @@
         }
     }
 }
-.reviews-carousel{
-    .swiper-slide{
-        padding-left: 24px; 
-        &:first-child{
-            padding-left: 0;
-        }
-    }
-}
+
 @media (max-width:768px) {
    .review-card .reviewcardinner .review-content .review-text p {
         font-size: 14px;
         line-height: 20px;
         margin-bottom: 10px;
     }
-    .reviews-carousel .swiper-slide {
-        padding-left: 12px;
-    }
+
     .review-card .reviewcardinner{
         padding: 22px 15px;
     }

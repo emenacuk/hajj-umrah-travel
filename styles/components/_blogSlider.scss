@@ -61,12 +61,6 @@
 
   .blog-slider-wrapper {
     position: relative;
-    .swiper-slide {
-      padding-left: 24px;
-      &:first-child {
-        padding-left: 0;
-      }
-    }
   }
 }
 
