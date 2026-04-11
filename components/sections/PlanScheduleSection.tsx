@@ -208,7 +208,7 @@ export default function PlanScheduleSection({ hotelName }: PlanScheduleSectionPr
                   <div className="form-group icon-group custom-datepicker-wrapper">
                     <DatePicker
                       selected={formData.contactDetail.checkInDate}
-                      onChange={(date) => handleDateChange('checkInDate', date)}
+                      onChange={(date: any) => handleDateChange('checkInDate', date)}
                       placeholderText="Check In Date"
                       dateFormat="dd/MM/yyyy"
                       className="custom-date-input"
@@ -229,7 +229,7 @@ export default function PlanScheduleSection({ hotelName }: PlanScheduleSectionPr
                   <div className="form-group icon-group custom-datepicker-wrapper">
                     <DatePicker
                       selected={formData.contactDetail.checkOutDate}
-                      onChange={(date) => handleDateChange('checkOutDate', date)}
+                      onChange={(date: any) => handleDateChange('checkOutDate', date)}
                       placeholderText="Check Out Date"
                       dateFormat="dd/MM/yyyy"
                       className="custom-date-input"
