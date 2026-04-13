@@ -135,13 +135,13 @@ export default function Header() {
             };
 
             const item: NavItem = {
-                name: root.title,
+                name: root.title ? root.title.replace(/&amp;/g, '&') : '',
                 href: formatHref(root.page_url),
             };
 
             if (children.length > 0) {
                 item.submenu = children.map(child => ({
-                    name: child.title,
+                    name: child.title ? child.title.replace(/&amp;/g, '&') : '',
                     href: formatHref(child.page_url)
                 }));
             }

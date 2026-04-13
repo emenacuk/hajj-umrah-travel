@@ -200,7 +200,9 @@
 
   }
 }
-
+.inner-banner + .exploration-section {
+    padding-top: 0;
+}
 .umrah-exploration-card {
   position: relative;
   border-radius: 18px;
@@ -585,6 +587,9 @@
 }
 
 @media (max-width: 1200px) {
+  .hajjsection .packages-swiper-wrapper .imagearea{
+    display: none;
+  }
   .bestpackages {
     padding: 50px 20px 0;
     grid-template-columns: 1fr;
