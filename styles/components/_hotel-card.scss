@@ -17,6 +17,8 @@
   transition: transform 0.3s ease;
   padding: 0px 10px 0px 10px;
   gap: 0;
+  display: grid;
+  grid-template-columns: 356px 1fr;s
 
   &:hover {
     transform: translateY(-5px);
@@ -54,8 +56,8 @@
       line-height: 1.1;
       font-family: var(--font-heading);
       display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }

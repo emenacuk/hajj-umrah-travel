@@ -1,5 +1,6 @@
 import { fetchPageData } from '@/utils/api';
 import BlogTemplate from '@/templates/BlogTemplate';
+import PageScript from '@/components/common/PageScript';
 
 export default async function BlogPage() {
   const pageData = await fetchPageData('blog');
@@ -15,7 +16,12 @@ export default async function BlogPage() {
     return <BlogTemplate data={defaultData} />;
   }
 
-  return <BlogTemplate data={pageData} />;
+  return (
+    <>
+      <PageScript html={pageData.script} ownerKey="blog" />
+      <BlogTemplate data={pageData} />
+    </>
+  );
 }
 
 
