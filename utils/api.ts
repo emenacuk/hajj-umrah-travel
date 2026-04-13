@@ -174,7 +174,7 @@ export async function getGeneralSettings(): Promise<GeneralSettings | null> {
       headers: {
         'Accept': 'application/json',
       },
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // Enable ISR caching
     });
 
     if (!response.ok) {
@@ -210,8 +210,7 @@ export async function fetchPageData(slug: string): Promise<any> {
       headers: {
         'Accept': 'application/json',
       },
-      cache: 'no-store', // Ensure SSR
-      next: { revalidate: 0 }, // Disable caching
+      next: { revalidate: 3600 }, // Enable ISR caching
     });
 
     console.log('[API] Response status:', response.status, response.statusText);
@@ -258,137 +257,152 @@ export async function fetchPageData(slug: string): Promise<any> {
     // Fetch section packages separately as requested
     console.log('[API] Fetching section packages individually...');
 
-    // Section 1 Pricing Widget
-    try {
-      if (result.section_1_widget?.[0]) {
-        const widget = result.section_1_widget[0];
-        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+    // Parallel fetch definitions
+    const sectionTasks: Promise<void>[] = [];
 
-        if (uIds.length > 0) {
-          transformedData.content.section1Packages = await fetchUmrahPackagesByIds(uIds);
-        } else if (hIds.length > 0) {
-          transformedData.content.section1Packages = await fetchHajjPackagesByIds(hIds);
-        } else if (widget.umrah_type) {
-          transformedData.content.section1Packages = await fetchUmrahPackagesByType(widget.umrah_type);
-        } else if (widget.hajj_type) {
-          transformedData.content.section1Packages = await fetchHajjPackagesByType(widget.hajj_type);
+    // Section 1 Pricing Widget
+    sectionTasks.push((async () => {
+      try {
+        if (result.section_1_widget?.[0]) {
+          const widget = result.section_1_widget[0];
+          const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+          const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+
+          if (uIds.length > 0) {
+            transformedData.content.section1Packages = await fetchUmrahPackagesByIds(uIds);
+          } else if (hIds.length > 0) {
+            transformedData.content.section1Packages = await fetchHajjPackagesByIds(hIds);
+          } else if (widget.umrah_type) {
+            transformedData.content.section1Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+          } else if (widget.hajj_type) {
+            transformedData.content.section1Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          }
         }
+      } catch (e) {
+        console.error('[API] Failed to fetch Section 1 packages:', e);
+        transformedData.content.section1Packages = [];
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch Section 1 packages:', e);
-      transformedData.content.section1Packages = [];
-    }
+    })());
 
     // Section 2 Pricing Widget
-    try {
-      if (result.section_2_widget?.[0]) {
-        const widget = result.section_2_widget[0];
-        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+    sectionTasks.push((async () => {
+      try {
+        if (result.section_2_widget?.[0]) {
+          const widget = result.section_2_widget[0];
+          const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+          const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
 
-        if (uIds.length > 0) {
-          transformedData.content.section2Packages = await fetchUmrahPackagesByIds(uIds);
-        } else if (hIds.length > 0) {
-          transformedData.content.section2Packages = await fetchHajjPackagesByIds(hIds);
-        } else if (widget.umrah_type) {
-          transformedData.content.section2Packages = await fetchUmrahPackagesByType(widget.umrah_type);
-        } else if (widget.hajj_type) {
-          transformedData.content.section2Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          if (uIds.length > 0) {
+            transformedData.content.section2Packages = await fetchUmrahPackagesByIds(uIds);
+          } else if (hIds.length > 0) {
+            transformedData.content.section2Packages = await fetchHajjPackagesByIds(hIds);
+          } else if (widget.umrah_type) {
+            transformedData.content.section2Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+          } else if (widget.hajj_type) {
+            transformedData.content.section2Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          }
         }
+      } catch (e) {
+        console.error('[API] Failed to fetch Section 2 packages:', e);
+        transformedData.content.section2Packages = [];
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch Section 2 packages:', e);
-      transformedData.content.section2Packages = [];
-    }
+    })());
 
     // Section 3 Pricing Widget
-    try {
-      if (result.section_3_widget?.[0]) {
-        const widget = result.section_3_widget[0];
-        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+    sectionTasks.push((async () => {
+      try {
+        if (result.section_3_widget?.[0]) {
+          const widget = result.section_3_widget[0];
+          const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+          const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
 
-        if (hIds.length > 0) {
-          transformedData.content.section3Packages = await fetchHajjPackagesByIds(hIds);
-        } else if (uIds.length > 0) {
-          transformedData.content.section3Packages = await fetchUmrahPackagesByIds(uIds);
-        } else if (widget.hajj_type) {
-          transformedData.content.section3Packages = await fetchHajjPackagesByType(widget.hajj_type);
-        } else if (widget.umrah_type) {
-          transformedData.content.section3Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+          if (hIds.length > 0) {
+            transformedData.content.section3Packages = await fetchHajjPackagesByIds(hIds);
+          } else if (uIds.length > 0) {
+            transformedData.content.section3Packages = await fetchUmrahPackagesByIds(uIds);
+          } else if (widget.hajj_type) {
+            transformedData.content.section3Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          } else if (widget.umrah_type) {
+            transformedData.content.section3Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+          }
         }
+      } catch (e) {
+        console.error('[API] Failed to fetch Section 3 packages:', e);
+        transformedData.content.section3Packages = [];
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch Section 3 packages:', e);
-      transformedData.content.section3Packages = [];
-    }
+    })());
 
     // Section 4 Pricing Widget (Exploration)
-    try {
-      if (result.section_4_widget?.[0]) {
-        const widget = result.section_4_widget[0];
-        const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
-        const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
+    sectionTasks.push((async () => {
+      try {
+        if (result.section_4_widget?.[0]) {
+          const widget = result.section_4_widget[0];
+          const uIds = widget.umrah_package_ids ? parseIdsString(widget.umrah_package_ids) : [];
+          const hIds = widget.hajj_package_ids ? parseIdsString(widget.hajj_package_ids) : [];
 
-        if (uIds.length > 0) {
-          transformedData.content.section4Packages = await fetchUmrahPackagesByIds(uIds);
-        } else if (hIds.length > 0) {
-          transformedData.content.section4Packages = await fetchHajjPackagesByIds(hIds);
-        } else if (widget.umrah_type) {
-          transformedData.content.section4Packages = await fetchUmrahPackagesByType(widget.umrah_type);
-        } else if (widget.hajj_type) {
-          transformedData.content.section4Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          if (uIds.length > 0) {
+            transformedData.content.section4Packages = await fetchUmrahPackagesByIds(uIds);
+          } else if (hIds.length > 0) {
+            transformedData.content.section4Packages = await fetchHajjPackagesByIds(hIds);
+          } else if (widget.umrah_type) {
+            transformedData.content.section4Packages = await fetchUmrahPackagesByType(widget.umrah_type);
+          } else if (widget.hajj_type) {
+            transformedData.content.section4Packages = await fetchHajjPackagesByType(widget.hajj_type);
+          }
         }
+      } catch (e) {
+        console.error('[API] Failed to fetch Section 4 packages:', e);
+        transformedData.content.section4Packages = [];
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch Section 4 packages:', e);
-      transformedData.content.section4Packages = [];
-    }
+    })());
 
     // Reviews Section
-    try {
-      if (result.ourclientsays_widget?.[0]) {
-        const widget = result.ourclientsays_widget[0];
-        const ids = widget.reviews_ids ? parseIdsString(widget.reviews_ids) : [];
-        if (ids.length > 0) {
-          transformedData.content.reviews = await fetchReviewsByIds(ids);
+    sectionTasks.push((async () => {
+      try {
+        if (result.ourclientsays_widget?.[0]) {
+          const widget = result.ourclientsays_widget[0];
+          const ids = widget.reviews_ids ? parseIdsString(widget.reviews_ids) : [];
+          if (ids.length > 0) {
+            transformedData.content.reviews = await fetchReviewsByIds(ids);
+          }
         }
+      } catch (e) {
+        console.error('[API] Failed to fetch reviews:', e);
+        transformedData.content.reviews = [];
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch reviews:', e);
-      transformedData.content.reviews = [];
-    }
+    })());
 
     // Blog Section
-    try {
-      let blogSectionData = result.blog_section_data;
-      // Handle stringified JSON which is common in this API for widget data
-      if (typeof blogSectionData === 'string') {
-        try {
-          blogSectionData = JSON.parse(blogSectionData);
-        } catch (e) {
-          console.error('[API] Error parsing blog_section_data string:', e);
+    sectionTasks.push((async () => {
+      try {
+        let blogSectionData = result.blog_section_data;
+        if (typeof blogSectionData === 'string') {
+          try {
+            blogSectionData = JSON.parse(blogSectionData);
+          } catch (e) {
+            console.error('[API] Error parsing blog_section_data string:', e);
+          }
         }
-      }
 
-      if (blogSectionData?.blog_ids) {
-        const blogIds = parseIdsString(String(blogSectionData.blog_ids));
-        if (blogIds.length > 0) {
-          const rawBlogs = await getBlogsByIds(blogIds);
-          // Attach mapped blogs and other data onto the blog_section_data object in content
-          transformedData.content.blog_section_data = {
-            ...blogSectionData,
-            blogs: rawBlogs.map(mapBlogData),
-          };
+        if (blogSectionData?.blog_ids) {
+          const blogIds = parseIdsString(String(blogSectionData.blog_ids));
+          if (blogIds.length > 0) {
+            const rawBlogs = await getBlogsByIds(blogIds);
+            transformedData.content.blog_section_data = {
+              ...blogSectionData,
+              blogs: rawBlogs.map(mapBlogData),
+            };
+          }
+        } else if (blogSectionData) {
+          transformedData.content.blog_section_data = blogSectionData;
         }
-      } else if (blogSectionData) {
-        // If no blog_ids but we have the object, ensure it's still available
-        transformedData.content.blog_section_data = blogSectionData;
+      } catch (e) {
+        console.error('[API] Failed to fetch blog section data:', e);
       }
-    } catch (e) {
-      console.error('[API] Failed to fetch blog section data:', e);
-    }
+    })());
+
+    // Run all section fetches in parallel
+    await Promise.all(sectionTasks);
 
     console.log('[API] Section packages and reviews fetched:', {
       s1: transformedData.content.section1Packages?.length || 0,
@@ -521,7 +535,7 @@ export async function fetchUmrahPackagesByIds(ids: string[]): Promise<any[]> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -556,7 +570,7 @@ export async function fetchUmrahPackagesByIds(ids: string[]): Promise<any[]> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       });
       if (postResponse.ok) {
         const postData = await postResponse.json();
@@ -587,7 +601,7 @@ export async function fetchUmrahPackagesByType(type: string): Promise<any[]> {
     const response = await fetch(`${API_BASE_URL}/umrah-packages?type=${encodeURIComponent(type.trim())}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -615,7 +629,7 @@ export async function fetchUmrahPackagesByType(type: string): Promise<any[]> {
 async function fetchAllUmrahPackages(filterIds?: string[]): Promise<any[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/umrah-packages`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -662,7 +676,7 @@ export async function fetchHajjPackagesByType(type: string): Promise<any[]> {
     const response = await fetch(`${API_BASE_URL}/hajj-packages?type=${encodeURIComponent(type.trim())}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -701,7 +715,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -735,7 +749,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       });
       if (postResponse.ok) {
         const postData = await postResponse.json();
@@ -760,7 +774,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
 async function fetchAllHajjPackages(filterIds?: string[]): Promise<any[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/hajj-packages`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -811,7 +825,7 @@ export async function fetchHajjPackages(): Promise<any[]> {
 export async function fetchUmrahPackage(id: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/umrah/packages/${id}`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -879,7 +893,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
 export async function fetchHajjPackage(id: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/hajj/packages/${id}`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -996,7 +1010,7 @@ export async function fetchReviewsByIds(ids: string[]): Promise<any[]> {
       headers: {
         'Accept': 'application/json',
       },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -1096,7 +1110,7 @@ export async function fetchHotelBySlug(slug: string): Promise<any> {
     const isNumeric = /^\d+$/.test(slug);
     const param = isNumeric ? 'hotel_id' : 'slug';
     const res = await fetch(`${API_BASE_URL}/hotels?${param}=${encodeURIComponent(slug)}`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
       headers: { Accept: 'application/json' },
     });
     if (res.ok) {
@@ -1119,7 +1133,7 @@ export async function fetchHotelBySlug(slug: string): Promise<any> {
   // Stage 2: path segment
   try {
     const res = await fetch(`${API_BASE_URL}/hotels/${encodeURIComponent(slug)}`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
       headers: { Accept: 'application/json' },
     });
     if (res.ok) {
@@ -1390,7 +1404,7 @@ export async function getBlogDetail(slug: string): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -1462,7 +1476,7 @@ export async function fetchMakkahBlogs(page: number = 1): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -1520,7 +1534,7 @@ export async function getHotelDetail(slug: string): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -1599,7 +1613,7 @@ export async function getMakkahHotels(page: number = 1, search: string = ''): Pr
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -1624,7 +1638,7 @@ export async function getMadinahHotels(page: number = 1, search: string = ''): P
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {

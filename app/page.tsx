@@ -3,8 +3,7 @@ import { resolveTemplate } from '@/utils/templateResolver';
 import PageScript from '@/components/common/PageScript';
 import { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600; // Revalidate every hour
 
 export async function generateMetadata(): Promise<Metadata> {
   const [pageData, generalSettings] = await Promise.all([

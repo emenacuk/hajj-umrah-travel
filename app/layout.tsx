@@ -7,6 +7,8 @@ import { Toaster } from 'sonner';
 import { getGeneralSettings, fetchPageData, generatePageMetadata } from '@/utils/api';
 import SkeletonLoaderShell from '@/components/common/SkeletonLoaderShell';
 
+import TopLoadingBar from '@/components/common/TopLoadingBar';
+
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const [pageData, generalSettings] = await Promise.all([
@@ -45,6 +47,7 @@ export default async function RootLayout({
         {globalSeoScript && <PageScript html={globalSeoScript} ownerKey="global-seo" />}
       </head>
       <body>
+        <TopLoadingBar />
         <Header />
         <SkeletonLoaderShell>
           {children}
