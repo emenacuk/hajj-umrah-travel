@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import '@/styles/components/_enquiry-modal.scss';
 
@@ -13,6 +13,12 @@ interface DescriptionModalProps {
 
 export default function DescriptionModal({ isOpen, onClose, title, content }: DescriptionModalProps) {
     const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!isOpen || !mounted) return null;
 
     useEffect(() => {
         setMounted(true);
