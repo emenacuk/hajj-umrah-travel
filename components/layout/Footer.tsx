@@ -39,7 +39,7 @@ export default function Footer() {
         while ((match = regex.exec(html || '')) !== null) {
             links.push({
                 href: match[1],
-                text: match[2].replace(/<\/?[^>]+(>|$)/g, "").replace(/&nbsp;/g, ' ').trim()
+                text: match[2].replace(/<\/?[^>]+(>|$)/g, "").replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim()
             });
         }
         return links;

@@ -25,13 +25,13 @@ export default function CustomizeForm({ packageType, data }: CustomizeFormProps)
         contactDetail: {
             departureAirport: '',
             departureDate: null as Date | null,
-            nightsInMAK: 2,
-            nightsInMAD: 2,
+            nightsInMAK: 1,
+            nightsInMAD: 1,
             accommodation: '',
             roomType: '',
             mealType: '',
             distance: '',
-            passengers: { adults: 2, children: 0, infants: 0 },
+            passengers: { adults: 1, children: 0, infants: 0 },
             message: '',
             hajjType: '',
             captcha: ''

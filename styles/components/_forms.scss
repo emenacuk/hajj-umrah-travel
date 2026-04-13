@@ -529,21 +529,25 @@
 }
 
 @media screen and (max-width:1580px) and (min-width:1200px) {
+  .premium-inquiry-form .passenger-group .passenger-trigger{
+    font-size: 11px;
+  }
   .premium-inquiry-form {
-    .form-row {
-      &.three-cols {
-        display: flex;
-        flex-wrap: wrap;
+    // .form-row {
+    //   &.three-cols {
+    //     display: flex;
+    //     flex-wrap: wrap;
 
-        .form-group {
-          width: calc(50% - 5px);
+    //     .form-group {
+    //       width: calc(50% - 5px);
 
-          &:last-child {
-            width: 100%;
-          }
-        }
-      }
-    }
+    //       &:last-child {
+    //         width: 100%;
+    //       }
+    //     }
+    //   }
+    // }
+
 
     &.is-inner-page {
       .form-row {
