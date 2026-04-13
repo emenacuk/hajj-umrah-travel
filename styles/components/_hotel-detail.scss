@@ -47,12 +47,18 @@
   color: var(--color-dark);
   line-height: 1.15;
   margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
 
   @media (max-width: 992px) {
     font-size: 28px;
+    -webkit-line-clamp: 1;
   }
   @media (max-width: 576px) {
     font-size: 22px;
+    -webkit-line-clamp: 1;
   }
 }
 
@@ -274,10 +280,9 @@
         align-items: center;
 
         @media (max-width: 576px) {
-          grid-template-columns: 1fr 1fr !important;
+          grid-template-columns: 1fr !important;
           
           .submit-icon-btn {
-            grid-column: span 2;
             width: 100% !important;
             border-radius: 50px !important;
             height: 48px !important;

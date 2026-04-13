@@ -1,6 +1,7 @@
 import { fetchPageData } from '@/utils/api';
 import ContactTemplate from '@/templates/ContactTemplate';
 import { PageData } from '@/types';
+import PageScript from '@/components/common/PageScript';
 
 export default async function ContactPage() {
   const pageData = await fetchPageData('contact');
@@ -14,7 +15,12 @@ export default async function ContactPage() {
     return <ContactTemplate data={defaultData} />;
   }
 
-  return <ContactTemplate data={pageData} />;
+  return (
+    <>
+      <PageScript html={pageData.script} ownerKey="contact" />
+      <ContactTemplate data={pageData} />
+    </>
+  );
 }
 
 
