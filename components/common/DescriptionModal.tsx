@@ -20,12 +20,6 @@ export default function DescriptionModal({ isOpen, onClose, title, content }: De
 
     if (!isOpen || !mounted) return null;
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!isOpen || !mounted) return null;
-
     return createPortal(
         <div className="enquiry-modal-overlay" onClick={onClose}>
             <div className="enquiry-modal-content description-modal-content" onClick={e => e.stopPropagation()}>
