@@ -1,6 +1,8 @@
 // API Configuration - Hardcoded URLs (no env file needed)
 const API_BASE_URL = 'https://hajj-umrah.holyvibes.co.uk/api';
+// const API_BASE_URL = 'http://live_hajjumrahpackage.test/api';
 export const MEDIA_BASE_URL = 'https://hajj-umrah.holyvibes.co.uk';
+// export const MEDIA_BASE_URL = 'http://live_hajjumrahpackage.test';
 
 // API Response Types
 export interface ApiResponse<T> {
@@ -174,7 +176,7 @@ export async function getGeneralSettings(): Promise<GeneralSettings | null> {
       headers: {
         'Accept': 'application/json',
       },
-      next: { revalidate: 3600 }, // Enable ISR caching
+      next: { tags: ['settings'] }, // Enable tagged revalidation
     });
 
     if (!response.ok) {
@@ -210,15 +212,19 @@ export async function fetchPageData(slug: string): Promise<any> {
       headers: {
         'Accept': 'application/json',
       },
-      next: { revalidate: 3600 }, // Enable ISR caching
+      next: { tags: ['pages'] }, // Enable tagged revalidation
     });
 
     console.log('[API] Response status:', response.status, response.statusText);
 
     if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`[API] Page not found (404): ${slug}`);
+        return null;
+      }
       const errorText = await response.text();
       console.error('[API] Error Response:', errorText);
-      throw new Error(`API Error ${response.status}: ${response.statusText} - ${errorText.substring(0, 200)}`);
+      return null; // Return null instead of throwing to prevent build crash
     }
 
     const responseText = await response.text();
@@ -247,7 +253,7 @@ export async function fetchPageData(slug: string): Promise<any> {
     // If we're not requesting 'home' and the API returns '0' or 'Home Template', it's a 404
     if (slug !== 'home' && (apiResponse.result.page_template === '0' || apiResponse.result.page_template === 'Home Template')) {
       console.warn(`[API] Detected fallback to home for invalid slug: ${slug}`);
-      throw new Error('Page not found');
+      return null;
     }
 
     // Transform API response to match component expectations
@@ -421,7 +427,7 @@ export async function fetchPageData(slug: string): Promise<any> {
       url,
       error: error
     });
-    throw error; // Re-throw to let calling code handle it
+    return null; // Return null to let the page component handle missing data gracefully
   }
 }
 
@@ -535,7 +541,7 @@ export async function fetchUmrahPackagesByIds(ids: string[]): Promise<any[]> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['umrah-packages'] },
     });
 
     if (!response.ok) {
@@ -570,7 +576,7 @@ export async function fetchUmrahPackagesByIds(ids: string[]): Promise<any[]> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
-        next: { revalidate: 3600 },
+        next: { tags: ['umrah-packages'] },
       });
       if (postResponse.ok) {
         const postData = await postResponse.json();
@@ -601,7 +607,7 @@ export async function fetchUmrahPackagesByType(type: string): Promise<any[]> {
     const response = await fetch(`${API_BASE_URL}/umrah-packages?type=${encodeURIComponent(type.trim())}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['umrah-packages'] },
     });
 
     if (!response.ok) {
@@ -629,7 +635,7 @@ export async function fetchUmrahPackagesByType(type: string): Promise<any[]> {
 async function fetchAllUmrahPackages(filterIds?: string[]): Promise<any[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/umrah-packages`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['umrah-packages'] },
     });
 
     if (!response.ok) {
@@ -676,7 +682,7 @@ export async function fetchHajjPackagesByType(type: string): Promise<any[]> {
     const response = await fetch(`${API_BASE_URL}/hajj-packages?type=${encodeURIComponent(type.trim())}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['hajj-packages'] },
     });
 
     if (!response.ok) {
@@ -715,7 +721,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['hajj-packages'] },
     });
 
     if (!response.ok) {
@@ -749,7 +755,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: ids.map(id => id.trim()) }),
-        next: { revalidate: 3600 },
+        next: { tags: ['hajj-packages'] },
       });
       if (postResponse.ok) {
         const postData = await postResponse.json();
@@ -774,7 +780,7 @@ export async function fetchHajjPackagesByIds(ids: string[]): Promise<any[]> {
 async function fetchAllHajjPackages(filterIds?: string[]): Promise<any[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/hajj-packages`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['hajj-packages'] },
     });
 
     if (!response.ok) {
@@ -825,7 +831,7 @@ export async function fetchHajjPackages(): Promise<any[]> {
 export async function fetchUmrahPackage(id: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/umrah/packages/${id}`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['umrah-packages'] },
     });
 
     if (!response.ok) {
@@ -853,7 +859,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
     const param = isNumeric ? 'package_ids' : 'slug';
     const queryUrl = `${API_BASE_URL}/umrah-packages?${param}=${slug}`;
     console.log(`[API] Stage 1 fetching Umrah package by ${param}:`, queryUrl);
-    const queryResponse = await fetch(queryUrl, { cache: 'no-store' });
+    const queryResponse = await fetch(queryUrl, { next: { tags: ['umrah-packages'] } });
     if (queryResponse.ok) {
       const apiResponse = await queryResponse.json();
       if (apiResponse.status === 1 && apiResponse.result) {
@@ -866,7 +872,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
     // Stage 2: Try singular path /umrah-packages/${slug}
     const directUrl = `${API_BASE_URL}/umrah-packages/${slug}`;
     console.log('[API] Stage 2 fetching Umrah package by slug path:', directUrl);
-    const directResponse = await fetch(directUrl, { cache: 'no-store' });
+    const directResponse = await fetch(directUrl, { next: { tags: ['umrah-packages'] } });
     if (directResponse.ok) {
       const apiResponse = await directResponse.json();
       if (apiResponse.status === 1 && apiResponse.result) {
@@ -893,7 +899,7 @@ export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
 export async function fetchHajjPackage(id: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/hajj/packages/${id}`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['hajj-packages'] },
     });
 
     if (!response.ok) {
@@ -921,7 +927,7 @@ export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
     const param = isNumeric ? 'package_ids' : 'slug';
     const queryUrl = `${API_BASE_URL}/hajj-packages?${param}=${slug}`;
     console.log(`[API] Stage 1 fetching Hajj package by ${param}:`, queryUrl);
-    const queryResponse = await fetch(queryUrl, { cache: 'no-store' });
+    const queryResponse = await fetch(queryUrl, { next: { tags: ['hajj-packages'] } });
     if (queryResponse.ok) {
       const apiResponse = await queryResponse.json();
       if (apiResponse.status === 1 && apiResponse.result) {
@@ -934,7 +940,7 @@ export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
     // Stage 2: Try singular path /hajj-packages/${slug}
     const directUrl = `${API_BASE_URL}/hajj-packages/${slug}`;
     console.log('[API] Stage 2 fetching Hajj package by slug path:', directUrl);
-    const directResponse = await fetch(directUrl, { cache: 'no-store' });
+    const directResponse = await fetch(directUrl, { next: { tags: ['hajj-packages'] } });
     if (directResponse.ok) {
       const apiResponse = await directResponse.json();
       if (apiResponse.status === 1 && apiResponse.result) {
@@ -1010,7 +1016,7 @@ export async function fetchReviewsByIds(ids: string[]): Promise<any[]> {
       headers: {
         'Accept': 'application/json',
       },
-      next: { revalidate: 3600 },
+      next: { tags: ['reviews'] },
     });
 
     if (!response.ok) {
@@ -1110,7 +1116,7 @@ export async function fetchHotelBySlug(slug: string): Promise<any> {
     const isNumeric = /^\d+$/.test(slug);
     const param = isNumeric ? 'hotel_id' : 'slug';
     const res = await fetch(`${API_BASE_URL}/hotels?${param}=${encodeURIComponent(slug)}`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['hotels'] },
       headers: { Accept: 'application/json' },
     });
     if (res.ok) {
@@ -1133,7 +1139,7 @@ export async function fetchHotelBySlug(slug: string): Promise<any> {
   // Stage 2: path segment
   try {
     const res = await fetch(`${API_BASE_URL}/hotels/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 3600 },
+      next: { tags: ['hotels'] },
       headers: { Accept: 'application/json' },
     });
     if (res.ok) {
@@ -1404,7 +1410,7 @@ export async function getBlogDetail(slug: string): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['blogs'] },
     });
 
     if (!response.ok) {
@@ -1476,7 +1482,7 @@ export async function fetchMakkahBlogs(page: number = 1): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['blogs'] },
     });
 
     if (!response.ok) {
@@ -1534,7 +1540,7 @@ export async function getHotelDetail(slug: string): Promise<any> {
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['hotels'] },
     });
 
     if (!response.ok) {
@@ -1613,7 +1619,7 @@ export async function getMakkahHotels(page: number = 1, search: string = ''): Pr
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['hotels'] },
     });
 
     if (!response.ok) {
@@ -1638,7 +1644,7 @@ export async function getMadinahHotels(page: number = 1, search: string = ''): P
     const response = await fetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      next: { revalidate: 3600 },
+      next: { tags: ['hotels'] },
     });
 
     if (!response.ok) {

@@ -14,7 +14,7 @@ interface HotelCardProps {
 
 export default function HotelCard({ id, name, city, distance_from_masjid, rating, image, link = '#' }: HotelCardProps) {
   return (
-    <div className="hotel-card">
+    <div className="hotel-card-page">
       <div className="hotel-image-wrapper">
         <img src={image} alt={name} />
       </div>
