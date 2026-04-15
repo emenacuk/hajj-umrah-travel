@@ -18,7 +18,7 @@
   padding: 0px 10px 0px 10px;
   gap: 0;
   display: grid;
-  grid-template-columns: 356px 1fr;s
+  grid-template-columns: 275px 1fr;s
 
   &:hover {
     transform: translateY(-5px);
@@ -26,7 +26,7 @@
 
   .hotel-image-wrapper {
     // width: 48%;
-    max-width: 356px;
+    object-fit: cover;
     height: 100%;
     overflow: hidden;
     border-radius: 25px;
@@ -123,8 +123,6 @@
 
   @media (max-width: 1200px) {
     height: auto;
-    min-height: 280px;
-
     .hotel-title {
       font-size: 24px;
     }
