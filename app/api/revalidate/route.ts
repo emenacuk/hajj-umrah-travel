@@ -23,13 +23,28 @@ export async function GET(request: NextRequest) {
   // 2. Revalidate by tag (preferred)
   if (tag) {
     try {
-      revalidateTag(tag);
-      return NextResponse.json({
-        revalidated: true,
-        type: 'tag',
-        tag,
-        now: Date.now(),
-      });
+      if (tag === 'all') {
+        const allTags = ['settings', 'pages', 'umrah-packages', 'hajj-packages', 'reviews', 'hotels', 'blogs'];
+        allTags.forEach(t => revalidateTag(t));
+        // Also clear by layout effectively revalidating everything in app router
+        revalidatePath('/', 'layout');
+        
+        return NextResponse.json({
+          revalidated: true,
+          type: 'tag',
+          tag: 'all',
+          revalidatedTags: allTags,
+          now: Date.now(),
+        });
+      } else {
+        revalidateTag(tag);
+        return NextResponse.json({
+          revalidated: true,
+          type: 'tag',
+          tag,
+          now: Date.now(),
+        });
+      }
     } catch (err: any) {
       return NextResponse.json(
         { revalidated: false, message: 'Error revalidating tag.', error: err.message },
