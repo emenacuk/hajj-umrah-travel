@@ -122,11 +122,13 @@
 
 
   }
-.packages-swiper-wrapper{
-  .swiper-slide{
-    height: auto;
+
+  .packages-swiper-wrapper {
+    .swiper-slide {
+      height: auto;
+    }
   }
-}
+
   .bestpackagesswiper,
   .bestUmrah-swiper {
     .swiper-slide {
@@ -162,6 +164,7 @@
 
       .swiper-slide {
         height: stretch;
+
         .hajj-card {
           height: 100%;
         }
@@ -200,9 +203,11 @@
 
   }
 }
-.inner-banner + .exploration-section {
-    padding-top: 0;
+
+.inner-banner+.exploration-section {
+  padding-top: 0;
 }
+
 .umrah-exploration-card {
   position: relative;
   border-radius: 18px;
@@ -335,6 +340,7 @@
   background-color: #FAFAFA;
   padding: 60px 0;
   margin-top: 60px;
+
   .why-us-header {
     margin-bottom: 3rem;
   }
@@ -343,6 +349,30 @@
     display: grid;
     grid-template-columns: 1fr 321px 1fr;
     gap: 30px;
+
+    .centeredchooose {
+      background: url('/choose.svg')center no-repeat;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 321px;
+      height: 321px;
+      margin: 0 auto;
+
+      h2 {
+        font-size: 113px;
+        font-family: var(--font-body);
+        line-height: 82px;
+        color: #fff;
+        margin-bottom: 10px;
+
+        span {
+          font-size: 30px;
+          display: block;
+        }
+      }
+    }
 
     .features-card-wrapper {
       display: flex;
@@ -499,6 +529,7 @@
     display: none;
   }
 }
+
 @media screen and (max-width:1650px) {
   .hajjsection {
     .packages-swiper-wrapper {
@@ -508,6 +539,7 @@
     }
   }
 }
+
 @media screen and (max-width:1580px) and (min-width:1200px) {
   .bestpackages {
     grid-template-columns: 300px 1fr;
@@ -536,7 +568,7 @@
 @media screen and (max-width:1580px) {
   .why-us-section {
     .features-grid {
-      grid-template-columns: 1fr 236px 1fr;
+     
       align-items: center;
     }
 
@@ -587,9 +619,10 @@
 }
 
 @media (max-width: 1200px) {
-  .hajjsection .packages-swiper-wrapper .imagearea{
+  .hajjsection .packages-swiper-wrapper .imagearea {
     display: none;
   }
+
   .bestpackages {
     padding: 50px 20px 0;
     grid-template-columns: 1fr;
@@ -630,7 +663,8 @@
 
       .sliderhere {
         order: 1;
-        .packages-swiper-wrapper{
+
+        .packages-swiper-wrapper {
           padding: 0;
         }
       }
@@ -662,6 +696,8 @@
           margin: 0 auto;
           max-width: 200px;
         }
+
+
       }
 
       .features-card-wrapper {
@@ -754,35 +790,45 @@
     }
   }
 }
+
 @media (max-width: 576.5px) {
   .bestpackages .sideimage {
     padding-bottom: 0;
   }
-  .dealssection, .hajjsection, .partners-section{
+
+  .dealssection,
+  .hajjsection,
+  .partners-section {
     padding-top: 25px;
   }
-  .why-us-section{
+
+  .why-us-section {
     padding: 25px 0;
     margin-top: 25px;
   }
+
   .exploration-section,
   .home-reviews-section,
   .umrah-hajj-services,
-  .scroll-detail-section{
+  .scroll-detail-section {
     padding-top: 25px;
   }
+
   .customize-banner,
-  .faq-section{
+  .faq-section {
     padding: 25px 0 0;
   }
-  .sectionheadings{
+
+  .sectionheadings {
     padding-bottom: 25px;
   }
+
   .umrah-hajj-services .services-grid .service-card .service-icon {
     width: 80px;
     height: 80px;
   }
-  .umrah-hajj-services .services-list{
+
+  .umrah-hajj-services .services-list {
     gap: 10px;
   }
 }

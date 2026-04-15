@@ -44,7 +44,10 @@ export default function WhyChoose() {
           </div>
 
           <div className='centeredchooose'>
-            <img src="/chooseus.png" alt="" />
+            <h2>
+              <span>Why Choose </span>
+              Us?
+            </h2>
           </div>
 
           <div className='rightside features-card-wrapper'>
