@@ -62,6 +62,7 @@ export function ScrollDetail({
                                 width={400}
                                 height={755}
                                 priority
+                                unoptimized
                             />
                         </div>
                     )}
