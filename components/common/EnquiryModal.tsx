@@ -76,6 +76,23 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        // Restriction for name field: alphabets, spaces, and dots only
+        if (name === 'name') {
+            const regex = /^[a-zA-Z\s.]*$/;
+            if (!regex.test(value)) {
+                return;
+            }
+        }
+
+        // Restriction for phone field: digits, spaces, +, and - only
+        if (name === 'phone') {
+            const regex = /^[0-9+\s-]*$/;
+            if (!regex.test(value)) {
+                return;
+            }
+        }
+
         if (['name', 'email', 'phone', 'captchaInput'].includes(name)) {
             setFormData(prev => ({ ...prev, [name]: value }));
         } else {
@@ -192,6 +209,8 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 placeholder="Full Name*"
                                 value={formData.name}
                                 onChange={handleChange}
+                                pattern="[a-zA-Z\s.]+"
+                                title="Only alphabets, spaces, and dots are allowed"
                                 required
                             />
                         </div>
@@ -253,6 +272,8 @@ export default function EnquiryModal({ isOpen, onClose, selectedPackage, package
                                 placeholder="Phone Number*"
                                 value={formData.phone}
                                 onChange={handleChange}
+                                pattern="[0-9+\s-]+"
+                                title="Only digits, spaces, +, and - are allowed"
                                 required
                             />
                         </div>

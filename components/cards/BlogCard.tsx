@@ -15,7 +15,7 @@ export default function BlogCard({ post }: BlogCardProps) {
           <img src={getImageUrl(post.image)} alt={post.title} />
         </div>        
         <div className="blog-content">       
-          <h3 className="blog-title">{post.title}</h3>
+          <span className="blog-title">{post.title}</span>
           <div className="blog-meta">
             <span className="author">{post.author || 'Admin'}</span>
             {/* <div className="date-wrapper">

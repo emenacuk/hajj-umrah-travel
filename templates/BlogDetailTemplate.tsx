@@ -1,5 +1,5 @@
 import { PageData, BlogPost } from '@/types';
-import InnerBanner from '@/components/banners/InnerBanner';
+import BlogBanner from '@/components/banners/BlogBanner';
 import BlogCard from '@/components/cards/BlogCard';
 import '@/styles/components/_blog-detail.scss';
 
@@ -13,12 +13,15 @@ export default function BlogDetailTemplate({ data }: BlogDetailTemplateProps) {
     description: '',
   };
 
+  const title = data.title || '';
+  const bannerDescription = data?.banner_description || '';
+
   const postContent = data.content?.body || '';
   const latestPosts = data.content?.latestPosts || [];
 
   return (
     <>
-      {bannerData && <InnerBanner data={bannerData} form={false} />}
+      {bannerData && <BlogBanner data={bannerData} form={false} />}
 
       <section className="section blog-detail-section">
         <div className="container">

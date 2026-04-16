@@ -11,6 +11,8 @@ export interface PageData {
   };
   banner_heading?: string;
   banner_subheading?: string;
+  banner_description?: string;
+  short_description?: string;
   image_url?: string;
   page_url?: string;
   search_engine?: number;

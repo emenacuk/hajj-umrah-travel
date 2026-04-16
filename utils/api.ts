@@ -1422,8 +1422,8 @@ export async function getBlogDetail(slug: string): Promise<any> {
       const blog = apiResponse.blog;
 
       // Check if banner_description is truly empty (e.g., "<p>&nbsp;</p>" or just whitespace)
-      const isBannerHeadingEmpty = !blog.banner_heading && (!blog.banner_description || blog.banner_description.replace(/<[^>]*>/g, '').trim() === '');
-      const bannerTitle = isBannerHeadingEmpty ? blog.title : (blog.banner_heading || blog.banner_description);
+      const bannerTitle = blog.banner_heading || blog.title;
+      const bannerDescription = blog.banner_description;
 
       return {
         id: blog.id,
@@ -1434,7 +1434,7 @@ export async function getBlogDetail(slug: string): Promise<any> {
         content: {
           banner: {
             title: bannerTitle,
-            description: blog.short_description || "",
+            description: bannerDescription || blog.short_description || "",
             image: blog.banner_image_url || blog.image_url,
           },
           body: blog.description,
@@ -1554,8 +1554,7 @@ export async function getHotelDetail(slug: string): Promise<any> {
       const hotel = mapHotelData(hotelData);
 
       // Check if banner_description is truly empty (e.g., "<p>&nbsp;</p>" or just whitespace)
-      const isBannerHeadingEmpty = !hotelData.banner_heading && (!hotelData.banner_description || hotelData.banner_description.replace(/<[^>]*>/g, '').trim() === '');
-      const bannerTitle = isBannerHeadingEmpty ? hotel.name : (hotelData.banner_heading || hotelData.banner_description);
+      const bannerTitle = hotelData.banner_heading || hotel.name;
 
       return {
         id: hotel.id,
