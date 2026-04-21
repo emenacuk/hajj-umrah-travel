@@ -93,11 +93,18 @@
       gap: 2px;
       margin-bottom: 15px;
 
-      .star-filled,
+      .star-filled {
+        img {
+          width: 17px;
+          height: 17px;
+        }
+      }
+
       .star {
         img {
           width: 17px;
           height: 17px;
+          filter: grayscale(100%) brightness(1.5) opacity(0.4);
         }
       }
     }
