@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { getGeneralSettings, GeneralSettings, getImageUrl } from '@/utils/api';
+import { getGeneralSettings, GeneralSettings, getImageUrl, MEDIA_BASE_URL } from '@/utils/api';
 
 export default function Footer() {
     const [settings, setSettings] = useState<GeneralSettings | null>(null);
@@ -50,14 +50,48 @@ export default function Footer() {
     const contents = footerData?.contents;
     const socialIcons = footerData?.social_media_icons;
 
-    const getSocialLink = (platform: string) => {
-        if (!socialIcons) return "#";
+    interface SocialIconEntry {
+        index: string;
+        platform: string;
+        link: string;
+        iconPath: string;
+        alt: string;
+    }
+
+    const getSocialIcons = (): SocialIconEntry[] => {
+        if (!socialIcons || socialIcons.enable_social_media_icons !== '1') return [];
+
+        const entries: SocialIconEntry[] = [];
         const keys = Object.keys(socialIcons);
-        const index = keys.find(key =>
-            key.startsWith('social_media_icons_input_') &&
-            socialIcons[key]?.toLowerCase() === platform.toLowerCase()
-        )?.split('_').pop();
-        return index ? (socialIcons[`social_media_icons_link_input_${index}`] as string) || "#" : "#";
+
+        // Collect all numeric suffixes (skip INDEX and non-numeric)
+        const numericIndices = new Set<string>();
+        keys.forEach(key => {
+            const match = key.match(/^social_media_icons_link_input_(\d+)$/);
+            if (match) numericIndices.add(match[1]);
+        });
+
+        numericIndices.forEach(idx => {
+            const platform = socialIcons[`social_media_icons_input_${idx}`] as string | null;
+            const link = socialIcons[`social_media_icons_link_input_${idx}`] as string | null;
+            const iconPath = socialIcons[`social_media_icons_${idx}`] as string | null;
+            const alt = socialIcons[`social_media_icons_alt_input_${idx}`] as string | null;
+
+            // Only render if link is present and icon is not a dummy placeholder
+            if (link && iconPath && !iconPath.includes('dummy.svg')) {
+                const label = platform || alt || `social-${idx}`;
+                entries.push({
+                    index: idx,
+                    platform: label,
+                    link,
+                    iconPath,
+                    alt: alt || label,
+                });
+            }
+        });
+
+        // Sort by numeric index order
+        return entries.sort((a, b) => Number(a.index) - Number(b.index));
     };
 
     if (!settings) {
@@ -86,18 +120,17 @@ export default function Footer() {
                                 </div>
 
                                 <div className="footer-social">
-                                    <a href={getSocialLink('facebook')} className="social-icon facebook" target="_blank" rel="noopener noreferrer">
-                                        <img src="/fb.svg" alt="facebook" />
-                                    </a>
-                                    <a href={getSocialLink('Instagram')} className="social-icon instagram" target="_blank" rel="noopener noreferrer">
-                                        <img src="/insta.svg" alt="instagram" />
-                                    </a>
-                                    <a href={getSocialLink('whatsapp')} className="social-icon whatsapp" target="_blank" rel="noopener noreferrer">
-                                        <img src="/whatsapp.svg" alt="whatsapp" />
-                                    </a>
-                                    <a href={getSocialLink('youtube')} className="social-icon youtube" target="_blank" rel="noopener noreferrer">
-                                        <img src="/youtube.svg" alt="youtube" />
-                                    </a>
+                                    {getSocialIcons().map((icon) => (
+                                        <a
+                                            key={icon.index}
+                                            href={icon.link}
+                                            className={`social-icon ${icon.platform.toLowerCase()}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <img src={`${MEDIA_BASE_URL}/${icon.iconPath}`} alt={icon.alt} />
+                                        </a>
+                                    ))}
                                 </div>
                             </div>
                             <div className="footer-divider"></div>
