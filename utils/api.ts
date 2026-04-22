@@ -1072,8 +1072,19 @@ export function mapHotelData(hotel: any): any {
     id: hotel.id,
     name: hotel.name || hotel.hotel_name || hotel.title || '',
     city: hotel.city || (String(hotel.city_id) === '1' ? 'Makkah' : String(hotel.city_id) === '2' ? 'Madinah' : ''),
-    distance_from_masjid: hotel.distance_from_masjid || hotel.distance_from_masjid || '',
-    rating: parseInt(hotel.hotel_star || hotel.rating || hotel.stars || '5'),
+    distance_from_masjid: hotel.distance_from_masjid || hotel.distance || hotel.walk_dist || hotel.dist_masjid || '',
+    distance: hotel.distance || hotel.distance_from_masjid || hotel.walk_dist || hotel.dist_masjid || '',
+    rating: (() => {
+      const val = hotel.hotel_star ?? hotel.rating ?? hotel.stars;
+      const parsed = parseInt(String(val));
+      return isNaN(parsed) ? 0 : parsed;
+    })(),
+    stars: (() => {
+      const val = hotel.hotel_star ?? hotel.rating ?? hotel.stars;
+      const parsed = parseInt(String(val));
+      return isNaN(parsed) ? 0 : parsed;
+    })(),
+    image: getImageUrl(hotel.thumbnail_image || hotel.image_url || hotel.hotel_image || ''),
     images: Array.isArray(hotel.images)
       ? hotel.images.map((img: any) => img.url || img.image_url || img)
       : (hotel.image_url || hotel.thumbnail_image) ? [hotel.image_url || hotel.thumbnail_image] : [],
