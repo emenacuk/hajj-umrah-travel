@@ -1618,7 +1618,7 @@ export async function getHotelDetail(slug: string): Promise<any> {
 }
 
 
-export async function getMakkahHotels(page: number = 1, search: string = ''): Promise<any> {
+export async function getMakkahHotels(page: number = 1, search: string = '', signal?: AbortSignal): Promise<any> {
   let url = `${API_BASE_URL}/hotels?city_id=1&page=${page}`;
   if (search) {
     url += `&search=${encodeURIComponent(search)}`;
@@ -1630,20 +1630,26 @@ export async function getMakkahHotels(page: number = 1, search: string = ''): Pr
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       next: { tags: ['hotels'] },
+      signal,
     });
 
     if (!response.ok) {
+      if (response.statusText === 'abort') return null;
       throw new Error(`API Error ${response.status}: ${response.statusText}`);
     }
 
     const apiResponse = await response.json();
     return apiResponse;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.log('[API] Makkah hotels fetch aborted');
+      return null;
+    }
     console.error('[API] Error fetching Makkah hotels:', error);
     return null;
   }
 }
-export async function getMadinahHotels(page: number = 1, search: string = ''): Promise<any> {
+export async function getMadinahHotels(page: number = 1, search: string = '', signal?: AbortSignal): Promise<any> {
   let url = `${API_BASE_URL}/hotels?city_id=2&page=${page}`;
   if (search) {
     url += `&search=${encodeURIComponent(search)}`;
@@ -1655,15 +1661,21 @@ export async function getMadinahHotels(page: number = 1, search: string = ''): P
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       next: { tags: ['hotels'] },
+      signal,
     });
 
     if (!response.ok) {
+      if (response.statusText === 'abort') return null;
       throw new Error(`API Error ${response.status}: ${response.statusText}`);
     }
 
     const apiResponse = await response.json();
     return apiResponse;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.log('[API] Madinah hotels fetch aborted');
+      return null;
+    }
     console.error('[API] Error fetching Madinah hotels:', error);
     return null;
   }

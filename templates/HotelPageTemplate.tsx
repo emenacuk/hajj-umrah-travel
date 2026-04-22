@@ -66,48 +66,101 @@ export default function HotelPageTemplate({ data }: { data: any }) {
   const [madinahSearch, setMadinahSearch] = useState('');
 
   const hasLoadedInitial = React.useRef(false);
+  const makkahControllerRef = React.useRef<AbortController | null>(null);
+  const madinahControllerRef = React.useRef<AbortController | null>(null);
+  const makkahZeroRef = React.useRef<string | null>(null);
+  const madinahZeroRef = React.useRef<string | null>(null);
 
 
 
   const loadMoreMakkah = React.useCallback(async (isInitial = false, searchOverride?: string) => {
     const activeSearch = searchOverride !== undefined ? searchOverride : makkahSearch;
-    if (makkahLoading || (!makkahHasMore && !isInitial && searchOverride === undefined)) return;
+    
+    // Optimization: If current search starts with a prefix that already returned 0 results, skip API
+    if (isInitial && activeSearch && makkahZeroRef.current && activeSearch.startsWith(makkahZeroRef.current)) {
+      setMakkahHotels([]);
+      setMakkahHasMore(false);
+      return;
+    }
+
+    // If it's a search or initial load, abort previous makkah request
+    if (isInitial) {
+      if (makkahControllerRef.current) makkahControllerRef.current.abort();
+      makkahControllerRef.current = new AbortController();
+    } else if (makkahLoading || !makkahHasMore) {
+      // For load-more, only return if already loading or no more items
+      return;
+    }
+
     setMakkahLoading(true);
     try {
       const nextPage = isInitial ? 1 : makkahPage + 1;
-      const result = await getMakkahHotels(nextPage, activeSearch);
-      if (result && result.data) {
+      const result = await getMakkahHotels(nextPage, activeSearch, makkahControllerRef.current?.signal);
+      
+      if (result && result.data && result.data.length > 0) {
         const mapped = result.data.map(mapHotelData);
         setMakkahHotels(prev => isInitial ? mapped : [...prev, ...mapped]);
         setMakkahPage(nextPage);
         setMakkahHasMore(result.pagination?.current_page < result.pagination?.last_page);
-      } else {
-        if (isInitial) setMakkahHotels([]);
+        
+        // Found results, so clear any zero-marker
+        if (isInitial) makkahZeroRef.current = null;
+      } else if (result !== null) {
+        // Result is explicitly empty (not aborted)
+        if (isInitial) {
+          setMakkahHotels([]);
+          // Only mark as zero-result if we were actually searching (not just loading page 1)
+          if (activeSearch) makkahZeroRef.current = activeSearch;
+        }
         setMakkahHasMore(false);
       }
     } finally {
-      setMakkahLoading(false);
+      // Don't set loading false if we were aborted and a new request started
+      if (!makkahControllerRef.current?.signal.aborted) {
+        setMakkahLoading(false);
+      }
     }
   }, [makkahLoading, makkahHasMore, makkahPage, makkahSearch]);
 
   const loadMoreMadinah = React.useCallback(async (isInitial = false, searchOverride?: string) => {
     const activeSearch = searchOverride !== undefined ? searchOverride : madinahSearch;
-    if (madinahLoading || (!madinahHasMore && !isInitial && searchOverride === undefined)) return;
+    
+    if (isInitial && activeSearch && madinahZeroRef.current && activeSearch.startsWith(madinahZeroRef.current)) {
+      setMadinahHotels([]);
+      setMadinahHasMore(false);
+      return;
+    }
+
+    if (isInitial) {
+      if (madinahControllerRef.current) madinahControllerRef.current.abort();
+      madinahControllerRef.current = new AbortController();
+    } else if (madinahLoading || !madinahHasMore) {
+      return;
+    }
+
     setMadinahLoading(true);
     try {
       const nextPage = isInitial ? 1 : madinahPage + 1;
-      const result = await getMadinahHotels(nextPage, activeSearch);
-      if (result && result.data) {
+      const result = await getMadinahHotels(nextPage, activeSearch, madinahControllerRef.current?.signal);
+      
+      if (result && result.data && result.data.length > 0) {
         const mapped = result.data.map(mapHotelData);
         setMadinahHotels(prev => isInitial ? mapped : [...prev, ...mapped]);
         setMadinahPage(nextPage);
         setMadinahHasMore(result.pagination?.current_page < result.pagination?.last_page);
-      } else {
-        if (isInitial) setMadinahHotels([]);
+        
+        if (isInitial) madinahZeroRef.current = null;
+      } else if (result !== null) {
+        if (isInitial) {
+          setMadinahHotels([]);
+          if (activeSearch) madinahZeroRef.current = activeSearch;
+        }
         setMadinahHasMore(false);
       }
     } finally {
-      setMadinahLoading(false);
+      if (!madinahControllerRef.current?.signal.aborted) {
+        setMadinahLoading(false);
+      }
     }
   }, [madinahLoading, madinahHasMore, madinahPage, madinahSearch]);
 
