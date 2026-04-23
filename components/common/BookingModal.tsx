@@ -217,7 +217,7 @@ export default function BookingModal({ isOpen, onClose, packageTitle, selectedPa
                 </button>
 
                 <div className="modal-header">
-                    <p>Just Drop Your Contact, One of Our Agent will contact you and Book Package this Package over the call</p>
+                    <p>Just Drop Your Contact, One of Our Agent will contact you and Book this Package over the call</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="booking-modal-form">
