@@ -67,7 +67,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+          <div className="packages-swiper-wrapper paddleft" style={{ position: 'relative' }}>
             <PackageSlider
               items={section1Packages}
               cardType="umrah"
@@ -82,7 +82,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2, spaceBetween: 24 },
                 1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
-              slidesPerView={1}
+              slidesPerView={1.2}
               spaceBetween={15}
             />
           </div>
@@ -119,7 +119,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+          <div className="packages-swiper-wrapper paddleft" style={{ position: 'relative' }}>
             <PackageSlider
               items={section2Packages}
               cardType="umrah"
@@ -134,7 +134,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2, spaceBetween: 24 },
                 1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
-              slidesPerView={1}
+              slidesPerView={1.2}
               spaceBetween={15}
             />
           </div>
@@ -171,7 +171,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+          <div className="packages-swiper-wrapper paddleft" style={{ position: 'relative' }}>
             <PackageSlider
               items={section3Packages}
               cardType="umrah"
@@ -186,7 +186,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2, spaceBetween: 24 },
                 1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
-              slidesPerView={1}
+              slidesPerView={1.2}
               spaceBetween={15}
             />
           </div>
@@ -225,7 +225,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
               </div>
             </div>
           </div>
-          <div className="packages-swiper-wrapper" style={{ position: 'relative' }}>
+          <div className="packages-swiper-wrapper paddleft" style={{ position: 'relative' }}>
             <PackageSlider
               items={section4Packages}
               cardType="umrah"
@@ -240,7 +240,7 @@ export default function UmrahPackageTemplate({ data }: UmrahPackageTemplateProps
                 1200: { slidesPerView: 2.2, spaceBetween: 24 },
                 1700: { slidesPerView: 2.8, spaceBetween: 24 },
               }}
-              slidesPerView={1}
+              slidesPerView={1.2}
               spaceBetween={15}
             />
           </div>

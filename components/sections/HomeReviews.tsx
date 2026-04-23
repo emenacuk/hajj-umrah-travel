@@ -23,10 +23,10 @@ const ReviewTextNode: React.FC<{ content: string; isLoaded: boolean }> = ({ cont
                 setIsOverflowing(textRef.current.scrollHeight > textRef.current.clientHeight + 2);
             }
         };
-        
+
         // Timeout to allow DOM paint after 'display: block'
         const timeout = setTimeout(checkOverflow, 50);
-        
+
         window.addEventListener('resize', checkOverflow);
         return () => {
             window.removeEventListener('resize', checkOverflow);
@@ -36,7 +36,7 @@ const ReviewTextNode: React.FC<{ content: string; isLoaded: boolean }> = ({ cont
 
     return (
         <div className="review-text-container">
-            <div 
+            <div
                 ref={textRef}
                 className="review-text"
                 style={{
@@ -45,11 +45,11 @@ const ReviewTextNode: React.FC<{ content: string; isLoaded: boolean }> = ({ cont
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                 }}
-                dangerouslySetInnerHTML={{ __html: content }} 
+                dangerouslySetInnerHTML={{ __html: content }}
             />
             {isOverflowing && (
-                <button 
-                    className="read-more-btn" 
+                <button
+                    className="read-more-btn"
                     onClick={() => setIsModalOpen(true)}
                     style={{
                         background: 'none',
@@ -67,7 +67,7 @@ const ReviewTextNode: React.FC<{ content: string; isLoaded: boolean }> = ({ cont
                     Read more
                 </button>
             )}
-            <DescriptionModal 
+            <DescriptionModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 title="Review"
@@ -110,7 +110,7 @@ const HomeReviews: React.FC<HomeReviewsProps> = ({ reviews, cardsPerSlide = 3, h
                     </div>
                 </div>
             </div>
-            <div className="reviews-carousel" style={{ position: 'relative' }}>
+            <div className="reviews-carousel paddleft" style={{ position: 'relative' }}>
                 {!isLoaded && <SliderSkeleton count={cardsPerSlide} />}
                 <div style={{ display: isLoaded ? 'block' : 'none' }}>
                     <Swiper

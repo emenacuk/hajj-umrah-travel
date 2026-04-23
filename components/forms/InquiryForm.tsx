@@ -265,7 +265,7 @@ export default function InquiryForm({ data }: InquiryFormProps) {
 
       {/* Row 3 */}
       <div className="form-row captcha-row">
-        <div className="form-group captcha-group">
+        <div className="form-group captcha-group smallfirst">
           <input
             type="text"
             name="captchaInput"
@@ -276,25 +276,27 @@ export default function InquiryForm({ data }: InquiryFormProps) {
           />
           <span className="captcha-text">{captcha.n1}+{captcha.n2}</span>
         </div>
-        <div className="form-group message-group">
-          <input
-            type="text"
-            name="message"
-            placeholder="Type a message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          />
+        <div className='largetwo'>
+          <div className="form-group message-group">
+            <input
+              type="text"
+              name="message"
+              placeholder="Type a message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+            />
 
-        </div>
-        <div>
-          <button type="submit" className="submit-icon-btn" disabled={isSubmitting}>
-            <span className='textbtn'>
-              Submit
-            </span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </div>
+          <div>
+            <button type="submit" className="submit-icon-btn" disabled={isSubmitting}>
+              <span className='textbtn'>
+                Submit
+              </span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
 
-          </button>
+            </button>
+          </div>
         </div>
       </div>
     </form>

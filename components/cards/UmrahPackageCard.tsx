@@ -36,7 +36,9 @@ export default function UmrahPackageCard({ package: pkg, loading }: UmrahPackage
             ))}
           </div>
         )}
-        <span className='headingoncard'>{pkg.title}</span>
+        <Link href={`/umrah-packages/${pkg.pageUrl}`} >
+          <span className='headingoncard'>{pkg.title}</span>
+        </Link>
 
         <div className="package-price">
           <span className="price-label">starting <br /> from</span>

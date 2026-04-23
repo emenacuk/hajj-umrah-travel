@@ -306,6 +306,10 @@
   font-size: 18px;
   margin-bottom: 10px;
   max-width: 1000px;
+
+  ul {
+    padding-left: 18px;
+  }
 }
 
 .package-icon-row {
@@ -593,6 +597,7 @@
       justify-content: flex-end;
       gap: 5px;
       margin-left: auto;
+
       span {
         color: var(--color-primary);
       }
@@ -1123,7 +1128,8 @@
     width: 80px;
     height: 80px;
   }
-  .related-packages-detail{
+
+  .related-packages-detail {
     padding-top: 25px;
   }
 }

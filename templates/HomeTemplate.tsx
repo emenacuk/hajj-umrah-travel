@@ -168,7 +168,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
 
-          <div className="packages-swiper-container-full">
+          <div className="packages-swiper-container-full paddleft">
             {section2Widget.slider_enable === '1' ? (
               <PackageSlider
                 items={section2Packages}
@@ -289,7 +289,7 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
             </div>
           </div>
           {section3Widget.slider_enable === '1' ? (
-            <div className="packages-swiper-wrapper bestHajj-swiper" style={{ position: 'relative' }}>
+            <div className="packages-swiper-wrapper bestHajj-swiper paddleft" style={{ position: 'relative' }}>
               <div className='sliderhere'>
                 <PackageSlider
                   items={section3Packages}
@@ -299,13 +299,13 @@ export default function HomeTemplate({ data }: HomeTemplateProps) {
                   paginationEl=".bestHajj-pagination"
                   skeletonCount={3}
                   breakpoints={{
-                    640: { slidesPerView: 2, spaceBetween: 15 },
+                    640: { slidesPerView: 2.2, spaceBetween: 15 },
                     992: { slidesPerView: 2.2, spaceBetween: 15 },
                     1025: { slidesPerView: 2.5, spaceBetween: 24 },
                     1200: { slidesPerView: 2, spaceBetween: 24 },
                     1500: { slidesPerView: 3, spaceBetween: 24 },
                   }}
-                  slidesPerView={1}
+                  slidesPerView={1.2}
                   spaceBetween={15}
                 />
               </div>
