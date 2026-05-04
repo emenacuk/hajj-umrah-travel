@@ -1,33 +1,48 @@
-import { fetchAllBlogPosts } from '@/utils/api';
-
 /**
  * Route handler for /post-sitemap.xml
- * Generates a dedicated XML sitemap for blog posts.
+ * Fetches blog post sitemap from the backend API endpoint.
  */
 export async function GET() {
-    const baseUrl = 'https://hajjumrapackages.co.uk';
-    const blogPosts = await fetchAllBlogPosts();
+    const apiUrl = 'https://hajj-umrah.holyvibes.co.uk/api/generate-post-sitemap';
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    try {
+        const response = await fetch(apiUrl, {
+            next: { revalidate: 3600 }, // Revalidate every hour
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to fetch post sitemap from API: ${response.statusText}`);
+            // Return empty sitemap on error
+            const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${blogPosts
-            .map((post: any) => {
-                const slug = post.slug || post.page_url || post.id;
-                return `
-    <url>
-      <loc>${baseUrl}/blog/${slug}</loc>
-      <lastmod>${new Date().toISOString()}</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.6</priority>
-    </url>`;
-            })
-            .join('')}
 </urlset>`;
+            return new Response(emptySitemap, {
+                headers: {
+                    'Content-Type': 'application/xml',
+                    'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=1800',
+                },
+            });
+        }
 
-    return new Response(sitemap, {
-        headers: {
-            'Content-Type': 'application/xml',
-            'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600',
-        },
-    });
+        const xmlContent = await response.text();
+
+        return new Response(xmlContent, {
+            headers: {
+                'Content-Type': 'application/xml',
+                'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600',
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching post sitemap from API:', error);
+        // Return empty sitemap on error
+        const emptySitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+</urlset>`;
+        return new Response(emptySitemap, {
+            headers: {
+                'Content-Type': 'application/xml',
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=1800',
+            },
+        });
+    }
 }
