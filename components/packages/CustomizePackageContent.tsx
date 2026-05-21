@@ -65,7 +65,7 @@ export default function CustomizePackageContent({ data }: CustomizePackageConten
                 <div className="person-image-wrapper">
                     {data?.image_url ? (
                         <img
-                            src={`${data._raw?.image_url?.startsWith('http') ? '' : 'https://hajj-umrah.holyvibes.co.uk/media/'}${data.image_url}`}
+                            src={`${data._raw?.image_url?.startsWith('http') ? '' : 'https://lime-stingray-174731.hostingersite.com/media/'}${data.image_url}`}
                             alt={data._raw?.image_alt || "Person in Ihram"}
                             className="person-image"
                         />
