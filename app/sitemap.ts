@@ -34,7 +34,7 @@ async function fetchSitemapFromAPI(apiUrl: string): Promise<string[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const backendUrl = 'https://lime-stingray-174731.hostingersite.com';
+    const backendUrl = 'https://backend.umrahholidays.co.uk';
     const sitemapApiUrl = `${backendUrl}/api/generate-sitemap`;
     const postSitemapApiUrl = `${backendUrl}/api/generate-post-sitemap`;
 

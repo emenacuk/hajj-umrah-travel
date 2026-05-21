@@ -1,7 +1,7 @@
 // API Configuration - Hardcoded URLs (no env file needed)
-const API_BASE_URL = 'https://lime-stingray-174731.hostingersite.com/api';
+const API_BASE_URL = 'https://backend.umrahholidays.co.uk/api';
 // const API_BASE_URL = 'http://live_hajjumrahpackage.test/api';
-export const MEDIA_BASE_URL = 'https://lime-stingray-174731.hostingersite.com';
+export const MEDIA_BASE_URL = 'https://backend.umrahholidays.co.uk';
 // export const MEDIA_BASE_URL = 'http://live_hajjumrahpackage.test';
 
 // API Response Types

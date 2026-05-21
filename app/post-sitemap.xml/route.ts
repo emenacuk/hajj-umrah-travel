@@ -4,7 +4,7 @@
  */
 export async function GET() {
   const apiUrl =
-    "https://lime-stingray-174731.hostingersite.com/api/generate-post-sitemap";
+    "https://backend.umrahholidays.co.uk/api/generate-post-sitemap";
 
   try {
     const response = await fetch(apiUrl, {
