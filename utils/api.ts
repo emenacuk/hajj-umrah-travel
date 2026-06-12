@@ -198,69 +198,85 @@ export async function getGeneralSettings(): Promise<GeneralSettings | null> {
 
 // Fetch page data from API using /get-page endpoint (GET request)
 export async function fetchPageData(slug: string): Promise<any> {
-  // API expects GET request - for home page, no query param needed (as shown in Postman)
-  // For other pages, slug might be needed as query parameter
-  const url = slug === 'home'
-    ? `${API_BASE_URL}/get-page`
-    : `${API_BASE_URL}/get-page?page_url=${encodeURIComponent(slug)}`;
+  // Helper to make a single attempt
+  async function attempt(s: string): Promise<any> {
+    const url = s === 'home'
+      ? `${API_BASE_URL}/get-page`
+      : `${API_BASE_URL}/get-page?page_url=${encodeURIComponent(s)}`;
 
-  console.log('[API] Fetching page data:', { url, slug });
+    console.log('[API] Fetching page data:', { url, slug: s });
 
-  try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-      next: { tags: ['pages'] }, // Enable tagged revalidation
-    });
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        next: { tags: ['pages'] },
+      });
 
-    console.log('[API] Response status:', response.status, response.statusText);
+      console.log('[API] Response status:', response.status, response.statusText);
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.warn(`[API] Page not found (404): ${slug}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn(`[API] Page not found (404): ${s}`);
+          return null;
+        }
+        const errorText = await response.text();
+        console.error('[API] Error Response:', errorText);
         return null;
       }
-      const errorText = await response.text();
-      console.error('[API] Error Response:', errorText);
-      return null; // Return null instead of throwing to prevent build crash
-    }
 
-    const responseText = await response.text();
-    console.log('[API] Response text length:', responseText.length);
+      const responseText = await response.text();
+      console.log('[API] Response text length:', responseText.length);
 
-    let apiResponse: ApiResponse<PageApiResult>;
-    try {
-      apiResponse = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('[API] JSON Parse Error:', parseError);
-      console.error('[API] Response text:', responseText.substring(0, 500));
-      throw new Error('Invalid JSON response from API');
-    }
+      let apiResponse: ApiResponse<PageApiResult>;
+      try {
+        apiResponse = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('[API] JSON Parse Error:', parseError);
+        console.error('[API] Response text:', responseText.substring(0, 500));
+        throw new Error('Invalid JSON response from API');
+      }
 
-    console.log('[API] Parsed response:', {
-      status: apiResponse.status,
-      message: apiResponse.message,
-      hasResult: !!apiResponse.result
-    });
+      console.log('[API] Parsed response:', {
+        status: apiResponse.status,
+        message: apiResponse.message,
+        hasResult: !!apiResponse.result
+      });
 
-    if (apiResponse.status !== 1 || !apiResponse.result) {
-      throw new Error(apiResponse.message || 'API returned unsuccessful status');
-    }
+      if (apiResponse.status !== 1 || !apiResponse.result) {
+        throw new Error(apiResponse.message || 'API returned unsuccessful status');
+      }
 
-    // [ANTI-GRAVITY FIX] Handle API returning Home Page as fallback for invalid slugs
-    // If we're not requesting 'home' and the API returns '0' or 'Home Template', it's a 404
-    if (slug !== 'home' && (apiResponse.result.page_template === '0' || apiResponse.result.page_template === 'Home Template')) {
-      console.warn(`[API] Detected fallback to home for invalid slug: ${slug}`);
+      // [ANTI-GRAVITY FIX] Handle API returning Home Page as fallback for invalid slugs
+      if (s !== 'home' && (apiResponse.result.page_template === '0' || apiResponse.result.page_template === 'Home Template')) {
+        console.warn(`[API] Detected fallback to home for invalid slug: ${s}`);
+        return null;
+      }
+
+      return apiResponse.result;
+    } catch (error) {
+      console.error(`[API] Error fetching page data for "${s}":`, error);
       return null;
     }
+  }
 
-    // Transform API response to match component expectations
-    const transformedData = transformPageData(apiResponse.result);
-    const result = apiResponse.result as any;
+  // Try the clean slug first, then fallback to slug with .html if the API stored slugs with extension
+  let result = await attempt(slug);
+  if (!result && !slug.endsWith('.html')) {
+    console.log(`[API] Retrying with .html extension for slug: ${slug}`);
+    result = await attempt(`${slug}.html`);
+  }
 
-    // Fetch section packages separately as requested
+  if (!result) {
+    return null;
+  }
+
+  // Transform API response to match component expectations
+  const transformedData = transformPageData(result);
+
+  // Fetch section packages separately as requested
     console.log('[API] Fetching section packages individually...');
 
     // Parallel fetch definitions
@@ -419,16 +435,6 @@ export async function fetchPageData(slug: string): Promise<any> {
     });
 
     return transformedData;
-  } catch (error: any) {
-    console.error('[API] Error fetching page data:', {
-      message: error?.message,
-      name: error?.name,
-      slug,
-      url,
-      error: error
-    });
-    return null; // Return null to let the page component handle missing data gracefully
-  }
 }
 
 // Transform API page data to component format
