@@ -858,43 +858,52 @@ export async function fetchUmrahPackage(id: string): Promise<any> {
 }
 
 // Fetch single Umrah package by Slug
+async function fetchUmrahPackageBySlugInner(slug: string): Promise<any> {
+  // Stage 1: Try ?slug= or ?package_ids= if it looks like an ID
+  const isNumeric = /^\d+$/.test(slug);
+  const param = isNumeric ? 'package_ids' : 'slug';
+  const queryUrl = `${API_BASE_URL}/umrah-packages?${param}=${slug}`;
+  console.log(`[API] Stage 1 fetching Umrah package by ${param}:`, queryUrl);
+  const queryResponse = await fetch(queryUrl, { next: { tags: ['umrah-packages'] } });
+  if (queryResponse.ok) {
+    const apiResponse = await queryResponse.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let pkgData = apiResponse.result.data || apiResponse.result;
+      if (Array.isArray(pkgData)) pkgData = pkgData[0];
+      if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
+    }
+  }
+
+  // Stage 2: Try singular path /umrah-packages/${slug}
+  const directUrl = `${API_BASE_URL}/umrah-packages/${slug}`;
+  console.log('[API] Stage 2 fetching Umrah package by slug path:', directUrl);
+  const directResponse = await fetch(directUrl, { next: { tags: ['umrah-packages'] } });
+  if (directResponse.ok) {
+    const apiResponse = await directResponse.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let pkgData = apiResponse.result.data || apiResponse.result;
+      if (Array.isArray(pkgData)) pkgData = pkgData[0];
+      if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
+    }
+  }
+
+  // Stage 3: Fetch all and filter (most robust fallback)
+  console.log('[API] Stage 3: Searching in all Umrah packages for slug:', slug);
+  const allPackages = await fetchAllUmrahPackages();
+  const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
+  if (pkg) return enrichPackageWithWidgets(pkg);
+
+  return null;
+}
+
 export async function fetchUmrahPackageBySlug(slug: string): Promise<any> {
   try {
-    // Stage 1: Try ?slug= or ?package_ids= if it looks like an ID
-    const isNumeric = /^\d+$/.test(slug);
-    const param = isNumeric ? 'package_ids' : 'slug';
-    const queryUrl = `${API_BASE_URL}/umrah-packages?${param}=${slug}`;
-    console.log(`[API] Stage 1 fetching Umrah package by ${param}:`, queryUrl);
-    const queryResponse = await fetch(queryUrl, { next: { tags: ['umrah-packages'] } });
-    if (queryResponse.ok) {
-      const apiResponse = await queryResponse.json();
-      if (apiResponse.status === 1 && apiResponse.result) {
-        let pkgData = apiResponse.result.data || apiResponse.result;
-        if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
-      }
+    let result = await fetchUmrahPackageBySlugInner(slug);
+    if (!result && !slug.endsWith('.html')) {
+      console.log(`[API] Retrying Umrah package slug with .html extension: ${slug}`);
+      result = await fetchUmrahPackageBySlugInner(`${slug}.html`);
     }
-
-    // Stage 2: Try singular path /umrah-packages/${slug}
-    const directUrl = `${API_BASE_URL}/umrah-packages/${slug}`;
-    console.log('[API] Stage 2 fetching Umrah package by slug path:', directUrl);
-    const directResponse = await fetch(directUrl, { next: { tags: ['umrah-packages'] } });
-    if (directResponse.ok) {
-      const apiResponse = await directResponse.json();
-      if (apiResponse.status === 1 && apiResponse.result) {
-        let pkgData = apiResponse.result.data || apiResponse.result;
-        if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'umrah'));
-      }
-    }
-
-    // Stage 3: Fetch all and filter (most robust fallback)
-    console.log('[API] Stage 3: Searching in all Umrah packages for slug:', slug);
-    const allPackages = await fetchAllUmrahPackages();
-    const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
-    if (pkg) return enrichPackageWithWidgets(pkg);
-
-    return null;
+    return result;
   } catch (error) {
     console.error('Error fetching Umrah package by slug:', error);
     return null;
@@ -925,44 +934,53 @@ export async function fetchHajjPackage(id: string): Promise<any> {
   }
 }
 
+async function fetchHajjPackageBySlugInner(slug: string): Promise<any> {
+  // Stage 1: Try ?slug= or ?package_ids=
+  const isNumeric = /^\d+$/.test(slug);
+  const param = isNumeric ? 'package_ids' : 'slug';
+  const queryUrl = `${API_BASE_URL}/hajj-packages?${param}=${slug}`;
+  console.log(`[API] Stage 1 fetching Hajj package by ${param}:`, queryUrl);
+  const queryResponse = await fetch(queryUrl, { next: { tags: ['hajj-packages'] } });
+  if (queryResponse.ok) {
+    const apiResponse = await queryResponse.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let pkgData = apiResponse.result.data || apiResponse.result;
+      if (Array.isArray(pkgData)) pkgData = pkgData[0];
+      if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
+    }
+  }
+
+  // Stage 2: Try singular path /hajj-packages/${slug}
+  const directUrl = `${API_BASE_URL}/hajj-packages/${slug}`;
+  console.log('[API] Stage 2 fetching Hajj package by slug path:', directUrl);
+  const directResponse = await fetch(directUrl, { next: { tags: ['hajj-packages'] } });
+  if (directResponse.ok) {
+    const apiResponse = await directResponse.json();
+    if (apiResponse.status === 1 && apiResponse.result) {
+      let pkgData = apiResponse.result.data || apiResponse.result;
+      if (Array.isArray(pkgData)) pkgData = pkgData[0];
+      if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
+    }
+  }
+
+  // Stage 3: Fetch all and filter
+  console.log('[API] Stage 3: Searching in all Hajj packages for slug:', slug);
+  const allPackages = await fetchAllHajjPackages();
+  const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
+  if (pkg) return enrichPackageWithWidgets(pkg);
+
+  return null;
+}
+
 // Fetch single Hajj package by Slug
 export async function fetchHajjPackageBySlug(slug: string): Promise<any> {
   try {
-    // Stage 1: Try ?slug= or ?package_ids=
-    const isNumeric = /^\d+$/.test(slug);
-    const param = isNumeric ? 'package_ids' : 'slug';
-    const queryUrl = `${API_BASE_URL}/hajj-packages?${param}=${slug}`;
-    console.log(`[API] Stage 1 fetching Hajj package by ${param}:`, queryUrl);
-    const queryResponse = await fetch(queryUrl, { next: { tags: ['hajj-packages'] } });
-    if (queryResponse.ok) {
-      const apiResponse = await queryResponse.json();
-      if (apiResponse.status === 1 && apiResponse.result) {
-        let pkgData = apiResponse.result.data || apiResponse.result;
-        if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
-      }
+    let result = await fetchHajjPackageBySlugInner(slug);
+    if (!result && !slug.endsWith('.html')) {
+      console.log(`[API] Retrying Hajj package slug with .html extension: ${slug}`);
+      result = await fetchHajjPackageBySlugInner(`${slug}.html`);
     }
-
-    // Stage 2: Try singular path /hajj-packages/${slug}
-    const directUrl = `${API_BASE_URL}/hajj-packages/${slug}`;
-    console.log('[API] Stage 2 fetching Hajj package by slug path:', directUrl);
-    const directResponse = await fetch(directUrl, { next: { tags: ['hajj-packages'] } });
-    if (directResponse.ok) {
-      const apiResponse = await directResponse.json();
-      if (apiResponse.status === 1 && apiResponse.result) {
-        let pkgData = apiResponse.result.data || apiResponse.result;
-        if (Array.isArray(pkgData)) pkgData = pkgData[0];
-        if (pkgData) return enrichPackageWithWidgets(mapPackageData(pkgData, 'hajj'));
-      }
-    }
-
-    // Stage 3: Fetch all and filter
-    console.log('[API] Stage 3: Searching in all Hajj packages for slug:', slug);
-    const allPackages = await fetchAllHajjPackages();
-    const pkg = allPackages.find(p => p.pageUrl === slug || p._raw?.page_url === slug || p._raw?.slug === slug);
-    if (pkg) return enrichPackageWithWidgets(pkg);
-
-    return null;
+    return result;
   } catch (error) {
     console.error('Error fetching Hajj package by slug:', error);
     return null;
@@ -1121,13 +1139,7 @@ export function mapHotelData(hotel: any): any {
   };
 }
 
-/**
- * Fetch a single hotel by its page_url slug.
- * Stage 1: GET /hotels?slug={slug}
- * Stage 2: GET /hotels/{slug}
- * Stage 3: CMS page fallback via fetchPageData
- */
-export async function fetchHotelBySlug(slug: string): Promise<any> {
+async function fetchHotelBySlugInner(slug: string): Promise<any> {
   // Stage 1: query param
   try {
     const isNumeric = /^\d+$/.test(slug);
@@ -1183,6 +1195,15 @@ export async function fetchHotelBySlug(slug: string): Promise<any> {
   } catch { /* fall through */ }
 
   return null;
+}
+
+export async function fetchHotelBySlug(slug: string): Promise<any> {
+  let result = await fetchHotelBySlugInner(slug);
+  if (!result && !slug.endsWith('.html')) {
+    console.log(`[API] Retrying hotel slug with .html extension: ${slug}`);
+    result = await fetchHotelBySlugInner(`${slug}.html`);
+  }
+  return result;
 }
 
 // Map raw API package data to standardized camelCase format
@@ -1416,10 +1437,7 @@ export async function getBlogs(): Promise<any[]> {
     return [];
   }
 }
-/**
- * Fetches a single blog post details by slug.
- */
-export async function getBlogDetail(slug: string): Promise<any> {
+async function getBlogDetailInner(slug: string): Promise<any> {
   const url = `${API_BASE_URL}/get-makkah-blog?page_url=${slug}`;
   console.log('[API] Fetching blog detail:', url);
 
@@ -1438,7 +1456,6 @@ export async function getBlogDetail(slug: string): Promise<any> {
     if (apiResponse.success && apiResponse.blog) {
       const blog = apiResponse.blog;
 
-      // Check if banner_description is truly empty (e.g., "<p>&nbsp;</p>" or just whitespace)
       const bannerTitle = blog.banner_heading || blog.title;
       const bannerDescription = blog.banner_description;
 
@@ -1446,8 +1463,8 @@ export async function getBlogDetail(slug: string): Promise<any> {
         id: blog.id,
         page_template: 'blog_detail',
         title: blog.title,
-        banner_description: blog.banner_description, // For direct access if needed
-        short_description: blog.short_description,   // For direct access if needed
+        banner_description: blog.banner_description,
+        short_description: blog.short_description,
         content: {
           banner: {
             title: bannerTitle,
@@ -1471,6 +1488,18 @@ export async function getBlogDetail(slug: string): Promise<any> {
     console.error('[API] Error fetching blog detail:', error);
     return null;
   }
+}
+
+/**
+ * Fetches a single blog post details by slug.
+ */
+export async function getBlogDetail(slug: string): Promise<any> {
+  let result = await getBlogDetailInner(slug);
+  if (!result && !slug.endsWith('.html')) {
+    console.log(`[API] Retrying blog slug with .html extension: ${slug}`);
+    result = await getBlogDetailInner(`${slug}.html`);
+  }
+  return result;
 }
 export async function getBlogsByIds(ids: string[]): Promise<any[]> {
   try {

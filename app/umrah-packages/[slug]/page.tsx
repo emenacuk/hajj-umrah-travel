@@ -13,20 +13,22 @@ interface UmrahPackagePageProps {
 }
 
 export async function generateMetadata({ params }: UmrahPackagePageProps): Promise<Metadata> {
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
   try {
     const [packageData, generalSettings] = await Promise.all([
-      fetchUmrahPackageBySlug(params.slug),
+      fetchUmrahPackageBySlug(cleanSlug),
       getGeneralSettings()
     ]);
-    return generatePageMetadata(packageData, generalSettings, `umrah-packages/${params.slug}`);
+    return generatePageMetadata(packageData, generalSettings, `umrah-packages/${cleanSlug}`);
   } catch (error) {
     return { title: 'Umrah Package' };
   }
 }
 
 export default async function UmrahPackagePage({ params }: UmrahPackagePageProps) {
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
   try {
-    const packageData = await fetchUmrahPackageBySlug(params.slug);
+    const packageData = await fetchUmrahPackageBySlug(cleanSlug);
 
     if (!packageData) {
       notFound();
@@ -57,7 +59,7 @@ export default async function UmrahPackagePage({ params }: UmrahPackagePageProps
 
     return (
       <>
-        <PageScript html={pageData.script} ownerKey={params.slug} />
+        <PageScript html={pageData.script} ownerKey={cleanSlug} />
         {resolveTemplate(pageData.page_template, pageData)}
       </>
     );

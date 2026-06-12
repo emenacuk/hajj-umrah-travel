@@ -13,20 +13,22 @@ interface HajjPackagePageProps {
 }
 
 export async function generateMetadata({ params }: HajjPackagePageProps): Promise<Metadata> {
+    const cleanSlug = params.slug.replace(/\.html$/i, '');
     try {
         const [packageData, generalSettings] = await Promise.all([
-            fetchHajjPackageBySlug(params.slug),
+            fetchHajjPackageBySlug(cleanSlug),
             getGeneralSettings()
         ]);
-        return generatePageMetadata(packageData, generalSettings, `hajj-packages/${params.slug}`);
+        return generatePageMetadata(packageData, generalSettings, `hajj-packages/${cleanSlug}`);
     } catch (error) {
         return { title: 'Hajj Package' };
     }
 }
 
 export default async function HajjPackagePage({ params }: HajjPackagePageProps) {
+    const cleanSlug = params.slug.replace(/\.html$/i, '');
     try {
-        const packageData = await fetchHajjPackageBySlug(params.slug);
+        const packageData = await fetchHajjPackageBySlug(cleanSlug);
 
         if (!packageData) {
             notFound();
@@ -58,7 +60,7 @@ export default async function HajjPackagePage({ params }: HajjPackagePageProps) 
 
         return (
             <>
-                <PageScript html={pageData.script} ownerKey={params.slug} />
+                <PageScript html={pageData.script} ownerKey={cleanSlug} />
                 {resolveTemplate(pageData.page_template, pageData)}
             </>
         );

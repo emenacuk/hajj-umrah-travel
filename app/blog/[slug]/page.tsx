@@ -14,20 +14,22 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
   try {
     const [pageData, generalSettings] = await Promise.all([
-      getBlogDetail(params.slug),
+      getBlogDetail(cleanSlug),
       getGeneralSettings()
     ]);
     if (!pageData) return { title: 'Blog Post' };
-    return generatePageMetadata(pageData, generalSettings, `blog/${params.slug}`);
+    return generatePageMetadata(pageData, generalSettings, `blog/${cleanSlug}`);
   } catch (error) {
     return { title: 'Blog Post' };
   }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const pageData = await getBlogDetail(params.slug);
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
+  const pageData = await getBlogDetail(cleanSlug);
 
   if (!pageData) {
     notFound();
@@ -35,7 +37,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
-      <PageScript html={pageData.script} ownerKey={params.slug} />
+      <PageScript html={pageData.script} ownerKey={cleanSlug} />
       <BlogDetailTemplate data={pageData} />
     </>
   );
