@@ -14,7 +14,7 @@ export default function UmrahExplorationCard({ package: pkg, loading }: UmrahExp
 
     return (
         <div className="umrah-exploration-card">
-            <Link href={`/${pkg.pageUrl || (pkg.title).toLowerCase().replace(/\s+/g, '-')}.html`}>
+            <Link href={`/${(pkg.pageUrl || (pkg.title).toLowerCase().replace(/\s+/g, '-')).replace(/\.html$/i, '')}`}>
                 <div className="card-image">
                     <img src={getImageUrl(pkg.image)} alt={pkg.title} />
                     <div className="card-overlay">

@@ -13,20 +13,22 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
   try {
     const [pageData, generalSettings] = await Promise.all([
-      fetchPageData(params.slug),
+      fetchPageData(cleanSlug),
       getGeneralSettings()
     ]);
-    return generatePageMetadata(pageData, generalSettings, params.slug);
+    return generatePageMetadata(pageData, generalSettings, cleanSlug);
   } catch (error) {
     return { title: 'Hajj & Umrah Packages' };
   }
 }
 
 export default async function DynamicPage({ params }: PageProps) {
+  const cleanSlug = params.slug.replace(/\.html$/i, '');
   try {
-    const pageData = await fetchPageData(params.slug);
+    const pageData = await fetchPageData(cleanSlug);
 
     if (!pageData) {
       notFound();
@@ -34,7 +36,7 @@ export default async function DynamicPage({ params }: PageProps) {
 
     return (
       <>
-        <PageScript html={pageData.script} ownerKey={params.slug} />
+        <PageScript html={pageData.script} ownerKey={cleanSlug} />
         {resolveTemplate(pageData.page_template, pageData)}
       </>
     );

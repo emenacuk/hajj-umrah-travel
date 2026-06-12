@@ -27,19 +27,13 @@ const CustomizeBanner = ({ data }: CustomizeBannerProps) => {
     const backgroundImage = getImageUrl(data?.image_url, '/bannerbackground.png');
     const buttonText = data?.button_text || "Customize Your Package";
 
-    // Normalize button link - if it's "Customise your Package", it might need to be "/customise-your-package.html" or similar
-    // Based on previous navigation changes, it seems links are now ending in .html
     let buttonLink = data?.button_link || "/customize-package";
     if (buttonLink.toLowerCase() === "customise your package") {
-        buttonLink = "/customise-your-package.html";
+        buttonLink = "/customise-your-package";
     } else if (!buttonLink.startsWith('/') && !buttonLink.startsWith('http')) {
-        // Simple slug to .html if requested
-        if (!buttonLink.endsWith('.html')) {
-            buttonLink = `/${buttonLink.toLowerCase().replace(/\s+/g, '-')}.html`;
-        } else {
-            buttonLink = `/${buttonLink}`;
-        }
+        buttonLink = `/${buttonLink.toLowerCase().replace(/\s+/g, '-')}`;
     }
+    buttonLink = buttonLink.replace(/\.html$/i, '');
 
     return (
         <section className="customize-banner">

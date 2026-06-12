@@ -129,9 +129,9 @@ export default function Header() {
             const formatHref = (url: string) => {
                 if (!url) return '#';
                 if (url.startsWith('http')) return url;
-                if (url === 'home.html' || url === 'index.html') return '/';
-                const formatted = url;
-                return formatted.startsWith('/') ? formatted : `/${formatted}`;
+                const cleanUrl = url.replace(/\.html$/i, '');
+                if (cleanUrl === 'home' || cleanUrl === 'index') return '/';
+                return cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
             };
 
             const item: NavItem = {
