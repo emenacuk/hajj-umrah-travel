@@ -28,7 +28,7 @@ export async function GET() {
     }
 
     const xmlContent = await response.text();
-    const cleanedXml = xmlContent.replace(/\.html<\/loc>/g, '</loc>');
+    const cleanedXml = xmlContent.replace(/\.html(?=\/?<\/loc>)/g, '');
 
     return new Response(cleanedXml, {
       headers: {
