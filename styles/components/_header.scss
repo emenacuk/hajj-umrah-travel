@@ -58,6 +58,10 @@
         gap: 4px;
         cursor: pointer;
 
+        @media (min-width: 600px) {
+            display: none;
+        }
+
         span {
             width: 25px;
             height: 3px;
