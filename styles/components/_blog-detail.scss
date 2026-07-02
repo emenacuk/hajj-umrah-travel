@@ -70,7 +70,6 @@
     @media (max-width: 992px) {
       grid-template-columns: 1fr;
     }
-
   }
   @media (max-width: 992px) {
     padding: 0px 0px;
@@ -132,6 +131,7 @@
         border-collapse: collapse;
         margin: 20px 0;
         overflow-x: auto;
+
         th {
           background-color: var(--color-primary);
           color: var(--color-white);
@@ -146,6 +146,10 @@
           color: black;
           text-align: left;
           border: 1px solid black;
+
+          @media (max-width: 600px) {
+            font-size: 14px;
+          }
         }
       }
     }
