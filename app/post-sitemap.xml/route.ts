@@ -28,8 +28,9 @@ export async function GET() {
     }
 
     const xmlContent = await response.text();
+    const cleanedXml = xmlContent.replace(/\.html<\/loc>/g, '</loc>');
 
-    return new Response(xmlContent, {
+    return new Response(cleanedXml, {
       headers: {
         "Content-Type": "application/xml",
         "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",

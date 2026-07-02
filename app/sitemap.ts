@@ -7,7 +7,7 @@ async function parseXmlSitemap(xmlContent: string): Promise<string[]> {
     let match;
 
     while ((match = locRegex.exec(xmlContent)) !== null) {
-        urls.push(match[1]);
+        urls.push(match[1].replace(/\.html$/, ''));
     }
 
     return urls;
