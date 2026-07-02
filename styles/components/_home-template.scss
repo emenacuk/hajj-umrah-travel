@@ -35,8 +35,6 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-
-
   }
 
   .rightside {
@@ -88,6 +86,10 @@
           pointer-events: none;
         }
       }
+
+      @media (max-width: 992px) {
+        flex-direction: row;
+      }
     }
   }
 }
@@ -119,8 +121,6 @@
   .leftcontent {
     display: block;
     overflow: hidden;
-
-
   }
 
   .packages-swiper-wrapper {
@@ -152,7 +152,7 @@
 .hajjsection {
   padding-top: 60px;
 
-  >.packages-swiper-wrapper {
+  > .packages-swiper-wrapper {
     display: grid;
     grid-template-columns: 1fr 559px;
     gap: 40px;
@@ -199,12 +199,10 @@
       background-repeat: no-repeat;
       pointer-events: none;
     }
-
-
   }
 }
 
-.inner-banner+.exploration-section {
+.inner-banner + .exploration-section {
   padding-top: 0;
 }
 
@@ -271,16 +269,13 @@
     .card-image {
       .card-overlay {
         background-color: rgba(214, 154, 94, 0.6);
-        ;
       }
     }
   }
 }
 
-
 // Packages Swiper
 .packages-swiper-wrapper {
-
   :global(.swiper-button-next),
   :global(.swiper-button-prev) {
     top: 50%;
@@ -337,7 +332,7 @@
 
 // Why Choose Us
 .why-us-section {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   padding: 60px 0;
   margin-top: 60px;
 
@@ -351,7 +346,7 @@
     gap: 30px;
 
     .centeredchooose {
-      background: url('/choose.svg')center no-repeat;
+      background: url("/choose.svg") center no-repeat;
       background-size: cover;
       display: flex;
       align-items: center;
@@ -533,14 +528,15 @@
 .paddleft {
   padding-left: 37px !important;
 
-  @media screen and (max-width:1200px) {
+  @media screen and (max-width: 1200px) {
     padding-left: 20px !important;
   }
 
-  @media (max-width: 767.5px) {}
+  @media (max-width: 767.5px) {
+  }
 }
 
-@media screen and (max-width:1650px) {
+@media screen and (max-width: 1650px) {
   .hajjsection {
     .packages-swiper-wrapper {
       grid-template-columns: 1fr 355px;
@@ -550,7 +546,7 @@
   }
 }
 
-@media screen and (max-width:1580px) and (min-width:1200px) {
+@media screen and (max-width: 1580px) and (min-width: 1200px) {
   .bestpackages {
     grid-template-columns: 300px 1fr;
     padding-right: 0;
@@ -580,10 +576,9 @@
   }
 }
 
-@media screen and (max-width:1580px) {
+@media screen and (max-width: 1580px) {
   .why-us-section {
     .features-grid {
-
       align-items: center;
     }
 
@@ -633,7 +628,7 @@
   }
 }
 
-@media screen and (max-width:1360px) {
+@media screen and (max-width: 1360px) {
   .paddleft {
     padding-left: 20px !important;
   }
@@ -732,8 +727,6 @@
           margin: 0 auto;
           max-width: 200px;
         }
-
-
       }
 
       .features-card-wrapper {
@@ -811,7 +804,6 @@
       }
     }
   }
-
 
   .why-us-section {
     .features-grid {
